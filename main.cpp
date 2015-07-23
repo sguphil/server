@@ -7,6 +7,8 @@
 #include "network/include/Acceptor.h"
 #include "network/include/Connector.h"
 
+#define ULIMITSVR 1
+
 using namespace std;
 extern void printItem(TestAccess *accessObj);
 

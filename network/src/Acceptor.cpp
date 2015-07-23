@@ -1,0 +1,113 @@
+#include "Acceptor.h"
+
+Acceptor::Acceptor(SESSION_TYPE type): m_eAcceptType(type)
+{
+    memset(m_listenIp, 0x00, sizeof(m_listenIp));
+    m_boIsListen = false;
+    m_nServerSock = -1;
+    m_epollfd = epoll_create(3000);
+    m_SessionFactory.init(10, 10);
+}
+
+Acceptor::~Acceptor()
+{
+
+    //dtor
+}
+
+void Acceptor::init(int maxAcc)
+{
+    m_nCurrAccept = 0;
+    m_nMaxAccept = 3000;
+    m_nMaxAcc = maxAcc;
+}
+
+bool Acceptor::startListen(const char *szIP, Int32 nPort)
+{
+    strcpy(m_listenIp, szIP);
+    m_listenPort = nPort;
+    if(!createSocket())
+    {
+        return false;
+    }
+
+    struct epoll_event epEvent;
+    epEvent.events = EPOLLIN;
+    epEvent.data.fd = m_nServerSock;
+
+    epoll_ctl(m_epollfd, EPOLL_CTL_ADD, m_nServerSock, &epEvent);
+    return true;
+}
+
+bool Acceptor::createSocket()
+{
+    m_nServerSock = socket(AF_INET, SOCK_STREAM, 0);
+
+    //设置地址重用
+    Int32 reuse = 1;
+    setsockopt(m_nServerSock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+
+    //设置非堵塞
+    Int32 ioFlag;
+    ioFlag = fcntl(m_nServerSock, F_GETFL);
+    fcntl(m_nServerSock, F_SETFL, ioFlag|O_NONBLOCK);
+    //bind
+    struct sockaddr_in svrAddr;
+    svrAddr.sin_family = AF_INET;
+    svrAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    svrAddr.sin_port = htons(m_listenPort);
+
+    if (bind(m_nServerSock, (struct sockaddr *)&svrAddr, sizeof(sockaddr_in)) < 0)
+    {
+        return false;
+    }
+    //listen
+    if (listen(m_nServerSock, 10)< 0)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool Acceptor::getAcceptList(std::list<CSession *>& retList)
+{
+    AutoLock autoLock(&m_acceptListLock);
+    retList.splice(retList.begin(), m_acceptList);
+    return true;
+}
+
+void* Acceptor::threadRoutine(void *args)
+{
+    //Acceptor *acceptor = (Acceptor*)args;
+    struct epoll_event epEvent;
+    cout << "Acceptor::threadRoutine(void *args)1" << endl;
+    while(true)
+    {
+        cout << "Acceptor::threadRoutine(void *args)2" << endl;
+        Int32 evCount = epoll_wait(m_epollfd, &epEvent, 1, -1);
+        if (evCount > 0)
+        {
+            //struct sockaddr_id cliAddr;
+            Int32 clientSock = accept(m_nServerSock, NULL, NULL);
+            if (clientSock > 0)
+            {
+                CSession *session = m_SessionFactory.allocate();
+                if (NULL != session)
+                {
+                    session->setSocket(clientSock);
+                    addSession2List(session);
+                    printf("alloc session\n");
+                }
+                else
+                {
+                    printf("can not alloc session\n");
+                }
+            }
+            else
+            {
+                printf("accept error\n");
+            }
+        }
+    }
+    return NULL;
+}

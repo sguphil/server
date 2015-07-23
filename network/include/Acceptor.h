@@ -1,0 +1,61 @@
+#ifndef __ACCEPTOR_H__
+#define __ACCEPTOR_H__
+#include "../../include/baseHeader.h"
+#include "../../Thread/BaseThread.h"
+#include "../../Factory/BaseFactory.h"
+#include "Session.h"
+#include "CommonList.h"
+#include "../../Thread/Mutex.h"
+
+class Acceptor : public CBaseThread
+{
+    public:
+        Acceptor(SESSION_TYPE type);
+        virtual ~Acceptor();
+        void init(int maxAcc = 3000);
+        void init(void *configStruct); //预留根据配置文件初始化接收器
+        bool startListen(const char *szIP, Int32 nPort);
+        void *threadRoutine(void *args);
+
+        bool createSocket();
+
+        inline bool isListen()
+        {
+            return m_boIsListen;
+        }
+
+        inline int getMaxAcc(void)
+        {
+            return m_nMaxAcc;
+        }
+
+        inline void addSession2List(CSession *session)
+        {
+            AutoLock lock(&m_acceptListLock);
+            m_nCurrAccept++;
+            m_acceptList.push_back(session);
+        }
+
+        bool getAcceptList(std::list<CSession *>& retList);
+
+        inline void sessionReUse(CSession *pSession)
+        {
+            m_SessionFactory.reuse(pSession);
+        }
+
+    private:
+        Int32 m_nMaxAcc;
+        char m_listenIp[32];
+        Int32 m_listenPort;
+        Int32 m_nServerSock;
+        Int32 m_epollfd;
+        SESSION_TYPE m_eAcceptType;
+        bool m_boIsListen;
+        Int32 m_nMaxAccept;
+        Int32 m_nCurrAccept;
+        CMutex m_acceptListLock;
+        CommonList<CSession> m_acceptList;
+        CBaseFactory<CSession> m_SessionFactory;
+};
+
+#endif // __ACCEPTOR_H

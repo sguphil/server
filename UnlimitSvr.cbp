@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="UnlimitSvr" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/UnlimitSvr" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="include" />
+					<Add directory="network/include" />
+					<Add directory="Test/include" />
+					<Add directory="session" />
+					<Add directory="Thread" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/UnlimitSvr" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="include" />
+					<Add directory="network/include" />
+					<Add directory="Test/include" />
+					<Add directory="session" />
+					<Add directory="Thread" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="Factory/BaseFactory.cpp" />
+		<Unit filename="Factory/BaseFactory.h" />
+		<Unit filename="Logic/Actor.cpp" />
+		<Unit filename="Logic/Actor.h" />
+		<Unit filename="Logic/Player.cpp" />
+		<Unit filename="Logic/Player.h" />
+		<Unit filename="Test/include/TestAccess.h" />
+		<Unit filename="Test/src/TestAccess.cpp" />
+		<Unit filename="Thread/BaseThread.cpp" />
+		<Unit filename="Thread/BaseThread.h" />
+		<Unit filename="Thread/CThreadPool.cpp" />
+		<Unit filename="Thread/CThreadPool.h" />
+		<Unit filename="Thread/Mutex.cpp" />
+		<Unit filename="Thread/Mutex.h" />
+		<Unit filename="Thread/ThreadBase.cpp" />
+		<Unit filename="Thread/ThreadBase.h" />
+		<Unit filename="include/AccountSvr.h" />
+		<Unit filename="include/Singleton.h" />
+		<Unit filename="include/baseHeader.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="main.cpp" />
+		<Unit filename="network/include/Acceptor.h" />
+		<Unit filename="network/include/CommonList.h" />
+		<Unit filename="network/include/Connector.h" />
+		<Unit filename="network/include/IoHandler.h" />
+		<Unit filename="network/include/NetWorkObject.h" />
+		<Unit filename="network/include/Session.h" />
+		<Unit filename="network/include/threadCallBack.h" />
+		<Unit filename="network/src/Acceptor.cpp" />
+		<Unit filename="network/src/Connector.cpp" />
+		<Unit filename="network/src/IoHandler.cpp" />
+		<Unit filename="network/src/NetWorkObject.cpp" />
+		<Unit filename="network/src/Session.cpp" />
+		<Unit filename="network/src/threadCallBack.cpp" />
+		<Unit filename="session/ClientSession.cpp" />
+		<Unit filename="session/ClientSession.h" />
+		<Unit filename="src/AccountSvr.cpp" />
+		<Unit filename="src/Singleton.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,6 +1,7 @@
 #ifndef __CQUERY_H__
 #define __CQUERY_H__
 #include "../include/baseHeader.h"
+#include "CSqlConn.hpp"
 #include <mysql/mysql.h>
 class CSqlConn;
 class CResult;
@@ -15,20 +16,36 @@ enum eQueryType
 class CQuery
 {
 public:
-    CQuery(CSqlConn *sqlconn, string querystr);
+    CQuery(CSqlConn *sqlconn, string querystr, int32 len);
+    CQuery(string querystr, int32 len);
+    CQuery(CSqlConn * sqlconn);
     ~CQuery();
     bool exequery(CResult* res);
-    string getQueryStr()
+    int exeUpdate();
+
+    uint32 escapeString(char *des, char *src, int32 srcLen);
+
+    inline string getQueryStr()
     {
         return m_strQuery;
     }
 
-    CSqlConn* getSqlConn()
+    inline CSqlConn* getSqlConn()
     {
         return m_sqlconn;
     }
+
+    inline int32 getQlen()
+    {
+        return m_queryStrLen;
+    }
+
+    void setSqlConn(CSqlConn *sqlconn);
+    void setQueryStr(std::string, int32 len);
 private:
     CSqlConn *m_sqlconn;
     string m_strQuery;
+    int32 m_queryStrLen;
+    bool m_bIsReady;
 };
 #endif 

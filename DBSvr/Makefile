@@ -1,9 +1,9 @@
 CC = g++
 #1.设定所有源文件搜索目录顺序
-vpath % .:../include
+vpath % .:../include:../Factory
 
 #2.写出所有依赖的obj文件，带相对目录
-OBJS = CQuery.o CResult.o CSqlConn.o main.o 
+OBJS = CDBInstFactory.o CQuery.o CResult.o CSqlConn.o main.o 
 
 #3.编译选项
 CCFLAGS = -Wall -c -g

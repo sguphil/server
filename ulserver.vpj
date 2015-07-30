@@ -247,6 +247,8 @@
 				N="DBSvr/*.xpm"
 				Recurse="1"
 				Excludes=""/>
+			<F N="DBSvr/CDBInstFactory.cpp"/>
+			<F N="DBSvr/CDBInstFactory.hpp"/>
 			<F N="DBSvr/main.cpp"/>
 		</Folder>
 		<F

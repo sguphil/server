@@ -2,6 +2,8 @@
 #define __BASEFACTORY_H__
 #include "../include/baseHeader.h"
 #include "../Logic/Player.h"
+//#include "../DBSvr/CSqlConn.hpp"
+
 template<typename T>
 class CBaseFactory
 {
@@ -13,7 +15,9 @@ public:
         m_nAccNum = accNum;
         addItem(ItemNum, true);
     }
-
+    virtual void init(Int32 ItemNum, Int32 accNum, string ip, int32 port, string user, string passwd, string dbname)
+    {
+    }
     virtual T* allocate()
     {
         if (m_nItemLess <= 0)
@@ -34,8 +38,8 @@ public:
     }
     virtual void freeItem(){}
 
-private:
-    void addItem(Int32 num, bool flashTotalNum = false)
+protected:
+    virtual void addItem(Int32 num, bool flashTotalNum = false)
     {
         if (num > 0)
         {
@@ -50,7 +54,10 @@ private:
         }
     }
 
-private:
+    virtual void addItem(Int32 num, string ip, int32 port, string user, string passwd, string dbname, bool flashTotalNum = false)
+    {
+    }
+protected:
     list<T*> m_ItemList;
     Int32 m_nTotalItem;
     Int32 m_nItemLess;

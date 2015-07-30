@@ -32,7 +32,7 @@ void CSqlConn::connect(int32 port, string ip, string user, string passwd, string
 bool CSqlConn::exequery(CQuery *queryobj, CResult * result)
 {
     string qstr = queryobj->getQueryStr();
-    mysql_real_query(m_mysql, qstr.c_str(), qstr.length());
+    mysql_real_query(m_mysql, qstr.c_str(), queryobj->getQlen());
     MYSQL_RES *ptrRes = result->getRes();
     ptrRes = mysql_store_result(m_mysql);
     if (NULL == ptrRes)
@@ -46,4 +46,14 @@ bool CSqlConn::exequery(CQuery *queryobj, CResult * result)
     int32 row = mysql_num_rows(ptrRes);
     result->setRow(row);
     return true;
+}
+
+int CSqlConn::exeUpdate(CQuery *queryobj)
+{
+    if (0 != mysql_real_query(m_mysql, queryobj->getQueryStr().c_str(), queryobj->getQlen()))
+    {
+        perror("mysql_real_query exeUpdate error");
+        return -1;
+    }
+    return (int32)mysql_affected_rows(m_mysql);
 }

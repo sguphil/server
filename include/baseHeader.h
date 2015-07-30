@@ -22,6 +22,7 @@
 #include <list>
 #include <vector>
 #include <set>
+#include <sstream>
 
 enum SESSION_TYPE
 {

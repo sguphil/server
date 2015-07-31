@@ -1,5 +1,5 @@
-#include "IoHandler.h"
-#include "ClientSession.h"
+#include "../include/IoHandler.h"
+#include "../../session/ClientSession.h"
 
 IoHandler::IoHandler()
 :m_acceptor(eGameServer)
@@ -38,7 +38,7 @@ void IoHandler::update()
 void IoHandler::processActiveSessionList()
 {
     std::list<CSession*>::iterator iter = m_ActiveSessionList.begin();
-    for (iter; iter!=m_ActiveSessionList.end(); iter++)
+    for (; iter!=m_ActiveSessionList.end(); iter++)
     {
         //这里需要加入判断断开的连接处理
 
@@ -52,14 +52,14 @@ void IoHandler::processAcceptList()
     m_tempSessionList.clear();
     m_acceptor.getAcceptList(m_tempSessionList);
     std::list<CSession*>::iterator iter = m_tempSessionList.begin();
-    int ItemCount = 0;
-    for (iter; iter!=m_tempSessionList.end();)
+    uint32 ItemCount = 0;
+    for (; iter!=m_tempSessionList.end();)
     {
         CSession *tmpSession = *iter;
         if (NULL != tmpSession)
         {
             ++ItemCount;
-            if (m_ActiveSessionList.size()+ItemCount < m_acceptor.getMaxAcc())
+            if (m_ActiveSessionList.size()+ItemCount < (uint32)m_acceptor.getMaxAcc())
             {
                 NetWorkObject *pNetWorkObj = new ClientSession();
                 tmpSession->bindNetWorkObj(pNetWorkObj);

@@ -1,4 +1,4 @@
-#include "Connector.h"
+#include "../include/Connector.h"
 
 Connector::Connector()
 {
@@ -58,9 +58,8 @@ bool Connector::getConnList(std::vector<CSession*> retVec)
 {
     AutoLock autoLock(&m_connListLock);
     std::list<CSession*>::iterator iter = m_connList.begin();
-    for(iter; iter!=m_connList.end(); )
+    for(; iter!=m_connList.end(); iter++)
     {
-        iter++;
         retVec.push_back(m_connList.front());
         m_connList.pop_front();
     }

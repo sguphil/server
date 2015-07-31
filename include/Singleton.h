@@ -10,6 +10,9 @@ namespace base
         public:
             static T* GetInstance()
             {
+                //static T instance;
+                //return &instance;
+                ///*
                 if (NULL == instance)
                 {
                     instance = new T();
@@ -19,15 +22,18 @@ namespace base
                 {
                     return instance;
                 }
+                //*/
             }
 
             static void DestroyInstance()
             {
+                ///*
                 if (NULL != instance)
                 {
                     delete instance;
                     instance = NULL;
                 }
+                //*/
             }
 
         protected:

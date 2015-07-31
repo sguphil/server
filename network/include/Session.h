@@ -51,8 +51,8 @@ public:
         m_eSessionType = type;
     }
 
-    Int32 send(void *buff, int buffsize){}
-    Int32 recv(){}
+    Int32 send(void *buff, int buffsize) { return 0; }
+    Int32 recv() { return 0; }
 
     inline void bindNetWorkObj(NetWorkObject *networkObj)
     {

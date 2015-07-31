@@ -9,7 +9,17 @@ class CBaseFactory
 {
 public:
     CBaseFactory() {}
-    virtual ~CBaseFactory() { }
+    virtual ~CBaseFactory() 
+    {
+        /*
+        list<T *>::iterator it = m_ItemList.begin();
+        while (it != m_ItemList.end())
+        {
+            delete *it;
+            it++;
+        }
+        */
+    }
     virtual void init(Int32 ItemNum, Int32 accNum)
     {
         m_nAccNum = accNum;

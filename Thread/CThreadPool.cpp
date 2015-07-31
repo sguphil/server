@@ -12,9 +12,9 @@ CThreadPool ThreadPool;
 #define THREAD_SERVER 10
 
 CThreadPool::CThreadPool()
-:m_nThreadExitSinceLastCheck(0),
+:m_nThreadsReqSinceLastCheck(0),
 m_nthreadsFreedSinceLastCheck(0),
-m_nThreadsReqSinceLastCheck(0),
+m_nThreadExitSinceLastCheck(0),
 m_nThreadsEaten(0)
 {
     //ctor
@@ -102,8 +102,8 @@ void CThreadPool::StartUp()
 void CThreadPool::showStatus()
 {
     m_mutex.lock();
-    printf("Threadpool status: Active Threads:%u.\n", m_ActiveThreadSet.size());
-    printf("Threadpool status: Suspended Threads:%u.\n", m_FreeThreadSet.size());
+    printf("Threadpool status: Active Threads:%d.\n", (int)m_ActiveThreadSet.size());
+    printf("Threadpool status: Suspended Threads:%d.\n",(int) m_FreeThreadSet.size());
     //printf("Threadpool status: Requested-To-Free ratio: %.3f%% (%u%u).\n", );
     printf("Threadpool status: Eaten Count: %d (negative is bad!)\n", m_nThreadsEaten);
     m_mutex.unLock();
@@ -219,7 +219,7 @@ void CThreadPool::Shutdown()
                 }
             }
             //need log
-            printf("Threadpool %u active and %u free threads remain\n", m_ActiveThreadSet.size(), m_FreeThreadSet.size());
+            printf("Threadpool %d active and %d free threads remain\n", (int)m_ActiveThreadSet.size(),(int)m_FreeThreadSet.size());
             m_mutex.unLock();
             sleep(1000);
         }

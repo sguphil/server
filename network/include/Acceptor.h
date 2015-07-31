@@ -10,7 +10,7 @@
 class Acceptor : public CBaseThread
 {
     public:
-        Acceptor(SESSION_TYPE type);
+        Acceptor(SESSION_TYPE type=eClient);
         virtual ~Acceptor();
         void init(int maxAcc = 3000);
         void init(void *configStruct); //预留根据配置文件初始化接收器

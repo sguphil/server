@@ -12,7 +12,9 @@ class Connector: public CBaseThread
 public:
     Connector();
     ~Connector();
-    void init();
+    void init()
+    {
+    }
     void init(void *confgStruct) {}
     bool connect(const char *szIp, Int32 Port, SESSION_TYPE type);
     void *threadRoutine(void *args);

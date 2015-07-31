@@ -2,6 +2,7 @@
 #define __CQUERY_H__
 #include "../include/baseHeader.h"
 #include "CSqlConn.hpp"
+#include "CDBInstFactory.hpp"
 #include <mysql/mysql.h>
 class CSqlConn;
 class CResult;

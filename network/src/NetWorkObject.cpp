@@ -1,2 +1,2 @@
-#include "NetWorkObject.h"
+#include "../include/NetWorkObject.h"
 

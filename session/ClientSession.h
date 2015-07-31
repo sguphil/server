@@ -1,7 +1,7 @@
 #ifndef CLIENTSESSION_H
 #define CLIENTSESSION_H
 
-#include "NetWorkObject.h"
+#include "../network/include/NetWorkObject.h"
 
 
 class ClientSession : public NetWorkObject

@@ -61,8 +61,9 @@ int main()
             printf("data is: %d, %d, %s\n", pdata->a, pdata->b, pres.getString(3));
         }
     }
-    //delete sqlconn;
-    dbInstFact->reuse(sqlconn);
+    //delete sqlconn;i9
+    //dbInstFact->reuse(sqlconn);
+    delete dbInstFact;
     return 0;
 }
 

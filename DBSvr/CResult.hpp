@@ -19,7 +19,7 @@ public:
         m_nCurReadField = 0;
         return true;
     }
-
+/*
     template<typename T>
     T* getFieldbyT(T& arg, int i)
     {
@@ -28,12 +28,73 @@ public:
             return NULL;
         }
         stringstream ss;
-        ss << m_curRow[i];
+        ss.str(m_curRow[i]);
+        printf("strlen m_curRow:%d\n", (int32)strlen(m_curRow[i]));
         ss >> arg;
         //m_nCurReadField += 1;
         return &arg;
     }
-    
+*/
+    char* getString(int field)
+    {
+        if (field < m_nCol)
+        {
+            return m_curRow[field];
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+
+    int32 getInt(int field)
+    {
+        if (field < m_nCol)
+        {
+            return atoi(m_curRow[field]);
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    uint32 getUint(int field)
+    {
+        if (field < m_nCol)
+        {
+            return (uint32)atoi(m_curRow[field]);
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    float getFloat(int field)
+    {
+        if (field < m_nCol)
+        {
+            return atof(m_curRow[field]);
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    double getDouble(int field)
+    {
+        if (field < m_nCol)
+        {
+            return atof(m_curRow[field]);
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
     inline int32 getRow()
     {
         return m_nRow;

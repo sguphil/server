@@ -18,9 +18,9 @@ int main()
         int32 arg;
         while (res->hasNext())
         {
-            if (res->getFieldbyT(arg, 1) != NULL)
+            if ((arg = res->getInt(0)) != -1)
             {
-                printf("get result:%d\n", *(res->getFieldbyT<int32>(arg, 1)));
+                printf("get result a:%d  b:%d\n", arg, res->getInt(1));
             }
             else
             {
@@ -39,6 +39,7 @@ int main()
     struct testdb tsdata = {701, 702};
     int32 len = blobInsert.escapeString(buf, (char *)&tsdata, sizeof(tsdata));
     insertsql.append(buf, len);
+    insertsql += "','test varchar";
     insertsql.append("')", strlen("')"));
     blobInsert.setQueryStr(insertsql, insertsql.length());
     CResult pres;
@@ -46,17 +47,18 @@ int main()
 
     //test select 
     printf("insert affect row is:%d\n", affectrow);
-    string selSql = "select a, b, blobdata from tbl where a = 10";
+    string selSql = "select a, b, blobdata, vchar from tbl where a = 10";
     CQuery queryblob(sqlconn, selSql, selSql.length());
     if (queryblob.exequery(&pres))
     {
         while (pres.hasNext())
         {
             //char databuf[100] = { 0 };
-            string databuf;
-            pres.getFieldbyT(databuf, 2);
-            struct testdb *pdata = (struct testdb *)databuf.c_str();
-            printf("data is: %d, %d \n", pdata->a, pdata->b);
+            char *databuf = pres.getString(2);
+            //pres.getFieldbyT(databuf, 2);
+            struct testdb *pdata = (struct testdb*)(databuf);
+            
+            printf("data is: %d, %d, %s\n", pdata->a, pdata->b, pres.getString(3));
         }
     }
     //delete sqlconn;

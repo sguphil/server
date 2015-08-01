@@ -33,7 +33,8 @@ class Acceptor : public CBaseThread
         {
             AutoLock lock(&m_acceptListLock);
             m_nCurrAccept++;
-            m_acceptList.push_back(session);
+            //m_acceptList.push_back(session);
+            m_pWriteList->push_back(session);
         }
 
         bool getAcceptList(std::list<CSession *>& retList);
@@ -54,7 +55,10 @@ class Acceptor : public CBaseThread
         Int32 m_nMaxAccept;
         Int32 m_nCurrAccept;
         CMutex m_acceptListLock;
-        CommonList<CSession> m_acceptList;
+        CommonList<CSession> m_acceptList;  // first list
+        CommonList<CSession> m_acceptListSec; //second list
+        CommonList<CSession> *m_pReadList; // use double list to avoid mostly mutex competition
+        CommonList<CSession> *m_pWriteList; 
         CBaseFactory<CSession> m_SessionFactory;
 };
 

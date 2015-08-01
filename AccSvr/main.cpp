@@ -27,11 +27,11 @@ int main()
 
     cout << "actor type is:" << player->getActorType() << endl;
 
-    Acceptor acc(eClient);
-    acc.init();
-    acc.startListen("127.0.0.1", 9997);
-    acc.start();
-
+    //Acceptor acc(eClient);
+    //acc.init();
+    //acc.startListen("127.0.0.1", 9997);
+    //acc.start();
+    accountSvr->start();
     Connector conn;
     conn.start();
 

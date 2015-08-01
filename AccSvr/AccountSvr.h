@@ -8,19 +8,19 @@
 class AccountSvr: public base::Singleton<AccountSvr>
 {
 public:
-    AccountSvr()
+    AccountSvr();
+    virtual ~AccountSvr();
+    void start();
+    void update()
     {
-        m_ServerID = 1;
     }
-    virtual ~AccountSvr()
-    {
-        
-    }
-    inline int getServerID() {return m_ServerID;}
+    inline int getServerID()
+    {return m_ServerID;}
 protected:
     
 private:
     Acceptor m_acceptor;
+    CommonList<CSession> m_waitSessionList;
     CommonList<CSession> m_activeSessionList;
     //CommonList<Connector*> m_activeConnectorList;
     //CommonList<CSession*> 

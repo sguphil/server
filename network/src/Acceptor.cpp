@@ -7,6 +7,10 @@ Acceptor::Acceptor(SESSION_TYPE type): m_eAcceptType(type)
     m_nServerSock = -1;
     m_epollfd = epoll_create(3000);
     m_SessionFactory.init(10, 10);
+    m_acceptListLock.lock();
+    m_pReadList = &m_acceptList;
+    m_pWriteList = &m_acceptListSec;
+    m_acceptListLock.unLock();
 }
 
 Acceptor::~Acceptor()
@@ -71,8 +75,11 @@ bool Acceptor::createSocket()
 
 bool Acceptor::getAcceptList(std::list<CSession *>& retList)
 {
+    retList.splice(retList.begin(), *m_pReadList);
     AutoLock autoLock(&m_acceptListLock);
-    retList.splice(retList.begin(), m_acceptList);
+    CommonList<CSession> *pSwap = m_pReadList;
+    m_pReadList = m_pWriteList;
+    m_pWriteList = pSwap;
     return true;
 }
 

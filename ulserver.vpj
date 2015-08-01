@@ -255,5 +255,9 @@
 			N="*"
 			Recurse="1"
 			Excludes=""/>
+		<F N="include/CBuffQueue.hpp"/>
+		<F N="include/CRecvBuf.hpp"/>
+		<F N="include/CSendBuf.hpp"/>
+		<F N="include/packHeader.hpp"/>
 	</Files>
 </Project>

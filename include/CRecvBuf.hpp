@@ -18,11 +18,11 @@ public:
 
     bool checkMsg(PkgHeader *header) //check if buff is large than (sizeof(PkgHeader)+ msgsize)
     {
-        int32 size = sizeof(*header) + header->length;
+        int32 size = header->length;
         return size > m_buffQueue.getBufLen();
     }
 
-    inline int32 getHead(PkgHeader *header, int32 bufsize)
+    inline int32 getHead(PkgHeader *header)
     {
         PkgHeader header;
         if (!checkHead(&header))
@@ -30,12 +30,14 @@ public:
             return -1;
         }
 
-        return m_buffQueue.GetMsg(header, sizeof(*header));
+        memcpy(header, m_buffQueue.getReadPtr(), sizeof(*header));
+        return sizeof(*header);
     }
 
     inline int32 getMsg(char *buf, int32 bufsize)
     {
         PkgHeader header;
+        m_buffQueue.GetMsg((char *)&header, sizeof(header));
         if (!checkMsg(&header))
         {
             return -1;

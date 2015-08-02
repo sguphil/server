@@ -52,7 +52,7 @@ public:
     }
 
     Int32 send(void *buff, int buffsize) { return 0; }
-    Int32 recv() { return 0; }
+    Int32 recv();
 
     inline void bindNetWorkObj(NetWorkObject *networkObj)
     {
@@ -73,5 +73,7 @@ private:
     SESSION_TYPE m_eSessionType;
     struct sockaddr_in m_sockAddr;
     NetWorkObject *m_pBindNetWorkObj;
+    CRecvBuf m_recvBuff;
+    CSendBuf m_sendBuff;
 };
 #endif // __SESSION_H__

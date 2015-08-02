@@ -46,25 +46,27 @@ public:
             return -1;
         }
         AutoLock qlock(&m_mutex);
-        
-        if (m_pHead < m_pTail)
+        if (target != NULL)
         {
-            int32 backSize = m_nSize - ((m_pTail - m_pData) / sizeof(T));
-            if (backSize <= size)
+            if (m_pHead < m_pTail)
             {
-                memcpy(m_pTail, target, size * sizeof(T));
+                int32 backSize = m_nSize - ((m_pTail - m_pData) / sizeof(T));
+                if (backSize <= size)
+                {
+                    memcpy(m_pTail, target, size * sizeof(T));
+                }
+                else
+                {
+                    memcpy(m_pTail, target, backSize*sizeof(T));
+                    memcpy(m_pTail, target + backSize, (size - backSize) * sizeof(T));
+                }
             }
             else
             {
-                memcpy(m_pTail, target, backSize*sizeof(T));
-                memcpy(m_pTail, target + backSize, (size - backSize) * sizeof(T));
+                memcpy(m_pTail, target, size * sizeof(T));
             }
         }
-        else
-        {
-            memcpy(m_pTail, target, size * sizeof(T));
-        }
-
+        
         m_pTail += size * sizeof(T);
         m_pTail = m_pData + ((m_pTail - m_pData) % m_nSize);
         m_nLength += size;
@@ -133,7 +135,11 @@ public:
         AutoLock qlock(&m_mutex);
         return m_nLength;
     }
+    
+    inline int32 getReadableLen()
+    {
 
+    }
 protected:
     CBuffQueue(CBuffQueue &queue)
     {

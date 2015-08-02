@@ -53,6 +53,10 @@ typedef unsigned short uInt16;
 typedef short int16;
 typedef short Int16;
 
+
+#define MAXPKGLEN 1024*8
+#define SESSIONBUFLEN 1024*64
+
 #define SAFE_DELETE(p) {if(NULL != (p)) { delete (p); (p) == NULL;}}
 
 #endif // BASEHEADER_H_INCLUDED

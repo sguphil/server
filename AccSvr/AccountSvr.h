@@ -5,7 +5,7 @@
 #include "../network/include/CommonList.h"
 #include "../network/include/Session.h"
 
-class AccountSvr: public base::Singleton<AccountSvr>
+class AccountSvr: public base::Singleton<AccountSvr>, CServerBase
 {
 public:
     AccountSvr();
@@ -15,7 +15,14 @@ public:
     {
     }
     inline int getServerID()
-    {return m_ServerID;}
+    {
+        return m_ServerID;
+    }
+
+    int32 getIoEpollfd()
+    {
+        return m_epollfd;
+    }
 protected:
     
 private:
@@ -25,6 +32,8 @@ private:
     //CommonList<Connector*> m_activeConnectorList;
     //CommonList<CSession*> 
     int m_ServerID;
+    int32 m_epollfd;
+
 };
 
 #endif // ACCOUNTSVR_H

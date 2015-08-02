@@ -37,13 +37,9 @@ public:
         return m_buffQueue.pushMsg(buf, bufsize);
     }
 protected:
-    CRecvBuf(CRecvBuf& bufqueue)
-    {
-    }
+    CRecvBuf(CRecvBuf& bufqueue);
 
-    void operator=(CRecvBuf& bufqueue)
-    {
-    }
+    CRecvBuf& operator=(CRecvBuf& bufqueue);
 private:
     CBuffQueue<char> m_buffQueue;
 };

@@ -17,13 +17,9 @@ public:
         return m_sendbuf.pushMsg(msg,msgSize);
     }
 protected:
-    CSendBuf(CSendBuf& bufqueue)
-    {
-    }
+    CSendBuf(CSendBuf& bufqueue);
 
-    void operator=(CSendBuf& bufqueue)
-    {
-    }
+    CSendBuf& operator=(CSendBuf& bufqueue);
 private:
     CBuffQueue<char> m_sendbuf;
 };

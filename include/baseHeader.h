@@ -42,10 +42,16 @@ typedef char Int8;
 typedef char int8;
 typedef unsigned long long uInt64;
 typedef unsigned long long uint64;
+typedef  long long Int64;
+typedef  long long int64;
 typedef unsigned int uInt32;
 typedef unsigned int uint32;
 typedef unsigned char uInt8;
 typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned short uInt16;
+typedef short int16;
+typedef short Int16;
 
 #define SAFE_DELETE(p) {if(NULL != (p)) { delete (p); (p) == NULL;}}
 

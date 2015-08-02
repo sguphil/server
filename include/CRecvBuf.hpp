@@ -8,49 +8,42 @@
 class CRecvBuf
 {
 public:
+    CRecvBuf();
     CRecvBuf(int32 size, int32 extraSize);
     ~CRecvBuf();
-    bool checkHead(PkgHeader *header) //check if buff large than header size
+    inline bool init(int32 size, int32 extraSize)
+    {
+        return m_buffQueue.init(size, extraSize);
+    }
+
+    inline bool checkHead(PkgHeader *header) //check if buff large than header size
     {
         int32 size = sizeof(*header);
         return size > m_buffQueue.getBufLen();
     }
 
-    bool checkMsg(PkgHeader *header) //check if buff is large than (sizeof(PkgHeader)+ msgsize)
+    inline bool checkMsg(PkgHeader *header) //check if buff is large than (sizeof(PkgHeader)+ msgsize)
     {
         int32 size = header->length;
         return size > m_buffQueue.getBufLen();
     }
 
-    inline int32 getHead(PkgHeader *header)
-    {
-        PkgHeader header;
-        if (!checkHead(&header))
-        {
-            return -1;
-        }
-
-        memcpy(header, m_buffQueue.getReadPtr(), sizeof(*header));
-        return sizeof(*header);
-    }
-
-    inline int32 getMsg(char *buf, int32 bufsize)
-    {
-        PkgHeader header;
-        m_buffQueue.GetMsg((char *)&header, sizeof(header));
-        if (!checkMsg(&header))
-        {
-            return -1;
-        }
-
-        return m_buffQueue.GetMsg(buf, buffsize);
-    }
+    int32 getHead(PkgHeader *header);
+    
+    int32 getMsg(char *buf, int32 bufsize);
 
     int32 pushMsg(char *buf, int32 bufsize)
     {
-            return m_buffQueue.pushMsg(buf, bufsize)
+        return m_buffQueue.pushMsg(buf, bufsize);
+    }
+protected:
+    CRecvBuf(CRecvBuf& bufqueue)
+    {
     }
 
+    void operator=(CRecvBuf& bufqueue)
+    {
+    }
 private:
     CBuffQueue<char> m_buffQueue;
 };

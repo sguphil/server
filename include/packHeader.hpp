@@ -1,8 +1,9 @@
 #ifndef __PACKHEADER_H__
-#defien __PACKHEADER_H__
+#define __PACKHEADER_H__
 #include "baseHeader.h"
 
-#param pack(1)
+#pragma pack(1)
+
 struct PkgHeader
 {
     uint16 length;

@@ -30,7 +30,7 @@ public:
         {
             m_pHead = m_pData;
             m_pTail = m_pData;
-            m_nLength = m_pData;
+            m_nLength = 0;
             m_nSize = size;
             m_nExtraSize = extraSize;
             return true;
@@ -49,7 +49,7 @@ public:
         
         if (m_pHead < m_pTail)
         {
-            int32 backSize = m_nSize - (m_pTail - m_pData / sizeof(T));
+            int32 backSize = m_nSize - ((m_pTail - m_pData) / sizeof(T));
             if (backSize <= size)
             {
                 memcpy(m_pTail, target, size * sizeof(T));
@@ -97,7 +97,7 @@ public:
             }
         }
         int32 HeadSize = ((m_pHead + size - m_pData) / sizeof(T)) % m_nSize;
-        m_pHead = m_pData + incSize;
+        m_pHead = m_pData + HeadSize;
         m_nLength -= size;
         return size;
     }
@@ -105,8 +105,8 @@ public:
 
     inline int32 calcFreeSpace()
     {
-        AutoLock(&m_mutex);
-        return (m_nSize - m_nLength)
+        AutoLock qlock(&m_mutex);
+        return (m_nSize - m_nLength);
     }
 
     inline T* getReadPtr()

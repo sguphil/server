@@ -6,6 +6,7 @@
 #include "Session.h"
 #include "CommonList.h"
 #include "../../Thread/Mutex.h"
+#include "../../include/CServerBase.hpp"
 
 class Acceptor : public CBaseThread
 {
@@ -41,10 +42,28 @@ class Acceptor : public CBaseThread
 
         inline void sessionReUse(CSession *pSession)
         {
+            pSession->clear();
             m_SessionFactory.reuse(pSession);
         }
 
-    private:
+        void swapSessionList()
+        {
+            AutoLock listLock(&m_acceptListLock);
+            CommonList<CSession> *tmpList = m_pReadList;
+            m_pReadList = m_pWriteList;
+            m_pWriteList = tmpList;
+        }
+
+        CommonList<CSession>* getReadSessionList()
+        {
+            return m_pReadList;
+        }
+
+        CommonList<CSession>* getWriteSessionList()
+        {
+            return m_pWriteList;
+        }
+private:
         Int32 m_nMaxAcc;
         char m_listenIp[32];
         Int32 m_listenPort;

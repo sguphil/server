@@ -19,8 +19,12 @@ public:
     bool connect(const char *szIp, Int32 Port, SESSION_TYPE type);
     void *threadRoutine(void *args);
     void addToWaitList(CSession *session);
-    bool getConnList(std::vector<CSession*> retVec);
+    bool getConnList(std::vector<CSession*> &retVec);
 
+    inline CommonList<CSession>* getConnList()
+    {
+        return &m_connList;
+    }
 private:
     CommonList<CSession> m_waitList; //等待链接的队列
     CommonList<CSession> m_connList; //完成链接队列

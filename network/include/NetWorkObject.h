@@ -2,6 +2,8 @@
 #define __NETWORKOBJECT_H__
 //#include "Session.h"
 #include "../../include/baseHeader.h"
+#include "../../include/packHeader.hpp"
+
 class CSession;
 
 class NetWorkObject
@@ -10,14 +12,18 @@ public:
     NetWorkObject() {}
     virtual ~NetWorkObject() {}
 
-    virtual Int32 onRecv() { return 0; }
-    virtual Int32 processSend() { return 0; }
+    virtual int32 onRecv() { return 0; }
+    virtual int32 onRecv(PkgHeader *header, char *msgbuf, int32 buffsize) { return 0; }
+    virtual int32 processSend(int16 sysid, int16 msgid, char *buf, int32 bufsize) { return 0; }
 
     inline void setSesion(CSession* session)
     {
         m_pSession = session;
     }
-
+    inline CSession* getSession()
+    {
+        return m_pSession;
+    }
 private:
     CSession *m_pSession;
 };

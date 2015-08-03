@@ -12,9 +12,9 @@ public:
     bool init(int32 size, int32 extraSize);
     int32 putMsg(PkgHeader *header, char* msg, int32 msgSize);
     
-    inline int32 putMsg(char* msg, int32 msgSize)
+    inline CBuffQueue<char>* getBuffQueuePtr()
     {
-        return m_sendbuf.pushMsg(msg,msgSize);
+        return &m_sendbuf;
     }
 protected:
     CSendBuf(CSendBuf& bufqueue);

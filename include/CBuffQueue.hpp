@@ -22,6 +22,14 @@ public:
         delete[] m_pData;
         m_pData = NULL;
     }
+    void clear()
+    {
+        m_pHead = m_pData;
+        m_pTail = m_pData;
+        m_nLength = 0;
+        m_nSize = 0;
+        m_nExtraSize = 0;
+    }
 
     bool init(int32 size, int32 extraSize)
     {
@@ -73,31 +81,35 @@ public:
         return size;
     }
 
-    int32 GetMsg(T *des, int32 size)
+    int32 popMsg(T *des, int32 size)
     {
         AutoLock qlock(&m_mutex);
+        
         if (m_nLength < size)
         {
             return -1;
         }
-
-        if (m_pHead < m_pTail)
+        if (NULL != des)
         {
-            memcpy(des, m_pHead, size * sizeof(T));
-        }
-        else
-        {
-            int32 leftSize = m_nSize - (m_pHead - m_pData) / sizeof(T);
-            if (leftSize > size)
+            if (m_pHead < m_pTail)
             {
                 memcpy(des, m_pHead, size * sizeof(T));
             }
             else
             {
-                memcpy(des, m_pHead, leftSize * sizeof(T));
-                memcpy(des, m_pData, (size - leftSize) * sizeof(T));
+                int32 leftSize = m_nSize - (m_pHead - m_pData) / sizeof(T);
+                if (leftSize > size)
+                {
+                    memcpy(des, m_pHead, size * sizeof(T));
+                }
+                else
+                {
+                    memcpy(des, m_pHead, leftSize * sizeof(T));
+                    memcpy(des, m_pData, (size - leftSize) * sizeof(T));
+                }
             }
         }
+        
         int32 HeadSize = ((m_pHead + size - m_pData) / sizeof(T)) % m_nSize;
         m_pHead = m_pData + HeadSize;
         m_nLength -= size;
@@ -111,13 +123,12 @@ public:
         return (m_nSize - m_nLength);
     }
 
-    inline T* getReadPtr()
+    inline T* getReadPtr(int32 copySize) // if the backmsg is truncate into two parts, copy "copySize" memory from the head of buffqueue
     {
         AutoLock qlock(&m_mutex);
         T *ret = m_pHead;
-        if (m_pHead > m_pTail)
+        if (getReadableLen() < copySize)
         {
-            int32 copySize = (m_pTail - m_pData);
             memcpy(m_pData + m_nSize, m_pData, copySize);
         }
         
@@ -138,13 +149,33 @@ public:
     
     inline int32 getReadableLen()
     {
+        AutoLock qlock(&m_mutex);
+        if (m_pHead == m_pTail) return (getBufLen() > 0 ? getBufLen() : 0);
+        else if (m_pHead < m_pTail) return (m_pTail - m_pHead) / sizeof(T);
+        else return m_nSize - (m_pHead - m_pData) / sizeof(T);  // just return backmem size
+    }
 
+    inline int32 getWriteableLen()
+    {
+        AutoLock qlock(&m_mutex);
+        if (m_pHead == m_pTail)
+        {
+            return (getBufLen() > 0 ? 0 : m_nSize - (m_pTail - m_pData) / sizeof(T));
+        }
+        else if (m_pHead < m_pTail)
+        {
+            return (m_pTail - m_pHead) / sizeof(T);
+        }
+        else
+        {
+            return m_nSize - (m_pTail - m_pData) / sizeof(T);
+        }
     }
 protected:
     CBuffQueue(CBuffQueue &queue)
     {
     }
-    void operator=(CBuffQueue &queue)
+    CBuffQueue& operator=(CBuffQueue &queue)
     {
     }
 private:

@@ -4,12 +4,13 @@
 #include "../include/baseHeader.h"
 #include "../Thread/BaseThread.h"
 #include "../Thread/Mutex.h"
+#include "../include/CServerBase.hpp"
+#include "../network/include/Session.h"
 
-template<typename ServerType>
 class CIoThread: public CBaseThread
 {
 public:
-    CIoThread(ServerType* server): m_ptrServer(server)
+    CIoThread(CServerBase* server): m_ptrServer(server)
     {
     }
     ~CIoThread()
@@ -19,7 +20,7 @@ public:
 
     void *threadRoutine(void *args)
     {
-        CServerBase *svr = (ServerBase*)arg;
+        CServerBase *svr = (CServerBase*)args;
         struct epoll_event epEvent;
         cout << "CIoThread start threadRoutine" << endl;
         while (true)
@@ -29,9 +30,25 @@ public:
             if (evCount > 0)
             {
                 CSession *session =  (CSession*)epEvent.data.ptr;
-                if (epEvent.events & EPOLLIN)
+                int32 oplen = 0;
+                if (epEvent.events & EPOLLIN) // recv msg
                 {
-                    
+                    oplen = session->recv();
+                }
+                else if (epEvent.events & EPOLLOUT) // send msg to client
+                {
+                    oplen = session->sendToSocket();
+
+                }
+
+                if (oplen > 0)
+                {
+                    session->modEpollEvent(svr->getIoEpollfd());
+                }
+                else // socket error wait to free session
+                {
+                    session->delEpollEvent(svr->getIoEpollfd());
+                    session->setStatus(waitdel);
                 }
             }
             else
@@ -39,14 +56,16 @@ public:
                 printf("CIoThread error!!! epoll_wait return:%d", evCount);
             }
         }
+
+        return NULL;
     }
 
-    inline ServerType* getServerPtr()
+    inline CServerBase* getServerPtr()
     {
         return m_ptrServer;
     }
 private:
-    ServerType* m_ptrServer;
+    CServerBase* m_ptrServer;
 
 };
 #endif

@@ -12,6 +12,10 @@ CSession::~CSession()
 {
 
 }
+int32 CSession::send(char *buff, int32 buffsize)
+{
+    return m_sendBuff.putMsg(buff, buffsize);
+}
 
 int32 CSession::recv()
 {
@@ -108,7 +112,7 @@ void CSession::processPacket()
 
     while (m_recvBuff.getBuffQueuePtr()->getBufLen() > 0)
     {
-        int32 retHeadLen = m_recvBuff.getHead(header);
+        int32 retHeadLen = m_recvBuff.getHead(&header);
         if (retHeadLen != sizeof(header))
         {
             break;
@@ -121,7 +125,7 @@ void CSession::processPacket()
             break;
         }
         char buf[msgLen];
-        int32 retMsgLen = getMsg(buf, msglen);
+        int32 retMsgLen = m_recvBuff.getMsg(buf, msgLen);
         if (retMsgLen != msgLen)
         {
             printf("get error packeage!!! retMsgLen != msgLen\n");
@@ -130,5 +134,68 @@ void CSession::processPacket()
         }
 
         
+    }
+}
+
+void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 msgsize) // first package to register
+{
+    struct c_s_registersession *msg = (struct c_s_registersession*)(msgbuf + sizeof(MsgHeader));
+    int16 sessionType = msg->sessionType;
+    NetWorkObject *netobj = NULL;
+    struct s_c_registersession ret;
+    MsgHeader msghead;
+    int32 headlen = 0;
+    PkgHeader header;
+    int32 totalsize = 0;
+    char *buf = NULL;
+    switch (sessionType)
+    {
+    case 1: // client
+        {
+            netobj = new ClientSession;
+            bindNetWorkObj(netobj);
+            ret.retcode = 0;
+            msghead.sysId = 1;
+            msghead.msgType = 1;
+            headlen = sizeof(msghead) + sizeof(ret);
+            header.length = headlen;
+            header.reserved = 0;
+            totalsize = headlen + sizeof(header);
+            buf = new char[totalsize];
+            encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
+            send(buf, totalsize);
+            delete[] buf;
+            buf = NULL;
+            break;
+        }
+    case 2: // gateway
+        break;
+    case 3: // other account svr
+        break;
+    case 4: // gameserver
+        break;
+    case 5: // dbserver
+        break;
+    case 6: // strict client for test
+        {
+            netobj = new ClientSession;
+            bindNetWorkObj(netobj);
+            ret.retcode = 0;
+            msghead.sysId = 1;
+            msghead.msgType = 1;
+            headlen = sizeof(msghead) + sizeof(ret);
+            header.length = headlen;
+            header.reserved = 0;
+            totalsize = headlen + sizeof(header);
+            buf = new char[totalsize];
+            encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
+            send(buf, totalsize);
+            delete[] buf;
+            buf = NULL;
+            break;
+        }
+        break;
+    default:
+        break;
     }
 }

@@ -17,14 +17,13 @@ int main()
     AccountSvr* accountSvr = AccountSvr::GetInstance();
     cout << "Hello world! ServerID is:" << accountSvr->getServerID() << endl;
 
-    TestAccess acsObj;
-    printItem(&acsObj);
-    cout << acsObj << endl;
+    //TestAccess acsObj;
+    //printItem(&acsObj);
+    //cout << acsObj << endl;
 
     CBaseFactory<CPlayer> playerFactory;
     playerFactory.init(10, 10);
     CPlayer *player = playerFactory.allocate();
-
     cout << "actor type is:" << player->getActorType() << endl;
 
     //Acceptor acc(eClient);
@@ -34,11 +33,12 @@ int main()
     accountSvr->start();
     Connector conn;
     conn.start();
-
-    while (true)
+    
+    accountSvr->update();
+    while (false)
     {
         cout << "flash main thread" << endl;
-        conn.connect("127.0.0.1", 9997, eClient);
+        //conn.connect("127.0.0.1", 9997, eClient);
         sleep(1);
     }
     return 0;

@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <time.h>
+#include <sys/timeb.h>
 
 //容器
 #include <map>
@@ -29,6 +30,7 @@ enum SESSION_TYPE
     eClient = 0,
     eGateWay = 1,
     eGameServer = 2,
+    eStrictClient = 3,
 };
 
 using namespace std;
@@ -58,5 +60,14 @@ typedef short Int16;
 #define SESSIONBUFLEN 1024*64
 
 #define SAFE_DELETE(p) {if(NULL != (p)) { delete (p); (p) == NULL;}}
+
+enum eSESSIONSTATUS
+{
+    active = 1, // active io
+    waitactive = 2, // need to active io 
+    waitdel = 3, // deactive, need to remove
+    registered = 4,//registered
+};
+
 
 #endif // BASEHEADER_H_INCLUDED

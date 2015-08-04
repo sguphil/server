@@ -11,7 +11,11 @@ public:
     ~CSendBuf();
     bool init(int32 size, int32 extraSize);
     int32 putMsg(PkgHeader *header, char* msg, int32 msgSize);
-    
+    int32 putMsg(char *buf, int32 buffsize)
+    {
+        return m_sendbuf.pushMsg(buf, buffsize);
+    }
+
     inline CBuffQueue<char>* getBuffQueuePtr()
     {
         return &m_sendbuf;

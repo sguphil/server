@@ -5,12 +5,13 @@
 #include "../../include/packHeader.hpp"
 
 class CSession;
+//struct PkgHeader;
 
 class NetWorkObject
 {
 public:
-    NetWorkObject() {}
-    virtual ~NetWorkObject() {}
+    NetWorkObject();
+    virtual ~NetWorkObject();
 
     virtual int32 onRecv() { return 0; }
     virtual int32 onRecv(PkgHeader *header, char *msgbuf, int32 buffsize) { return 0; }

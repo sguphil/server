@@ -1,5 +1,6 @@
 #ifndef __PACKAGESTRUCT_H__
 #define __PACKAGESTRUCT_H__
+#include "baseHeader.h"
 
 #pragma pack(1)
 

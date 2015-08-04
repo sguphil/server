@@ -20,12 +20,13 @@ public:
 
     void *threadRoutine(void *args)
     {
-        CServerBase *svr = (CServerBase*)args;
+        CIoThread *threadself = (CIoThread *)args;
+        CServerBase *svr = threadself->getServerPtr();
         struct epoll_event epEvent;
         cout << "CIoThread start threadRoutine" << endl;
         while (true)
         {
-            cout << "CIoThread infinity loop" << endl;
+            cout << "CIoThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
             int32 evCount = epoll_wait(svr->getIoEpollfd(),&epEvent, 1, -1);//infinite wait just one event to one sockfd
             if (evCount > 0)
             {
@@ -53,7 +54,8 @@ public:
             }
             else
             {
-                printf("CIoThread error!!! epoll_wait return:%d", evCount);
+                perror("epoll_wait error!!!");
+                printf("CIoThread error!!! epoll_wait return:%d\n", evCount);
             }
         }
 

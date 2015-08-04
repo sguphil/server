@@ -54,15 +54,15 @@ bool Connector::connect(const char *szIp, Int32 Port, SESSION_TYPE type)
     return true;
 }
 
-bool Connector::getConnList(std::vector<CSession*> retVec)
+bool Connector::getConnList(std::vector<CSession*> &retVec)
 {
     AutoLock autoLock(&m_connListLock);
     std::list<CSession*>::iterator iter = m_connList.begin();
     for(; iter!=m_connList.end(); iter++)
     {
-        retVec.push_back(m_connList.front());
-        m_connList.pop_front();
+        retVec.push_back(*iter);
     }
+    m_connList.clear();
     return true;
 }
 

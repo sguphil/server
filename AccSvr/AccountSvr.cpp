@@ -2,10 +2,13 @@
 
 AccountSvr::AccountSvr()
 {
+    m_nInterval = 100; //loop per 100ms
+    m_nCycleTick = getSysTimeMs();
+    m_nNextTick = m_nCycleTick + m_nInterval;
     m_ServerID = 1;
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
-    if (m_epollfd < 0)
+    if (m_epollfd <= 0)
     {
         printf("AccountSvr create epollfd error!!!");
         exit(1);
@@ -17,11 +20,24 @@ AccountSvr::~AccountSvr()
 
 }
 
+uint64 AccountSvr::getSysTimeMs()
+{
+    struct timeb t;
+    ftime(&t);
+    return 1000 * t.time + t.millitm;
+}
+
 void AccountSvr::start()
 {
     m_acceptor.init();
     m_acceptor.startListen("127.0.0.1", 9997);
     m_acceptor.start();
+
+    for (int i = 0; i < 1;i++)
+    {
+        CIoThread *newThread = new CIoThread(this);
+        newThread->start();
+    }
 }
 
 void AccountSvr::updateSessionList()
@@ -35,7 +51,7 @@ void AccountSvr::updateSessionList()
         newSession->setStatus(active);
         m_activeSessionList.push_back(newSession);
         //add to epoll event loop
-        addFdToEpoll(newSession->getSocket());
+        addFdToEpoll(newSession);
     }
 
     readList->clear();
@@ -46,19 +62,19 @@ void AccountSvr::updateSessionList()
     }
     
     // 2.process connect session
-    CommonList<CSession> *connSessionList =  m_connector.getConnList()->getConnList();
+    CommonList<CSession> *connSessionList =  m_connector.getConnList();
     if (connSessionList->size() > 0)
     {
         std::vector<CSession *> connectSessions;
         m_connector.getConnList(connectSessions);
-        std::vector<CSession *>::iterator iter = connSessionList->begin();
+        std::vector<CSession *>::iterator iter = connectSessions.begin();
         for (; iter != connectSessions.end(); iter++)
         {
             CSession *newSession = *iter;
             newSession->setStatus(active);
             m_activeSessionList.push_back(newSession);
             //add to epoll event loop
-            addFdToEpoll(newSession->getSocket());
+            addFdToEpoll(newSession);
         }
     }
 
@@ -84,6 +100,16 @@ void AccountSvr::handleActiveSession()
 
 void AccountSvr::update()
 {
-    updateSessionList(); // handle new Session
-    handleActiveSession();
+    while (true)
+    {
+        while (getSysTimeMs() >= m_nNextTick)
+        {
+            updateSessionList(); // handle new Session
+            handleActiveSession();
+            removeDeadSession();
+            m_nNextTick = m_nNextTick + m_nInterval;
+            //cout << "into logic loop" << endl;
+        }
+        usleep(10);
+    }
 }

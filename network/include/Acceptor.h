@@ -13,7 +13,7 @@ class Acceptor : public CBaseThread
     public:
         Acceptor(SESSION_TYPE type=eClient);
         virtual ~Acceptor();
-        void init(int maxAcc = 3000);
+        void init(int maxAcc = 30);
         void init(void *configStruct); //预留根据配置文件初始化接收器
         bool startListen(const char *szIP, Int32 nPort);
         void *threadRoutine(void *args);

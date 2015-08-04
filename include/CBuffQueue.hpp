@@ -43,6 +43,11 @@ public:
             m_nExtraSize = extraSize;
             return true;
         }
+        else
+        {
+            cout << "buffqueue init error" << endl;
+            exit(1);
+        }
         return false;
     }
 
@@ -56,17 +61,17 @@ public:
         AutoLock qlock(&m_mutex);
         if (target != NULL)
         {
-            if (m_pHead < m_pTail)
+            if (m_pHead <= m_pTail)
             {
                 int32 backSize = m_nSize - ((m_pTail - m_pData) / sizeof(T));
-                if (backSize <= size)
+                if (backSize >= size)
                 {
                     memcpy(m_pTail, target, size * sizeof(T));
                 }
                 else
                 {
                     memcpy(m_pTail, target, backSize*sizeof(T));
-                    memcpy(m_pTail, target + backSize, (size - backSize) * sizeof(T));
+                    memcpy(m_pData, target + backSize*sizeof(T), (size - backSize) * sizeof(T));
                 }
             }
             else
@@ -125,10 +130,10 @@ public:
 
     inline T* getReadPtr(int32 copySize) // if the backmsg is truncate into two parts, copy "copySize" memory from the head of buffqueue
     {
-        AutoLock qlock(&m_mutex);
         T *ret = m_pHead;
         if (getReadableLen() < copySize)
         {
+            AutoLock qlock(&m_mutex);
             memcpy(m_pData + m_nSize, m_pData, copySize);
         }
         
@@ -150,9 +155,22 @@ public:
     inline int32 getReadableLen()
     {
         AutoLock qlock(&m_mutex);
-        if (m_pHead == m_pTail) return (getBufLen() > 0 ? getBufLen() : 0);
-        else if (m_pHead < m_pTail) return (m_pTail - m_pHead) / sizeof(T);
-        else return m_nSize - (m_pHead - m_pData) / sizeof(T);  // just return backmem size
+        //m_mutex.lock();
+        if (m_pHead == m_pTail)
+        {
+            //m_mutex.unLock();
+            return (m_nLength > 0 ? m_nLength : 0);
+        }
+        else if (m_pHead < m_pTail)
+        {
+            //m_mutex.unLock();
+            return (m_pTail - m_pHead) / sizeof(T);
+        } 
+        else
+        {
+            //m_mutex.unLock();
+            return m_nSize - (m_pHead - m_pData) / sizeof(T);  // just return backmem size
+        }
     }
 
     inline int32 getWriteableLen()
@@ -160,7 +178,7 @@ public:
         AutoLock qlock(&m_mutex);
         if (m_pHead == m_pTail)
         {
-            return (getBufLen() > 0 ? 0 : m_nSize - (m_pTail - m_pData) / sizeof(T));
+            return (m_nLength > 0 ? 0 : m_nSize - (m_pTail - m_pData) / sizeof(T));
         }
         else if (m_pHead < m_pTail)
         {

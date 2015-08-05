@@ -2,6 +2,7 @@
 #define __CBUFFQUEUE_H__
 #include "baseHeader.h"
 #include "../Thread/Mutex.h"
+#include "../include/packHeader.hpp"
 
 template<typename T>
 class CBuffQueue
@@ -188,6 +189,46 @@ public:
         {
             return m_nSize - (m_pTail - m_pData) / sizeof(T);
         }
+    }
+
+    int32 recvFromSocket(int32 socket)
+    {
+        AutoLock qlock(&m_mutex);
+        int32 recvlen = ::recv(socket, (void*)m_pTail, getWriteableLen(), 0);
+        pushMsg(NULL, recvlen);
+        return recvlen;
+    }
+
+    int32 sendToSocket(int32 socket)
+    {
+        AutoLock qlock(&m_mutex);
+        int32 canSendlen = getReadableLen();
+        int32 sendlen = ::send(socket, getReadPtr(canSendlen), canSendlen, 0);
+        popMsg(NULL, sendlen);
+        return sendlen;
+    }
+    int32 getMsg(char* buf, int32 bufsize) //get without header
+    {
+        AutoLock qlock(&m_mutex);
+        PkgHeader header;
+        popMsg((char *)&header, sizeof(header));
+        if (header.length > getBufLen())
+        {
+            return -1;
+        }
+        return popMsg(buf, bufsize);
+    }
+
+    int32 getHead(PkgHeader *header)
+    {
+        AutoLock qlock(&m_mutex);
+        if (sizeof(*header) > getBufLen())
+        {
+            return -1;
+        }
+    
+        memcpy(header, getReadPtr(sizeof(*header)), sizeof(*header));
+        return sizeof(*header);
     }
 protected:
     CBuffQueue(CBuffQueue &queue)

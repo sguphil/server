@@ -17,23 +17,16 @@ CRecvBuf::~CRecvBuf()
 
 int32 CRecvBuf::getHead(PkgHeader *header)
 {
-    if (!checkHead(header))
-    {
-        return -1;
-    }
-    
-    memcpy(header, m_buffQueue.getReadPtr(sizeof(*header)), sizeof(*header));
-    return sizeof(*header);
+    return m_buffQueue.getHead(header);
 }
 
 int32 CRecvBuf::getMsg(char *buf, int32 bufsize)
 {
-    PkgHeader header;
-    header.length = bufsize;
-    if (!checkMsg(&header))
-    {
-        return -1;
-    }
-    m_buffQueue.popMsg((char *)&header, sizeof(header));
-    return m_buffQueue.popMsg(buf, bufsize);
+    return m_buffQueue.getMsg(buf, bufsize);
 }
+/*
+int32 CRecvBuf::recvToBuff(int32 socket, int32 recvlen)
+{
+    return getBuffQueuePtr()->recvFromSocket(socket, recvlen);
+}
+*/

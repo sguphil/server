@@ -156,10 +156,11 @@ void TestClient::update()
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            m_nNextTick = m_nNextTick + m_nInterval*1000;
-            //cout << "into logic loop" << endl;
+            //m_nNextTick = getSysTimeMs() + m_nInterval*10000;
+            sleep(1);
+            cout << "into logic loop" << endl;
         }
-        usleep(10);
+        sleep(2);
     }
     
 }

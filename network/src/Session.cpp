@@ -25,7 +25,7 @@ int32 CSession::recv()
         return 0;
     }
 
-    int recvlen = ::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
+    int recvlen = m_recvBuff.getBuffQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
 
     if (0 == recvlen)
     {
@@ -34,7 +34,7 @@ int32 CSession::recv()
     }
     else if (recvlen > 0)
     {
-        m_recvBuff.getBuffQueuePtr()->pushMsg(NULL, recvlen);
+        //m_recvBuff.getBuffQueuePtr()->pushMsg(NULL, recvlen);
         return recvlen;
     }
     else
@@ -82,7 +82,7 @@ int32 CSession::sendToSocket()
         return 0;
     }
 
-    int32 sendLen = ::send(m_socket, m_sendBuff.getBuffQueuePtr()->getReadPtr(canSendlen), canSendlen, 0);
+    int32 sendLen = m_sendBuff.getBuffQueuePtr()->sendToSocket(m_socket);
 
     if (0 == sendLen)
     {
@@ -91,7 +91,7 @@ int32 CSession::sendToSocket()
     }
     else if (sendLen > 0)
     {
-        m_sendBuff.getBuffQueuePtr()->popMsg(NULL, sendLen);
+        //m_sendBuff.getBuffQueuePtr()->popMsg(NULL, sendLen);
         return sendLen;
     }
     else
@@ -122,7 +122,7 @@ void CSession::processPacket()
         int32 msgLen = header.length;
         if (msgLen<=0 || msgLen > MAXPKGLEN)
         {
-            //printf("file:%s get error packeage!!! msglen>MAXPKGLEN\n", __FILE__);
+            printf("file:%s get error packeage!!! msglen>MAXPKGLEN\n", __FILE__);
             //setStatus(waitdel);
             break;
         }
@@ -130,7 +130,7 @@ void CSession::processPacket()
         int32 retMsgLen = m_recvBuff.getMsg(buf, msgLen);
         if (retMsgLen != msgLen)
         {
-            //printf("get error packeage!!! retMsgLen:%d != msgLen:%d\n", retMsgLen, msgLen);
+            printf("get error packeage!!! retMsgLen:%d != msgLen:%d\n", retMsgLen, msgLen);
             break;
         }
         handlePackage(this, &header, buf, msgLen);

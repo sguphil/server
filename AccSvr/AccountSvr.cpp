@@ -107,9 +107,9 @@ void AccountSvr::update()
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            m_nNextTick = m_nNextTick + m_nInterval;
+            m_nNextTick = getSysTimeMs() + 1*1000;//m_nInterval*100;
             //cout << "into logic loop" << endl;
         }
-        usleep(10);
+        usleep(100);
     }
 }

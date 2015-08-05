@@ -38,7 +38,9 @@ int32 ClientSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
 int32 ClientSession::processSend(uint16 sysid, uint16 msgid, char *msgbuf, int32 bufsize)
 {
     MsgHeader msgHead = {sysid, msgid};
-    uint16 pkglen = sizeof(msgHead) + bufsize;
+    c_s_refecttest *ret = (c_s_refecttest*)msgbuf;
+    int32 strlen = ret->strlen;
+    uint16 pkglen = sizeof(msgHead) + strlen + sizeof(ret->strlen);
     PkgHeader header = {pkglen, 0};
     char buf[pkglen];
     encodepkg(buf, &header, &msgHead, msgbuf, bufsize);

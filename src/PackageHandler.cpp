@@ -31,7 +31,9 @@ void encodepkg(char *buf, PkgHeader *head, MsgHeader *msgHead, char *msgbuf, int
 {
     int32 headsize = sizeof(*head) + sizeof(*msgHead);
     memcpy(buf, (char *)head, sizeof(*head));
-    memcpy(buf + sizeof(*head), msgHead, sizeof(*msgHead));
-    memcpy(buf + headsize, msgbuf, msgbufsize);
+    memcpy(buf + sizeof(*head), (char*)msgHead, sizeof(*msgHead));
+    c_s_refecttest *ret = (c_s_refecttest*)msgbuf;
+    memcpy(buf + headsize, (char*)&(ret->strlen), sizeof(ret->strlen));
+    memcpy(buf + headsize + sizeof(ret->strlen), (char*)&ret + sizeof(ret->strlen), ret->strlen);
     //return pkgsize;
 }

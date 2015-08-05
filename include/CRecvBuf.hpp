@@ -36,6 +36,9 @@ public:
     {
         return &m_buffQueue;
     }
+
+    //int32 recvToBuff(int32 socket, int32 recvlen);
+
 protected:
     CRecvBuf(CRecvBuf& bufqueue);
 

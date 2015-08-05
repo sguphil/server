@@ -60,6 +60,7 @@ private:
     uint32 m_nCycleTick;
     uint32 m_nNextTick;
     uint32 m_nInterval;
+    int32 m_nSendTimes;
 };
 
 #endif // __TESTCLIENT_H__

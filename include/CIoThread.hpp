@@ -26,7 +26,7 @@ public:
         cout << "CIoThread start threadRoutine" << endl;
         while (true)
         {
-            cout << "CIoThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
+            //cout << "CIoThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
             int32 evCount = epoll_wait(svr->getIoEpollfd(),&epEvent, 1, -1);//infinite wait just one event to one sockfd
             if (evCount > 0)
             {
@@ -42,9 +42,17 @@ public:
 
                 }
 
-                if (oplen > 0)
+                if (oplen >= 0) // normal 
                 {
+                    if (oplen > 0)
+                    {
+                        cout << "CIoThread=======recvlen:" << oplen << endl;
+                    }
                     session->modEpollEvent(svr->getIoEpollfd());
+                    if (0 == oplen)
+                    {
+                        usleep(100);
+                    }
                 }
                 else // socket error wait to free session
                 {

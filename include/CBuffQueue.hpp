@@ -55,7 +55,7 @@ public:
     {
         if (calcFreeSpace() < size)
         {
-            printf("message too long...");
+            printf("message too long...buffreesize:%d, targetsize:%d\n", calcFreeSpace(), size);
             return -1;
         }
         AutoLock qlock(&m_mutex);

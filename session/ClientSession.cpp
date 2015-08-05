@@ -15,9 +15,12 @@ int32 ClientSession::testRefectSvr(char *msgbuf, int32 bufsize)
     MsgHeader *msgHead = (MsgHeader *)msgbuf;
     struct c_s_refecttest *pmsg = (struct c_s_refecttest *)(msgbuf+sizeof(*msgHead));
     int32 pkglen = bufsize - sizeof(*msgHead);
-    printf("server recv msg:%s\n", (char*)pmsg+(sizeof(pmsg->strlen)));
+    char buf[(pmsg->strlen)+1];
+    memset(buf, 0x00, sizeof(buf));
+    snprintf(buf, (pmsg->strlen), "%s", (char *)pmsg + sizeof(pmsg->strlen));
+    printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
     
-    return processSend(msgHead->sysId, msgHead->msgType, (char*)pmsg, pkglen);
+    return processSend(msgHead->sysId, msgHead->msgType, (char *)pmsg, pkglen);
 }
 
 int32 ClientSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)

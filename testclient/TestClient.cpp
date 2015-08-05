@@ -5,6 +5,7 @@ TestClient::TestClient()
     m_nInterval = 100; //loop per 100ms
     m_nCycleTick = getSysTimeMs();
     m_nNextTick = m_nCycleTick + m_nInterval;
+    m_nSendTimes = 0;
     m_ServerID = 1;
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
@@ -29,8 +30,8 @@ uint64 TestClient::getSysTimeMs()
 
 void TestClient::start()
 {
-    m_acceptor.init();
-    m_acceptor.startListen("127.0.0.1", 9997);
+    //m_acceptor.init();
+    //m_acceptor.startListen("127.0.0.1", 9997);
     //m_acceptor.start();
     m_connector.start();
     m_connector.connect("127.0.0.1", 9997, eStrictClient);
@@ -99,24 +100,28 @@ void TestClient::handleActiveSession()
 
             SESSION_TYPE sessionType = session->getType();
 
-            if (sessionType == eStrictClient)
+            if (sessionType == eStrictClient && m_nSendTimes < 2)
             {
+                //m_nSendTimes++; // test ---send times
                 MsgHeader msghead;
                 int32 sendlen = 0;
                 PkgHeader header;
                 struct c_s_registersession reg;
                 struct c_s_refecttest testStr;
-                cout << "ready to send msg" << endl;
+                
                 if (session->getStatus() != registered)
                 {
                     msghead.sysId = 1;
                     msghead.msgType = 1;
                     reg.sessionType = 1;
-                    sendlen = sizeof(msghead) + sizeof(header) + sizeof(reg);
+                    sendlen = sizeof(msghead) + sizeof(reg);
                     header.length = sendlen;
-                    char buf[sendlen];
+                    int32 totallen = sendlen +sizeof(header);
+                    char buf[totallen];
                     encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
-                    session->send(buf, sendlen);
+                    session->send(buf, totallen);
+                    cout << "ready to send msg:" << totallen << endl;
+                    session->setStatus(registered);
                 }
                 else
                 {
@@ -125,17 +130,17 @@ void TestClient::handleActiveSession()
                     char *sendStr = (char*)"hello ulserver";
                     testStr.strlen = (int16)strlen(sendStr);
                     testStr.buf = sendStr;
-
-                    sendlen = sizeof(msghead) + sizeof(header) + sizeof(testStr.strlen)+testStr.strlen;
-                    header.length = sendlen;
+                    int32 msglen = sizeof(msghead) + sizeof(testStr.strlen) + testStr.strlen;
+                    sendlen = msglen + sizeof(header);
+                    header.length = msglen;
                     char buf[sendlen];
                     //encodepkg(buf, &header, &msghead, (char *)&testStr, (int16)sizeof(testStr.strlen)+testStr.strlen);
                     memcpy(buf, (char *)&header, sizeof(header));
                     memcpy(buf+sizeof(header), (char *)&msghead, sizeof(msghead));
                     memcpy(buf+sizeof(header)+sizeof(msghead), (char *)&(testStr.strlen), sizeof(testStr.strlen));
-                    memcpy(buf+sizeof(header)+sizeof(msghead)+sizeof(testStr.strlen), (char *)&sendStr, testStr.strlen);
+                    memcpy(buf+sizeof(header)+sizeof(msghead)+sizeof(testStr.strlen), (char *)sendStr, testStr.strlen);
                     session->send(buf, sendlen);
-
+                    cout << "2ready to send msg:" << sendlen << endl;
                 }
             }
         }
@@ -151,7 +156,7 @@ void TestClient::update()
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            m_nNextTick = m_nNextTick + m_nInterval;
+            m_nNextTick = m_nNextTick + m_nInterval*1000;
             //cout << "into logic loop" << endl;
         }
         usleep(10);

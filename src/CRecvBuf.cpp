@@ -29,6 +29,7 @@ int32 CRecvBuf::getHead(PkgHeader *header)
 int32 CRecvBuf::getMsg(char *buf, int32 bufsize)
 {
     PkgHeader header;
+    header.length = bufsize;
     if (!checkMsg(&header))
     {
         return -1;

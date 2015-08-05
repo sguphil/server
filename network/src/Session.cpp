@@ -4,8 +4,8 @@ CSession::CSession()
 {
     m_socket = -1;
     m_boActive = false;
-    m_recvBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
-    m_sendBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
+    m_recvBuff.init(SESSIONBUFLEN, 4); //SESSIONBUFLEN);
+    m_sendBuff.init(SESSIONBUFLEN, 4); //SESSIONBUFLEN);
 }
 
 CSession::~CSession()
@@ -19,7 +19,7 @@ int32 CSession::send(char *buff, int32 buffsize)
 
 int32 CSession::recv()
 {
-    int32 writelen = m_recvBuff.getBuffQueuePtr()->getReadableLen();
+    int32 writelen = m_recvBuff.getBuffQueuePtr()->getWriteableLen();
     if (writelen <= 0)
     {
         return 0;
@@ -55,6 +55,8 @@ int32 CSession::modEpollEvent(int32 epollfd, bool addEvent)
 {
     struct epoll_event chkEvent;
     chkEvent.events = EPOLLIN | EPOLLOUT | EPOLLONESHOT;
+    chkEvent.data.ptr = this;
+
     if (addEvent)
     {
         return epoll_ctl(epollfd, EPOLL_CTL_ADD, m_socket, &chkEvent);
@@ -120,19 +122,18 @@ void CSession::processPacket()
         int32 msgLen = header.length;
         if (msgLen<=0 || msgLen > MAXPKGLEN)
         {
-            printf("get error packeage!!! msglen>MAXPKGLEN\n");
-            setStatus(waitdel);
+            //printf("file:%s get error packeage!!! msglen>MAXPKGLEN\n", __FILE__);
+            //setStatus(waitdel);
             break;
         }
         char buf[msgLen];
         int32 retMsgLen = m_recvBuff.getMsg(buf, msgLen);
         if (retMsgLen != msgLen)
         {
-            printf("get error packeage!!! retMsgLen != msgLen\n");
-            setStatus(waitdel);
+            //printf("get error packeage!!! retMsgLen:%d != msgLen:%d\n", retMsgLen, msgLen);
             break;
         }
-
+        handlePackage(this, &header, buf, msgLen);
         
     }
 }
@@ -147,7 +148,7 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
     int32 headlen = 0;
     PkgHeader header;
     int32 totalsize = 0;
-    char *buf = NULL;
+    //char *buf = NULL;
     switch (sessionType)
     {
     case 1: // client
@@ -161,11 +162,10 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
             header.length = headlen;
             header.reserved = 0;
             totalsize = headlen + sizeof(header);
-            buf = new char[totalsize];
+            char buf[totalsize];
             encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
-            send(buf, totalsize);
-            delete[] buf;
-            buf = NULL;
+            //send(buf, totalsize);
+            cout << "sessionType:client send len:" << endl;
             break;
         }
     case 2: // gateway
@@ -187,14 +187,12 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
             header.length = headlen;
             header.reserved = 0;
             totalsize = headlen + sizeof(header);
-            buf = new char[totalsize];
+            char buf[totalsize];
             encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
-            send(buf, totalsize);
-            delete[] buf;
-            buf = NULL;
+            //send(buf, totalsize);
+            cout << "strictclient got msg" << endl;
             break;
         }
-        break;
     default:
         break;
     }

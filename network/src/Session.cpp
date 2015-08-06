@@ -143,9 +143,9 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
     struct c_s_registersession *msg = (struct c_s_registersession*)(msgbuf + sizeof(MsgHeader));
     int16 sessionType = msg->sessionType;
     NetWorkObject *netobj = NULL;
-    struct s_c_registersession ret;
+    struct c_s_registersession ret;
     MsgHeader msghead;
-    int32 headlen = 0;
+    int32 msglen = 0;
     PkgHeader header;
     int32 totalsize = 0;
     //char *buf = NULL;
@@ -155,20 +155,21 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
         {
             netobj = new ClientSession;
             bindNetWorkObj(netobj);
-            ret.retcode = 0;
             msghead.sysId = 1;
             msghead.msgType = 1;
-            msg->sessionType = 6; // modify the typeof client
-            //headlen = sizeof(msghead)+msgsize;
-            header.length = msgsize;
+
+            ret.sessionType = 6; // modify the typeof client
+            msglen = sizeof(msghead) + sizeof(ret);
+
+            header.length = msglen;
             header.reserved = 0;
-            totalsize = msgsize + sizeof(header);
+
+            totalsize = msglen + sizeof(header);
             char buf[totalsize];
-            //encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
-            encodepkg(buf, &header, &msghead, (char *)&msgbuf + sizeof(msghead), (int32)sizeof(*msg));
+            encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
             send(buf, totalsize);// send back the same struct
 
-            cout << "sessionType:client send len:" << endl;
+            cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
             break;
         }
     case 2: // gateway

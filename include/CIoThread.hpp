@@ -62,6 +62,7 @@ public:
             }
             else
             {
+                usleep(100);
                 perror("epoll_wait error!!!");
                 printf("CIoThread error!!! epoll_wait return:%d\n", evCount);
             }

@@ -85,7 +85,23 @@ void TestClient::updateSessionList()
 
 void TestClient::removeDeadSession()
 {
-
+    if (m_activeSessionList.size() > 0)
+    {
+        CommonList<CSession>::iterator iter = m_activeSessionList.begin();
+        for (; iter != m_activeSessionList.end(); iter++)
+        {
+            CSession *session = *iter;
+            if (session->getStatus() == waitdel)
+            {
+                session->delEpollEvent(m_epollfd);
+                session->clear();
+                if (session->getType() == eClient)
+                {
+                    m_acceptor.sessionReUse(session);
+                }
+            }
+        }
+    }
 }
 
 void TestClient::handleActiveSession()
@@ -157,10 +173,10 @@ void TestClient::update()
             handleActiveSession();
             removeDeadSession();
             //m_nNextTick = getSysTimeMs() + m_nInterval*10000;
-            sleep(1);
+            usleep(100);
             cout << "into logic loop" << endl;
         }
-        sleep(2);
+        usleep(200);
     }
     
 }

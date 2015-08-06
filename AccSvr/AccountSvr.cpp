@@ -82,7 +82,23 @@ void AccountSvr::updateSessionList()
 
 void AccountSvr::removeDeadSession()
 {
-
+    if (m_activeSessionList.size() > 0)
+    {
+        CommonList<CSession>::iterator iter = m_activeSessionList.begin();
+        for (; iter != m_activeSessionList.end(); iter++)
+        {
+            CSession *session = *iter;
+            if (session->getStatus() == waitdel)
+            {
+                session->delEpollEvent(m_epollfd);
+                session->clear();
+                if (session->getType() == eClient)
+                {
+                    m_acceptor.sessionReUse(session);
+                }
+            }
+        }
+    }
 }
 
 void AccountSvr::handleActiveSession()
@@ -107,7 +123,7 @@ void AccountSvr::update()
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            m_nNextTick = getSysTimeMs() + 1*1000;//m_nInterval*100;
+            m_nNextTick = getSysTimeMs() + 1*100;//m_nInterval*100;
             //cout << "into logic loop" << endl;
         }
         usleep(100);

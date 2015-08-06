@@ -112,6 +112,7 @@ void* Acceptor::threadRoutine(void *args)
             }
             else
             {
+                usleep(100);
                 printf("accept error\n");
             }
         }

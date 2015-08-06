@@ -2,6 +2,7 @@
 
 ClientSession::ClientSession()
 {
+    m_llpkgCount = 0;
     //ctor
 }
 
@@ -19,8 +20,9 @@ int32 ClientSession::testRefectSvr(char *msgbuf, int32 bufsize)
     memset(buf, 0x00, sizeof(buf));
     snprintf(buf, (pmsg->strlen), "%s", (char *)pmsg + sizeof(pmsg->strlen));
     printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
+    cout << "=======================================================" << m_llpkgCount++ << endl;
     
-    return processSend(msgHead->sysId, msgHead->msgType, (char *)msgbuf, pkglen);
+    return processSend(msgHead->sysId, msgHead->msgType, (char *)msgbuf+sizeof(*msgHead), pkglen);
 }
 
 int32 ClientSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
@@ -35,14 +37,15 @@ int32 ClientSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
     return 0;
 }
 
-int32 ClientSession::processSend(uint16 sysid, uint16 msgid, char *msgbuf, int32 bufsize)
+int32 ClientSession::processSend(uint16 sysid, uint16 msgid, char *msg, int32 msgsize)
 {
     MsgHeader msgHead = {sysid, msgid};
     //c_s_refecttest *ret = (c_s_refecttest*)msgbuf;
     //int32 strlen = ret->strlen;
-    uint16 pkglen = sizeof(msgHead) + bufsize;
-    PkgHeader header = {pkglen, 0};
+    uint16 msglen = sizeof(msgHead) + msgsize;
+    uint16 pkglen = sizeof(msgHead) + msgsize + sizeof(PkgHeader);
+    PkgHeader header = {msglen, 0};
     char buf[pkglen];
-    encodepkg(buf, &header, &msgHead, msgbuf, bufsize);
+    encodepkg(buf, &header, &msgHead, msg, msgsize);
     return getSession()->send(buf, (int32)pkglen);
 }

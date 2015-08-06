@@ -7,7 +7,7 @@
 //c->s 1-1
 struct c_s_registersession
 {
-    int16 sessionType; // 1: client 2:gateway 3:other accsvr 4:gameserver 5:dbserver
+    int16 sessionType; // 1: client 2:gateway 3:other accsvr 4:gameserver 5:dbserver 6:strictClient
 };
 //s-c 1-1 return
 struct s_c_registersession

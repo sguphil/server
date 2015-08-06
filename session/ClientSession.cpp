@@ -20,7 +20,7 @@ int32 ClientSession::testRefectSvr(char *msgbuf, int32 bufsize)
     snprintf(buf, (pmsg->strlen), "%s", (char *)pmsg + sizeof(pmsg->strlen));
     printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
     
-    return processSend(msgHead->sysId, msgHead->msgType, (char *)pmsg, pkglen);
+    return processSend(msgHead->sysId, msgHead->msgType, (char *)msgbuf, pkglen);
 }
 
 int32 ClientSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
@@ -38,9 +38,9 @@ int32 ClientSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
 int32 ClientSession::processSend(uint16 sysid, uint16 msgid, char *msgbuf, int32 bufsize)
 {
     MsgHeader msgHead = {sysid, msgid};
-    c_s_refecttest *ret = (c_s_refecttest*)msgbuf;
-    int32 strlen = ret->strlen;
-    uint16 pkglen = sizeof(msgHead) + strlen + sizeof(ret->strlen);
+    //c_s_refecttest *ret = (c_s_refecttest*)msgbuf;
+    //int32 strlen = ret->strlen;
+    uint16 pkglen = sizeof(msgHead) + bufsize;
     PkgHeader header = {pkglen, 0};
     char buf[pkglen];
     encodepkg(buf, &header, &msgHead, msgbuf, bufsize);

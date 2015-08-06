@@ -158,13 +158,16 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
             ret.retcode = 0;
             msghead.sysId = 1;
             msghead.msgType = 1;
-            headlen = sizeof(msghead) + sizeof(ret);
-            header.length = headlen;
+            msg->sessionType = 6; // modify the typeof client
+            //headlen = sizeof(msghead)+msgsize;
+            header.length = msgsize;
             header.reserved = 0;
-            totalsize = headlen + sizeof(header);
+            totalsize = msgsize + sizeof(header);
             char buf[totalsize];
-            encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
-            //send(buf, totalsize);
+            //encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
+            encodepkg(buf, &header, &msghead, (char *)&msgbuf + sizeof(msghead), (int32)sizeof(*msg));
+            send(buf, totalsize);// send back the same struct
+
             cout << "sessionType:client send len:" << endl;
             break;
         }
@@ -178,18 +181,8 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
         break;
     case 6: // strict client for test
         {
-            netobj = new ClientSession;
+            netobj = new StrictClient;
             bindNetWorkObj(netobj);
-            ret.retcode = 0;
-            msghead.sysId = 1;
-            msghead.msgType = 1;
-            headlen = sizeof(msghead) + sizeof(ret);
-            header.length = headlen;
-            header.reserved = 0;
-            totalsize = headlen + sizeof(header);
-            char buf[totalsize];
-            encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
-            //send(buf, totalsize);
             cout << "strictclient got msg" << endl;
             break;
         }

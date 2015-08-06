@@ -8,6 +8,7 @@
 #include "../../include/packHeader.hpp"
 #include "../../include/packageStruct.hpp"
 #include "../../session/ClientSession.h"
+#include "../../session/StrictClient.h"
 #include "../../include/PackageHandler.hpp"
 
 class NetWorkObject;

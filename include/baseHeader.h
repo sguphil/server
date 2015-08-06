@@ -27,10 +27,12 @@
 
 enum SESSION_TYPE
 {
-    eClient = 0,
-    eGateWay = 1,
-    eGameServer = 2,
-    eStrictClient = 3,
+    eClient = 1,
+    eGateWay = 2,
+    eOtherSvr = 3,
+    eGameServer = 4,
+    eDBServer = 5,
+    eStrictClient = 6,
 };
 
 using namespace std;

@@ -8,10 +8,12 @@ AccountSvr::AccountSvr()
     m_ServerID = 1;
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
-    if (m_epollfd <= 0)
+    m_epollSendfd = epoll_create(10);
+
+    if (m_epollfd <= 0 || m_epollSendfd <= 0)
     {
         printf("AccountSvr create epollfd error!!!");
-        exit(1);
+        assert(false);
     }
 }
 
@@ -38,6 +40,9 @@ void AccountSvr::start()
         CIoThread *newThread = new CIoThread(this);
         newThread->start();
     }
+
+    CSendThread *sendThread = new CSendThread(this);
+    sendThread->start();
 }
 
 void AccountSvr::updateSessionList()
@@ -51,7 +56,8 @@ void AccountSvr::updateSessionList()
         newSession->setStatus(active);
         m_activeSessionList.push_back(newSession);
         //add to epoll event loop
-        addFdToEpoll(newSession);
+        addFdToRecvEpoll(newSession);
+        addFdToSendEpoll(newSession);
     }
 
     readList->clear();
@@ -74,7 +80,8 @@ void AccountSvr::updateSessionList()
             newSession->setStatus(active);
             m_activeSessionList.push_back(newSession);
             //add to epoll event loop
-            addFdToEpoll(newSession);
+            addFdToRecvEpoll(newSession);
+            addFdToSendEpoll(newSession);
         }
     }
 

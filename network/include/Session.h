@@ -24,6 +24,7 @@ public:
         m_recvBuff.getBuffQueuePtr()->clear();
         m_sendBuff.getBuffQueuePtr()->clear();
         delete m_pBindNetWorkObj;
+        close(m_socket); // close socket fd
         if (NULL != m_pBindNetWorkObj)
         {
             m_pBindNetWorkObj = NULL;
@@ -92,7 +93,7 @@ public:
     int32 sendToSocket(); //network layer call to send msg with socket
     int32 recv();  // network layer call to recv msg with socket
     void processPacket();  // application layer handle msg from buffqueue, into the logic modules
-    int32 modEpollEvent(int32 epollfd, bool addEvent=false);
+    int32 modEpollEvent(int32 epollfd, bool isRecv, bool addEvent=false);
     int32 delEpollEvent(int32 epollfd);
 
     inline void bindNetWorkObj(NetWorkObject *networkObj)

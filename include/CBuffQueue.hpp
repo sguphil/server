@@ -47,19 +47,21 @@ public:
         else
         {
             cout << "buffqueue init error" << endl;
-            exit(1);
+            assert(false);
         }
         return false;
     }
 
     int32 pushMsg(T *target, int32 size)
     {
+        AutoLock qlock(&m_mutex);
+        assert(calcFreeSpace() >= size);
         if (calcFreeSpace() < size)
         {
             printf("message too long...buffreesize:%d, targetsize:%d\n", calcFreeSpace(), size);
             return -1;
         }
-        AutoLock qlock(&m_mutex);
+        
         if (target != NULL)
         {
             if (m_pHead <= m_pTail)
@@ -90,11 +92,13 @@ public:
     int32 popMsg(T *des, int32 size)
     {
         AutoLock qlock(&m_mutex);
-        
+        assert(m_nLength >= size);
+
         if (m_nLength < size)
         {
             return -1;
         }
+
         if (NULL != des)
         {
             if (m_pHead < m_pTail)
@@ -103,20 +107,20 @@ public:
             }
             else
             {
-                int32 leftSize = m_nSize - (m_pHead - m_pData) / sizeof(T);
-                if (leftSize > size)
+                int32 leftSize = m_nSize - ((m_pHead - m_pData) / sizeof(T));
+                if (leftSize >= size)
                 {
                     memcpy(des, m_pHead, size * sizeof(T));
                 }
                 else
                 {
                     memcpy(des, m_pHead, leftSize * sizeof(T));
-                    memcpy(des, m_pData, (size - leftSize) * sizeof(T));
+                    memcpy(des+leftSize, m_pData, (size - leftSize) * sizeof(T));
                 }
             }
         }
         
-        int32 HeadSize = ((m_pHead + size - m_pData) / sizeof(T)) % m_nSize;
+        int32 HeadSize = ((m_pHead - m_pData) / sizeof(T) + size) % m_nSize;
         m_pHead = m_pData + HeadSize;
         m_nLength -= size;
         return size;
@@ -131,12 +135,12 @@ public:
 
     inline T* getReadPtr(int32 copySize) // if the backmsg is truncate into two parts, copy "copySize" memory from the head of buffqueue
     {
+        AutoLock qlock(&m_mutex);
         T *ret = m_pHead;
-        if (getReadableLen() < copySize)
+        /*if (copySize>0) // always do
         {
-            AutoLock qlock(&m_mutex);
-            memcpy(m_pData + m_nSize, m_pData, copySize);
-        }
+            memcpy(m_pData + m_nSize, m_pData, m_nSize-getBackSize());
+        }*/
         
         return ret;
     }
@@ -159,18 +163,18 @@ public:
         //m_mutex.lock();
         if (m_pHead == m_pTail)
         {
-            //m_mutex.unLock();
-            return (m_nLength > 0 ? m_nLength : 0);
+            int len = m_nSize - (m_pHead - m_pData) / sizeof(T);
+            return (m_nLength > 0 ? len : 0);
         }
-        else if (m_pHead < m_pTail)
+        elseif (m_pHead < m_pTail)
         {
             //m_mutex.unLock();
             return (m_pTail - m_pHead) / sizeof(T);
         } 
         else
         {
-            //m_mutex.unLock();
-            return m_nSize - (m_pHead - m_pData) / sizeof(T);  // just return backmem size
+            int len = m_nSize - (m_pHead - m_pData) / sizeof(T);
+            return len;  // just return backmem size
         }
     }
 
@@ -194,19 +198,73 @@ public:
     int32 recvFromSocket(int32 socket)
     {
         AutoLock qlock(&m_mutex);
-        int32 recvlen = ::recv(socket, (void*)m_pTail, getWriteableLen(), 0);
-        pushMsg(NULL, recvlen);
-        return recvlen;
+        int32 canRecvlen = getWriteableLen();
+        if (0 == canRecvlen)
+        {
+            return 0;
+        }
+
+        int32 recvlen = ::recv(socket, (void *)m_pTail, canRecvlen, 0);
+
+        if (0 == recvlen)
+        {
+            printf("socket!!!!!!!!recv return 0!!!!!!!!\n");
+            return -1;
+        }
+        else if (recvlen > 0)
+        {
+            pushMsg(NULL, recvlen);
+            return recvlen;
+        }
+        else
+        {
+            if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
+            {
+                printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
+                return 0;
+            }
+            else
+            {
+                return -1;
+            }
+        }
     }
 
     int32 sendToSocket(int32 socket)
     {
         AutoLock qlock(&m_mutex);
         int32 canSendlen = getReadableLen();
+        if (0 == canSendlen)
+        {
+            return 0;
+        }
+
         int32 sendlen = ::send(socket, getReadPtr(canSendlen), canSendlen, 0);
-        popMsg(NULL, sendlen);
-        return sendlen;
+
+        if (0 == sendlen)
+        {
+            printf("socket!!!!!!!!recv return 0!!!!!!!!\n");
+            return -1;
+        }
+        else if (sendlen > 0)
+        {
+            popMsg(NULL, sendlen);
+            return sendlen;
+        }
+        else
+        {
+            if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
+            {
+                printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
+                return 0;
+            }
+            else
+            {
+                return -1;
+            }
+        }
     }
+
     int32 getMsg(char* buf, int32 bufsize) //get without header
     {
         AutoLock qlock(&m_mutex);
@@ -222,12 +280,12 @@ public:
     int32 getHead(PkgHeader *header)
     {
         AutoLock qlock(&m_mutex);
-        if (sizeof(*header) > getBufLen())
+        if (sizeof(*header) >= getBufLen())
         {
             return -1;
         }
     
-        memcpy(header, getReadPtr(sizeof(*header)), sizeof(*header));
+        memcpy((char*)header, getReadPtr(sizeof(*header)), sizeof(*header));
         return sizeof(*header);
     }
 protected:

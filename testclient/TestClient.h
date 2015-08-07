@@ -7,7 +7,7 @@
 #include "../network/include/Connector.h"
 #include "../include/CIoThread.hpp"
 #include "../include/PackageHandler.hpp"
-
+#include "../include/CSendThread.hpp"
 
 class TestClient: public CServerBase, public base::Singleton<TestClient>
 {
@@ -29,17 +29,30 @@ public:
         return m_epollfd;
     }
 
+    inline int32 getSendEpollfd()
+    {
+        return m_epollSendfd;
+    }
+
     inline eSERVERTYPE getServerType()
     {
         return m_svrType;
     }
     
-    int32 addFdToEpoll(CSession* session)
+    int32 addFdToRecvEpoll(CSession* session)
     {
         struct epoll_event ev;
-        ev.events = EPOLLIN | EPOLLOUT | EPOLLONESHOT;
+        ev.events = EPOLLIN | EPOLLONESHOT; // default EPOLLIN event
         ev.data.ptr = session;
         return epoll_ctl(m_epollfd, EPOLL_CTL_ADD, session->getSocket(), &ev);
+    }
+
+    int32 addFdToSendEpoll(CSession* session)
+    {
+        struct epoll_event ev;
+        ev.events = EPOLLOUT | EPOLLONESHOT; // default EPOLLOUT event
+        ev.data.ptr = session;
+        return epoll_ctl(m_epollSendfd, EPOLL_CTL_ADD, session->getSocket(), &ev);
     }
 
     inline Connector* getConnector()
@@ -61,6 +74,7 @@ private:
     uint32 m_nNextTick;
     uint32 m_nInterval;
     int32 m_nSendTimes;
+    int32 m_epollSendfd;
 };
 
 #endif // __TESTCLIENT_H__

@@ -20,7 +20,7 @@ int32 ClientSession::testRefectSvr(char *msgbuf, int32 bufsize)
     memset(buf, 0x00, sizeof(buf));
     snprintf(buf, (pmsg->strlen), "%s", (char *)pmsg + sizeof(pmsg->strlen));
     printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
-    cout << "=======================================================" << m_llpkgCount++ << endl;
+    cout << "===========================================%d" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
     
     return processSend(msgHead->sysId, msgHead->msgType, (char *)msgbuf+sizeof(*msgHead), pkglen);
 }

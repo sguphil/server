@@ -17,6 +17,7 @@
 #include <errno.h>
 #include <time.h>
 #include <sys/timeb.h>
+#include <assert.h>
 
 //容器
 #include <map>

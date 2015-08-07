@@ -4,8 +4,8 @@ CSession::CSession()
 {
     m_socket = -1;
     m_boActive = false;
-    m_recvBuff.init(SESSIONBUFLEN, 4); //SESSIONBUFLEN);
-    m_sendBuff.init(SESSIONBUFLEN, 4); //SESSIONBUFLEN);
+    m_recvBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
+    m_sendBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
 }
 
 CSession::~CSession()
@@ -26,36 +26,22 @@ int32 CSession::recv()
     }
 
     int recvlen = m_recvBuff.getBuffQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
+    return recvlen;
+}
 
-    if (0 == recvlen)
+int32 CSession::modEpollEvent(int32 epollfd, bool isRecv, bool addEvent)
+{
+    struct epoll_event chkEvent;
+    chkEvent.data.ptr = this;
+    
+    if (isRecv)
     {
-        printf("socket!!!!!!!!recv return 0!!!!!!!!\n");
-        return -1;
-    }
-    else if (recvlen > 0)
-    {
-        //m_recvBuff.getBuffQueuePtr()->pushMsg(NULL, recvlen);
-        return recvlen;
+        chkEvent.events = EPOLLIN | EPOLLONESHOT;
     }
     else
     {
-        if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
-        {
-            printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
-            return 0;
-        }
-        else
-        {
-            return -1;
-        }
+        chkEvent.events = EPOLLOUT | EPOLLONESHOT;
     }
-}
-
-int32 CSession::modEpollEvent(int32 epollfd, bool addEvent)
-{
-    struct epoll_event chkEvent;
-    chkEvent.events = EPOLLIN | EPOLLOUT | EPOLLONESHOT;
-    chkEvent.data.ptr = this;
 
     if (addEvent)
     {
@@ -69,9 +55,7 @@ int32 CSession::modEpollEvent(int32 epollfd, bool addEvent)
 
 int32 CSession::delEpollEvent(int32 epollfd)
 {
-    struct epoll_event chkEvent;
-    chkEvent.events = EPOLLIN | EPOLLOUT | EPOLLONESHOT;
-    return epoll_ctl(epollfd, EPOLL_CTL_DEL, m_socket, &chkEvent);
+    return epoll_ctl(epollfd, EPOLL_CTL_DEL, m_socket, NULL);
 }
 
 int32 CSession::sendToSocket()
@@ -83,36 +67,14 @@ int32 CSession::sendToSocket()
     }
 
     int32 sendLen = m_sendBuff.getBuffQueuePtr()->sendToSocket(m_socket);
-
-    if (0 == sendLen)
-    {
-        printf("socket!!!!!!!!send return 0!!!!!!!!\n");
-        return -1;
-    }
-    else if (sendLen > 0)
-    {
-        //m_sendBuff.getBuffQueuePtr()->popMsg(NULL, sendLen);
-        return sendLen;
-    }
-    else
-    {
-        if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
-        {
-            printf("socket send!!!!!!!!EAGAIN!!!!!!!!\n");
-            return 0;
-        }
-        else
-        {
-            return -1;
-        }
-    }
+    return sendLen;
 }
 
 void CSession::processPacket()
 {
     PkgHeader header;
-
-    while (m_recvBuff.getBuffQueuePtr()->getBufLen() > 0)
+    int handlePkgCount = 0;
+    while (m_recvBuff.getBuffQueuePtr()->getBufLen() > (int32)sizeof(header))
     {
         int32 retHeadLen = m_recvBuff.getHead(&header);
         if (retHeadLen != sizeof(header))
@@ -122,8 +84,8 @@ void CSession::processPacket()
         int32 msgLen = header.length;
         if (msgLen<=0 || msgLen > MAXPKGLEN)
         {
-            printf("file:%s get error packeage!!! msglen>MAXPKGLEN\n", __FILE__);
-            //setStatus(waitdel);
+            printf("FILE:%s LINE:%d get error packeage!!! msglen:%d>MAXPKGLEN:%d\n", __FILE__, __LINE__, msgLen, MAXPKGLEN);
+            setStatus(waitdel);
             break;
         }
         char buf[msgLen];
@@ -131,10 +93,14 @@ void CSession::processPacket()
         if (retMsgLen != msgLen)
         {
             printf("get error packeage!!! retMsgLen:%d != msgLen:%d\n", retMsgLen, msgLen);
+            setStatus(waitdel);
             break;
         }
         handlePackage(this, &header, buf, msgLen);
-        
+        if (handlePkgCount++ > 30) // handle 30 packages each loop
+        {
+            break;
+        }
     }
 }
 

@@ -24,10 +24,11 @@ public:
         CServerBase *svr = threadself->getServerPtr();
         struct epoll_event epEvent;
         cout << "CIoThread start threadRoutine" << endl;
+        bool isRecvEvent = true;
         while (true)
         {
             //cout << "CIoThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
-            int32 evCount = epoll_wait(svr->getIoEpollfd(),&epEvent, 1, -1);//infinite wait just one event to one sockfd
+            int32 evCount = epoll_wait(svr->getIoEpollfd(),&epEvent, 1, 100);//100ms wait timeout infinite wait just one event to one sockfd
             if (evCount > 0)
             {
                 CSession *session =  (CSession*)epEvent.data.ptr;
@@ -35,33 +36,36 @@ public:
                 if (epEvent.events & EPOLLIN) // recv msg
                 {
                     oplen = session->recv();
-                }
-                else if (epEvent.events & EPOLLOUT) // send msg to client
-                {
-                    oplen = session->sendToSocket();
-
-                }
-
-                if (oplen >= 0) // normal 
-                {
-                    if (oplen > 0)
+                    isRecvEvent = true;
+                    if (oplen >= 0) // normal 
                     {
-                        cout << "CIoThread=======recvlen:" << oplen << endl;
+                        if (oplen > 0)
+                        {
+                            cout << "CIoThread=======recvlen:" << oplen << endl;
+                        }
+                        session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
+                        if (0 == oplen)
+                        {
+                            usleep(100);
+                        }
                     }
-                    session->modEpollEvent(svr->getIoEpollfd());
-                    if (0 == oplen)
+                    else // socket error wait to free session
                     {
-                        usleep(100);
+                        session->delEpollEvent(svr->getIoEpollfd());
+                        session->setStatus(waitdel);
                     }
-                }
-                else // socket error wait to free session
-                {
-                    session->delEpollEvent(svr->getIoEpollfd());
-                    session->setStatus(waitdel);
                 }
             }
-            else
+            else if (0 == evCount) //epoll timeout
             {
+                // handle timeout??
+            }
+            else // ret < 0 error or interrupt
+            {
+                if (evCount == -1 && errno == EINTR)
+                {
+                    continue;
+                }
                 usleep(100);
                 perror("epoll_wait error!!!");
                 printf("CIoThread error!!! epoll_wait return:%d\n", evCount);

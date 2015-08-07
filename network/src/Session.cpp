@@ -92,8 +92,8 @@ void CSession::processPacket()
         int32 retMsgLen = m_recvBuff.getMsg(buf, msgLen);
         if (retMsgLen != msgLen)
         {
-            printf("get error packeage!!! retMsgLen:%d != msgLen:%d\n", retMsgLen, msgLen);
-            setStatus(waitdel);
+            printf("get error packeage!!! retMsgLen:%d != msgLen:%d alllen: %d continue\n", retMsgLen, msgLen, m_recvBuff.getBuffQueuePtr()->getBufLen());
+            //setStatus(waitdel);
             break;
         }
         handlePackage(this, &header, buf, msgLen);

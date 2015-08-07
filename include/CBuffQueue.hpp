@@ -55,10 +55,12 @@ public:
     int32 pushMsg(T *target, int32 size)
     {
         AutoLock qlock(&m_mutex);
-        assert(calcFreeSpace() >= size);
+        //assert(calcFreeSpace() >= size);
         if (calcFreeSpace() < size)
         {
-            printf("message too long...buffreesize:%d, targetsize:%d\n", calcFreeSpace(), size);
+            
+            printf("FILE:%s LINE:%d FUNC:%s m_nLength:%d < size:%d lost pakage!!!!need to add solution!!!",__FILE__, __LINE__, __FUNCTION__, calcFreeSpace(), size);
+            //assert(calcFreeSpace() >= size);
             return -1;
         }
         
@@ -92,10 +94,12 @@ public:
     int32 popMsg(T *des, int32 size)
     {
         AutoLock qlock(&m_mutex);
-        assert(m_nLength >= size);
+        //assert(m_nLength >= size);
 
         if (m_nLength < size)
         {
+            printf("FILE:%s LINE:%d FUNC:%s m_nLength:%d < size:%d",__FILE__, __LINE__, __FUNCTION__, m_nLength, size);
+            assert(m_nLength >= size);
             return -1;
         }
 
@@ -137,10 +141,10 @@ public:
     {
         AutoLock qlock(&m_mutex);
         T *ret = m_pHead;
-        /*if (copySize>0) // always do
+        if (copySize>0) // always do
         {
-            memcpy(m_pData + m_nSize, m_pData, m_nSize-getBackSize());
-        }*/
+            memcpy(m_pData + m_nSize, m_pData, copySize);
+        }
         
         return ret;
     }
@@ -166,7 +170,7 @@ public:
             int len = m_nSize - (m_pHead - m_pData) / sizeof(T);
             return (m_nLength > 0 ? len : 0);
         }
-        elseif (m_pHead < m_pTail)
+        else if (m_pHead < m_pTail)
         {
             //m_mutex.unLock();
             return (m_pTail - m_pHead) / sizeof(T);
@@ -185,7 +189,7 @@ public:
         {
             return (m_nLength > 0 ? 0 : m_nSize - (m_pTail - m_pData) / sizeof(T));
         }
-        else if (m_pHead < m_pTail)
+        else if (m_pHead > m_pTail)
         {
             return (m_pTail - m_pHead) / sizeof(T);
         }
@@ -209,6 +213,7 @@ public:
         if (0 == recvlen)
         {
             printf("socket!!!!!!!!recv return 0!!!!!!!!\n");
+            assert(false);
             return -1;
         }
         else if (recvlen > 0)
@@ -226,6 +231,7 @@ public:
             else
             {
                 return -1;
+                assert(false);
             }
         }
     }
@@ -269,11 +275,13 @@ public:
     {
         AutoLock qlock(&m_mutex);
         PkgHeader header;
-        popMsg((char *)&header, sizeof(header));
-        if (header.length > getBufLen())
+        if ((bufsize + sizeof(header)) > getBufLen()) //because header is not pop, so add the head to calc
         {
             return -1;
         }
+       
+        popMsg((char *)&header, sizeof(header));
+        
         return popMsg(buf, bufsize);
     }
 

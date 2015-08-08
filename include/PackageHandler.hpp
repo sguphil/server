@@ -19,7 +19,7 @@ enum msgid
 };
 
 void handlePackage(CSession *pSession, PkgHeader *header, char *msgbuf, int32 msgsize);
-
+void handlePackage(CSession *pSession, PkgHeader *header, MsgHeader *msgHead, char *msgbuf, int32 msgsize);
 void decodeMsgHead(MsgHeader &msghead, char *buf, int32 buffsize);
 
 void encodepkg(char *buf, PkgHeader *head, MsgHeader *msgHead, char *msgbuf, int32 msgbufsize);

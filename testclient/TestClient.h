@@ -75,6 +75,7 @@ private:
     uint32 m_nInterval;
     int32 m_nSendTimes;
     int32 m_epollSendfd;
+    bool m_bAlreadySend;
 };
 
 #endif // __TESTCLIENT_H__

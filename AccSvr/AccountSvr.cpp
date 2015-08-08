@@ -35,7 +35,7 @@ void AccountSvr::start()
     m_acceptor.startListen("127.0.0.1", 9997);
     m_acceptor.start();
 
-    for (int i = 0; i < 1;i++)
+    for (int i = 0; i < 3;i++)
     {
         CIoThread *newThread = new CIoThread(this);
         newThread->start();
@@ -91,18 +91,25 @@ void AccountSvr::removeDeadSession()
 {
     if (m_activeSessionList.size() > 0)
     {
-        CommonList<CSession>::iterator iter = m_activeSessionList.begin();
-        for (; iter != m_activeSessionList.end(); iter++)
+        CommonList<CSession>::iterator iter;
+        for (iter = m_activeSessionList.begin(); iter != m_activeSessionList.end();)
         {
             CSession *session = *iter;
             if (session->getStatus() == waitdel)
             {
                 session->delEpollEvent(m_epollfd);
+                session->delEpollEvent(m_epollSendfd);
                 session->clear();
+                m_activeSessionList.erase(iter++);
+                cout << "remove session===========" << endl;
                 if (session->getType() == eClient)
                 {
                     m_acceptor.sessionReUse(session);
                 }
+            }
+            else
+            {
+                iter++;
             }
         }
     }
@@ -130,9 +137,9 @@ void AccountSvr::update()
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            m_nNextTick = getSysTimeMs() + 1*100;//m_nInterval*100;
+            m_nNextTick = getSysTimeMs() + m_nInterval;// 100 ms
             //cout << "into logic loop" << endl;
         }
-        usleep(100);
+        usleep(1000);
     }
 }

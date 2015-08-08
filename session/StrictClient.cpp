@@ -1,6 +1,6 @@
 #include "ClientSession.h"
 
-StrictClient::StrictClient()
+StrictClient::StrictClient():m_llpkgCount(0)
 {
     //ctor
 }
@@ -23,6 +23,19 @@ int32 StrictClient::testRefectSvr(char *msgbuf, int32 bufsize)
     return 0; //processSend(msgHead->sysId, msgHead->msgType, (char *)msgbuf, pkglen);
 }
 
+int32 StrictClient::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsize)
+{
+    struct c_s_refecttest *pmsg = (struct c_s_refecttest *)(msgbuf);
+    int32 pkglen = bufsize;
+    char buf[(pmsg->strlen)+1];
+    memset(buf, 0x00, sizeof(buf));
+    snprintf(buf, (pmsg->strlen), "%s", (char *)pmsg + sizeof(pmsg->strlen));
+    printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
+    cout << "===========================================%d" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
+    
+    return 0;//processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
+}
+
 int32 StrictClient::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
 {
     MsgHeader *msghead = (MsgHeader *)msgbuf;
@@ -35,6 +48,17 @@ int32 StrictClient::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
     return 0;
 }
 
+int32 StrictClient::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int32 buffsize)
+{
+    int16 sysid = msghead->sysId;
+    int16 msgtype = msghead->msgType;
+    if (sysid == 1 and msgtype == 2)
+    {
+        testRefectSvr(msghead, msgbuf, buffsize);
+    }
+    return 0;
+}
+
 int32 StrictClient::processSend(uint16 sysid, uint16 msgid, char *msgbuf, int32 bufsize)
 {
     MsgHeader msgHead = {sysid, msgid};
@@ -42,7 +66,8 @@ int32 StrictClient::processSend(uint16 sysid, uint16 msgid, char *msgbuf, int32 
     //int32 strlen = ret->strlen;
     uint16 pkglen = sizeof(msgHead) + bufsize;
     PkgHeader header = {pkglen, 0};
-    char buf[pkglen];
+    uint16 allPkgLen = pkglen + sizeof(header);
+    char buf[allPkgLen];
     encodepkg(buf, &header, &msgHead, msgbuf, bufsize);
-    return getSession()->send(buf, (int32)pkglen);
+    return getSession()->send(buf, (int32)allPkgLen);
 }

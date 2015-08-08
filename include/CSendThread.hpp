@@ -28,7 +28,7 @@ public:
         while (true)
         {
             //cout << "CSendThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
-            int32 evCount = epoll_wait(svr->getSendEpollfd(),&epEvent, 1, 100);//100ms wait timeout infinite wait just one event to one sockfd
+            int32 evCount = epoll_wait(svr->getSendEpollfd(),&epEvent, 1, -1);//100ms wait timeout infinite wait just one event to one sockfd
             if (evCount > 0)
             {
                 CSession *session =  (CSession*)epEvent.data.ptr;
@@ -42,12 +42,12 @@ public:
                     {
                         if (oplen > 0)
                         {
-                            cout << "CSendThread=======recvlen:" << oplen << endl;
+                            cout << "CSendThread=======sendlen:" << oplen << endl;
                         }
                         session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);
                         if (0 == oplen)
                         {
-                            usleep(100);
+                            usleep(10000);
                         }
                     }
                     else // socket error wait to free session
@@ -67,7 +67,7 @@ public:
                 {
                     continue;
                 }
-                usleep(100);
+                usleep(10000);
                 perror("epoll_wait error!!!");
                 printf("CSendThread error!!! epoll_wait return:%d\n", evCount);
             }

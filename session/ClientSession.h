@@ -14,8 +14,10 @@ class ClientSession : public NetWorkObject
         ClientSession();
         virtual ~ClientSession();
         int32 onRecv(PkgHeader *header, char *msgbuf, int32 buffsize);
+        int32 onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int32 buffsize);
         int32 processSend(uint16 sysid, uint16 msgid, char *msg, int32 msgsize);
         int32 testRefectSvr(char *msgbuf, int32 bufsize);
+        int32 testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsize);
     protected:
     private:
         uint64 m_llpkgCount;

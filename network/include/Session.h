@@ -10,6 +10,7 @@
 #include "../../session/ClientSession.h"
 #include "../../session/StrictClient.h"
 #include "../../include/PackageHandler.hpp"
+#include "../../include/CPackageFetch.hpp"
 
 class NetWorkObject;
 //class ClientSession;
@@ -118,6 +119,7 @@ public:
     }
 
     void defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 msgsize); // first package to register
+    void defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize);
 
     inline CSendBuf* getSendbufPtr()
     {

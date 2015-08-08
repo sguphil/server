@@ -10,6 +10,7 @@ TestClient::TestClient()
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
+    m_bAlreadySend = false;
     if (m_epollfd <= 0 || m_epollSendfd <= 0)
     {
         printf("TestClient create epollfd error!!!");
@@ -93,18 +94,25 @@ void TestClient::removeDeadSession()
 {
     if (m_activeSessionList.size() > 0)
     {
-        CommonList<CSession>::iterator iter = m_activeSessionList.begin();
-        for (; iter != m_activeSessionList.end(); iter++)
+        CommonList<CSession>::iterator iter;
+        for (iter = m_activeSessionList.begin(); iter != m_activeSessionList.end();)
         {
             CSession *session = *iter;
             if (session->getStatus() == waitdel)
             {
                 session->delEpollEvent(m_epollfd);
+                session->delEpollEvent(m_epollSendfd);
                 session->clear();
+                m_activeSessionList.erase(iter++);
+                cout << "remove session===========" << endl;
                 if (session->getType() == eClient)
                 {
                     m_acceptor.sessionReUse(session);
                 }
+            }
+            else
+            {
+                iter++;
             }
         }
 
@@ -151,8 +159,9 @@ void TestClient::handleActiveSession()
                     cout << "ready to send msg:" << totallen << endl;
                     session->setStatus(registered);
                 }
-                else
+                else //if (!m_bAlreadySend)
                 {
+                    m_bAlreadySend = true;
                     msghead.sysId = 1;
                     msghead.msgType = 2;
                     char *sendStr = (char*)"hello ulserver";
@@ -167,8 +176,17 @@ void TestClient::handleActiveSession()
                     memcpy(buf+sizeof(header), (char *)&msghead, sizeof(msghead));
                     memcpy(buf+sizeof(header)+sizeof(msghead), (char *)&(testStr.strlen), sizeof(testStr.strlen));
                     memcpy(buf+sizeof(header)+sizeof(msghead)+sizeof(testStr.strlen), (char *)sendStr, testStr.strlen);
-                    session->send(buf, sendlen);
-                    cout << "2ready to send msg:" << sendlen << endl;
+                    if (session->send(buf, sendlen)< 0)
+                    {
+                        cout << "send buff is full!!!! stop!!!" << endl;
+                        session->setStatus(waitdel);
+                        assert(false);
+                    }
+                    else
+                    {
+                        cout << "2ready to send msg:" << sendlen << endl;
+                    }
+                    
                 }
             }
         }
@@ -184,11 +202,11 @@ void TestClient::update()
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            //m_nNextTick = getSysTimeMs() + m_nInterval*10000;
-            usleep(100);
+            //m_nNextTick = getSysTimeMs() + m_nInterval*3000; //300ms
+            usleep(5*1000);
             cout << "into logic loop" << endl;
         }
-        usleep(200);
+        //usleep(800*1000);
     }
     
 }

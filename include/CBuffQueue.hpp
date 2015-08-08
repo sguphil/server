@@ -3,6 +3,7 @@
 #include "baseHeader.h"
 #include "../Thread/Mutex.h"
 #include "../include/packHeader.hpp"
+#include "./CPackageFetch.hpp"
 
 template<typename T>
 class CBuffQueue
@@ -34,7 +35,7 @@ public:
 
     bool init(int32 size, int32 extraSize)
     {
-        m_pData = new T[size + extraSize];
+        m_pData = new T[size*sizeof(T) + extraSize*sizeof(T)];
         if (NULL != m_pData)
         {
             m_pHead = m_pData;
@@ -86,7 +87,7 @@ public:
         }
         
         m_pTail += size * sizeof(T);
-        m_pTail = m_pData + ((m_pTail - m_pData) % m_nSize);
+        m_pTail = m_pData + (((m_pTail - m_pData)/sizeof(T)) % m_nSize);
         m_nLength += size;
         return size;
     }
@@ -141,7 +142,7 @@ public:
     {
         AutoLock qlock(&m_mutex);
         T *ret = m_pHead;
-        if (copySize>0) // always do
+        if (copySize>0 && m_pHead > m_pTail) // always do
         {
             memcpy(m_pData + m_nSize, m_pData, copySize);
         }
@@ -191,7 +192,7 @@ public:
         }
         else if (m_pHead > m_pTail)
         {
-            return (m_pTail - m_pHead) / sizeof(T);
+            return (m_pHead - m_pTail) / sizeof(T);
         }
         else
         {
@@ -213,7 +214,6 @@ public:
         if (0 == recvlen)
         {
             printf("socket!!!!!!!!recv return 0!!!!!!!!\n");
-            assert(false);
             return -1;
         }
         else if (recvlen > 0)
@@ -270,7 +270,7 @@ public:
             }
         }
     }
-
+private:
     int32 getMsg(char* buf, int32 bufsize) //get without header
     {
         AutoLock qlock(&m_mutex);
@@ -280,8 +280,8 @@ public:
             return -1;
         }
        
-        popMsg((char *)&header, sizeof(header));
-        
+        //popMsg((char *)&header, sizeof(header));
+        popMsg(NULL, sizeof(header));
         return popMsg(buf, bufsize);
     }
 
@@ -295,6 +295,32 @@ public:
     
         memcpy((char*)header, getReadPtr(sizeof(*header)), sizeof(*header));
         return sizeof(*header);
+    }
+public:
+    int32 fetchFullPkg(CpackageFetch& pkgret)
+    {
+        AutoLock qlock(&m_mutex);
+        if (getHead(&pkgret.m_pkgHeader) > 0) //pkghead len enouth
+        {
+            int32 allMsglen = pkgret.m_pkgHeader.length;
+            char buf[allMsglen];
+            if (getMsg(buf, allMsglen) > 0)
+            {
+                MsgHeader *msghead = (MsgHeader*)buf;
+                pkgret.m_msgHeader.sysId = msghead->sysId;
+                pkgret.m_msgHeader.msgType = msghead->msgType;
+                pkgret.m_nMsglen = allMsglen-sizeof(*msghead);
+                printf("msglen is================%d\n", allMsglen);
+                assert(pkgret.m_nMsglen > 0);
+                pkgret.setMsgBuff(buf+sizeof(*msghead), pkgret.m_nMsglen);
+                return sizeof(pkgret);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        return -1;
     }
 protected:
     CBuffQueue(CBuffQueue &queue)

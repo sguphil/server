@@ -28,9 +28,9 @@ public:
         return size < m_buffQueue.getBufLen();
     }
 
-    int32 getHead(PkgHeader *header);
+    //int32 getHead(PkgHeader *header);
     
-    int32 getMsg(char *buf, int32 bufsize);
+    //int32 getMsg(char *buf, int32 bufsize);
 
     inline CBuffQueue<char>* getBuffQueuePtr()
     {

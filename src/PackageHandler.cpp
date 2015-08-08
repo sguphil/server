@@ -22,6 +22,24 @@ void handlePackage(CSession *pSession, PkgHeader *header, char *msgbuf, int32 ms
     networkObj->onRecv(header, msgbuf, msgsize);
 }
 
+void handlePackage(CSession *pSession, PkgHeader *header, MsgHeader *msgHead, char *msgbuf, int32 msgsize)
+{   
+    NetWorkObject *networkObj = pSession->getNetWorkObject();
+    if (NULL == networkObj)
+    {
+        if (msgHead->sysId == SYS_SESSION_REGISTER && msgHead->msgType == C_S_SISSION_REGISTER)
+        {
+            pSession->defaultMsgHandle(msgHead, msgbuf, msgsize);
+            return;
+        }
+
+        printf("session does not bind a networkObject!!!!!disconnect\n");
+        pSession->setStatus(waitdel);
+        return;
+    }
+    networkObj->onRecv(header, msgHead, msgbuf, msgsize);
+}
+
 void decodeMsgHead(MsgHeader &msghead, char *buf, int32 buffsize)
 {
     memcpy(&msghead, buf, sizeof(msghead));

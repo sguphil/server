@@ -18,6 +18,7 @@
 #include <time.h>
 #include <sys/timeb.h>
 #include <assert.h>
+#include <signal.h>
 
 //容器
 #include <map>

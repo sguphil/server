@@ -14,6 +14,7 @@ extern void printItem(TestAccess *accessObj);
 
 int main()
 {
+    signal(SIGPIPE, SIG_IGN);
     AccountSvr* accountSvr = AccountSvr::GetInstance();
     cout << "Hello world! ServerID is:" << accountSvr->getServerID() << endl;
 

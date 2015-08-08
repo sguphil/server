@@ -179,8 +179,9 @@ void TestClient::handleActiveSession()
                     if (session->send(buf, sendlen)< 0)
                     {
                         cout << "send buff is full!!!! stop!!!" << endl;
-                        session->setStatus(waitdel);
-                        assert(false);
+                        //session->setStatus(waitdel);
+                        //assert(false);
+                        usleep(1000);
                     }
                     else
                     {
@@ -203,7 +204,7 @@ void TestClient::update()
             handleActiveSession();
             removeDeadSession();
             //m_nNextTick = getSysTimeMs() + m_nInterval*3000; //300ms
-            usleep(5*1000);
+            usleep(100);
             cout << "into logic loop" << endl;
         }
         //usleep(800*1000);

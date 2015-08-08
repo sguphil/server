@@ -33,7 +33,7 @@ int32 StrictClient::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsiz
     printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
     cout << "===========================================%d" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
     
-    return 0;//processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
+    return processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
 }
 
 int32 StrictClient::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)

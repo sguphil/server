@@ -14,10 +14,11 @@ extern void printItem(TestAccess *accessObj);
 
 int main()
 {
+    signal(SIGPIPE, SIG_IGN);
     TestClient* testClient = TestClient::GetInstance();
     cout << "Hello world! ServerID is:" << testClient->getServerID() << endl;
 
-
+    
     CBaseFactory<CPlayer> playerFactory;
     playerFactory.init(10, 10);
     CPlayer *player = playerFactory.allocate();

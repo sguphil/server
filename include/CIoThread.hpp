@@ -43,7 +43,11 @@ public:
                         {
                             cout << "CIoThread=======recvlen:" << oplen << endl;
                         }
-                        session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
+                        if (svr->getIoThreadNum() > 1)
+                        {
+                            session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
+                        }
+                        
                         if (0 == oplen)
                         {
                             usleep(10000);

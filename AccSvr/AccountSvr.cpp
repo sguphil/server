@@ -6,6 +6,7 @@ AccountSvr::AccountSvr()
     m_nCycleTick = getSysTimeMs();
     m_nNextTick = m_nCycleTick + m_nInterval;
     m_ServerID = 1;
+    m_nIoThreadNum = 1;
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
@@ -35,7 +36,7 @@ void AccountSvr::start()
     m_acceptor.startListen("127.0.0.1", 9997);
     m_acceptor.start();
 
-    for (int i = 0; i < 3;i++)
+    for (int i = 0; i < 1/*m_nIoThreadNum*/;i++)
     {
         CIoThread *newThread = new CIoThread(this);
         newThread->start();

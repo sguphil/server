@@ -7,6 +7,7 @@ TestClient::TestClient()
     m_nNextTick = m_nCycleTick + m_nInterval;
     m_nSendTimes = 0;
     m_ServerID = 1;
+    m_nIoThreadNum = 1;
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
@@ -38,7 +39,7 @@ void TestClient::start()
     m_connector.start();
     m_connector.connect("127.0.0.1", 9997, eStrictClient);
 
-    for (int i = 0; i < 1;i++)
+    for (int i = 0; i < 1/*m_nIoThreadNum*/;i++)
     {
         CIoThread *newThread = new CIoThread(this);
         newThread->start();

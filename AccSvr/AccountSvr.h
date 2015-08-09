@@ -43,6 +43,10 @@ public:
     {
         struct epoll_event ev;
         ev.events = EPOLLIN | EPOLLONESHOT; // default EPOLLIN event
+        if (m_nIoThreadNum == 1)
+        {
+            ev.events = EPOLLIN;
+        }
         ev.data.ptr = session;
         return epoll_ctl(m_epollfd, EPOLL_CTL_ADD, session->getSocket(), &ev);
     }
@@ -50,7 +54,7 @@ public:
     int32 addFdToSendEpoll(CSession* session)
     {
         struct epoll_event ev;
-        ev.events = EPOLLOUT | EPOLLONESHOT; // default EPOLLOUT event
+        ev.events = EPOLLOUT;// | EPOLLONESHOT; // default EPOLLOUT event , signal thread without EPOLLONESHOT
         ev.data.ptr = session;
         return epoll_ctl(m_epollSendfd, EPOLL_CTL_ADD, session->getSocket(), &ev);
     }
@@ -59,6 +63,17 @@ public:
     {
         return &m_connector;
     }
+
+    inline int32 getIoThreadNum()
+    {
+        return m_nIoThreadNum;
+    }
+
+    inline void setIoThreadNum(int32 threadNum)
+    {
+        m_nIoThreadNum = threadNum;
+    }
+
     uint64 getSysTimeMs();
 private:
     Acceptor m_acceptor;
@@ -74,6 +89,7 @@ private:
     uint32 m_nNextTick;
     uint32 m_nInterval;
     int32 m_epollSendfd;
+    int32 m_nIoThreadNum;
 };
 
 #endif // ACCOUNTSVR_H

@@ -24,7 +24,7 @@ public:
         CServerBase *svr = threadself->getServerPtr();
         struct epoll_event epEvent;
         cout << "CSendThread start threadRoutine" << endl;
-        bool isRecvEvent = true;
+        //bool isRecvEvent = true;
         while (true)
         {
             //cout << "CSendThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
@@ -36,7 +36,7 @@ public:
                 if (epEvent.events & EPOLLOUT) // send msg to client
                 {
                     oplen = session->sendToSocket();
-                    isRecvEvent = false;
+                    //isRecvEvent = false;
                 
                     if (oplen >= 0) // normal 
                     {
@@ -44,7 +44,7 @@ public:
                         {
                             cout << "CSendThread=======sendlen:" << oplen << endl;
                         }
-                        session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);
+                        //session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);//single thread do not need epolloneshoot
                         if (0 == oplen)
                         {
                             usleep(10000);

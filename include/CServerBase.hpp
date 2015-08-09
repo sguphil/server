@@ -16,6 +16,7 @@ public:
     virtual int32 getIoEpollfd() = 0;
     virtual int32 getSendEpollfd() = 0;
     virtual int32 getServerID() = 0;
+    virtual int32 getIoThreadNum() = 0;
     virtual eSERVERTYPE getServerType() = 0;
 };
 #endif 

@@ -43,10 +43,11 @@ public:
                         
                         if (oplen >= 0) // normal 
                         {
-                            if (oplen > 0)
+                            /*if (oplen > 0)
                             {
                                 cout << "CSendThread=======sendlen:" << oplen << endl;
-                            }
+                            }*/
+
                             //session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);//single thread do not need epolloneshoot
                             //if (0 == oplen)
                             //{

@@ -1,11 +1,18 @@
 #include "../include/Connector.h"
 
+static sem_t m_waitSem;
+
 Connector::Connector()
 {
     m_sessionFactory.init(2,2);
     pthread_mutex_init(&m_mutex, NULL);
     pthread_cond_init(&m_waitCond, NULL);
-    sem_init(&m_waitSem, 0, 0);
+    printf("Connector constructer\n");
+    if (sem_init(&m_waitSem, 0, 0) < 0)
+    {
+        perror("sem_init error");
+        assert(false);
+    }
 }
 
 Connector::~Connector()
@@ -17,11 +24,15 @@ Connector::~Connector()
 
 void Connector::addToWaitList(CSession *session)
 {
-    //pthread_mutex_lock(&m_mutex);
+    pthread_mutex_lock(&m_mutex);
     m_waitList.push_back(session);
-    sem_post(&m_waitSem);
+    if (sem_post(&m_waitSem) < 0)
+    {
+        perror("sem_post error");
+        assert(false);
+    }
     //pthread_cond_signal(&m_waitCond);
-    //pthread_mutex_unlock(&m_mutex);
+    pthread_mutex_unlock(&m_mutex);
 }
 
 bool Connector::connect(const char *szIp, Int32 Port, SESSION_TYPE type)
@@ -85,8 +96,18 @@ void* Connector::threadRoutine(void *args)
             cout << "connect thread=======list empty" << endl;
             pthread_cond_wait(&m_waitCond, &m_mutex);
         }*/
-        sem_wait(&m_waitSem);
+        if (sem_wait(&m_waitSem) < 0)
+        {
+            perror("sem_wait error");
+            if (errno )
+            {
+                printf("sem_wait errno:%d == EINTR", errno);
+            }
+            assert(false);
+        }
+
         cout << "connect thread=======" << endl;
+        pthread_mutex_lock(&m_mutex);
         while(!m_waitList.empty())
         {
             CSession *pSession = m_waitList.front();
@@ -108,7 +129,7 @@ void* Connector::threadRoutine(void *args)
             }
         }
 
-        //pthread_mutex_unlock(&m_mutex);
+        pthread_mutex_unlock(&m_mutex);
     }
     return NULL;
 }

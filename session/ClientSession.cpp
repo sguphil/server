@@ -3,6 +3,8 @@
 ClientSession::ClientSession()
 {
     m_llpkgCount = 0;
+    m_nStatistic = 0;
+    m_nNextTick = acct_time::getCurTimeMs();
     //ctor
 }
 
@@ -19,9 +21,17 @@ int32 ClientSession::testRefectSvr(char *msgbuf, int32 bufsize)
     char buf[(pmsg->strlen)+1];
     memset(buf, 0x00, sizeof(buf));
     snprintf(buf, (pmsg->strlen), "%s", (char *)pmsg + sizeof(pmsg->strlen));
+    #if 0
     printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
-    cout << "===========================================%d" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
-    
+    #endif
+
+    if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
+    {
+        cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
+        m_llpkgCount = 0;
+    }
+
+    m_llpkgCount++;
     return processSend(msgHead->sysId, msgHead->msgType, (char *)msgbuf+sizeof(*msgHead), pkglen);
 }
 
@@ -32,9 +42,18 @@ int32 ClientSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsi
     char buf[(pmsg->strlen)+1];
     memset(buf, 0x00, sizeof(buf));
     snprintf(buf, (pmsg->strlen), "%s", (char *)pmsg + sizeof(pmsg->strlen));
+    #if 0
     printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
-    cout << "===========================================%d" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
-    
+    #endif
+
+    if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
+    {
+        m_nNextTick = acct_time::getCurTimeMs() + 1000;
+        cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
+        m_llpkgCount = 0;
+    }
+
+    m_llpkgCount++;
     return processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
 }
 

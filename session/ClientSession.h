@@ -6,6 +6,7 @@
 #include "../include/PackageHandler.hpp"
 #include "../include/packHeader.hpp"
 #include "../include/packageStruct.hpp"
+#include "../include/acctTimeTool.hpp"
 
 
 class ClientSession : public NetWorkObject
@@ -21,6 +22,8 @@ class ClientSession : public NetWorkObject
     protected:
     private:
         uint64 m_llpkgCount;
+        int32 m_nStatistic;
+        int32 m_nNextTick;
 };
 
 #endif // CLIENTSESSION_H

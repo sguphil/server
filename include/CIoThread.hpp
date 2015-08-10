@@ -42,10 +42,11 @@ public:
                         isRecvEvent = true;
                         if (oplen >= 0) // normal 
                         {
-                            if (oplen > 0)
+                            /*if (oplen > 0 )
                             {
                                 cout << "CIoThread=======recvlen:" << oplen << endl;
-                            }
+                            }*/
+
                             if (svr->getIoThreadNum() > 1)
                             {
                                 session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);

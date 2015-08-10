@@ -200,10 +200,10 @@ void TestClient::update()
             handleActiveSession();
             removeDeadSession();
             m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;// 30 ms per logic handle
-            cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
+            //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
         //cout << "out logic loop:" << acct_time::getCurTimeMs() << endl;
-        acct_time::sleepMs(100); // sleep 1ms per loop
+        acct_time::sleepMs(1); // sleep 1ms per loop
     }
     
 }

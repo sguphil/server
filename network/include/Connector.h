@@ -7,6 +7,7 @@
 #include "../../Factory/BaseFactory.h"
 #include "../../Thread/Mutex.h"
 
+
 class Connector: public CBaseThread
 {
 public:
@@ -26,6 +27,7 @@ public:
         return &m_connList;
     }
 private:
+    
     CommonList<CSession> m_waitList; //等待链接的队列
     CommonList<CSession> m_connList; //完成链接队列
 
@@ -36,6 +38,6 @@ private:
     CMutex m_connErrListLock;
     pthread_cond_t m_waitCond;
     pthread_mutex_t m_mutex;
-    sem_t m_waitSem;
+    
 };
 #endif // __CONNECTOR_H__

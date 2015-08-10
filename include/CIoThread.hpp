@@ -6,6 +6,7 @@
 #include "../Thread/Mutex.h"
 #include "../include/CServerBase.hpp"
 #include "../network/include/Session.h"
+#include "../include/acctTimeTool.hpp"
 
 class CIoThread: public CBaseThread
 {
@@ -22,55 +23,60 @@ public:
     {
         CIoThread *threadself = (CIoThread *)args;
         CServerBase *svr = threadself->getServerPtr();
-        struct epoll_event epEvent;
+        struct epoll_event epEvent[10];
         cout << "CIoThread start threadRoutine" << endl;
         bool isRecvEvent = true;
         while (true)
         {
             //cout << "CIoThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
-            int32 evCount = epoll_wait(svr->getIoEpollfd(),&epEvent, 1, -1);//100ms wait timeout infinite wait just one event to one sockfd
+            int32 evCount = epoll_wait(svr->getIoEpollfd(),epEvent, 1, -1);//100ms wait timeout infinite wait just one event to one sockfd
             if (evCount > 0)
             {
-                CSession *session =  (CSession*)epEvent.data.ptr;
-                int32 oplen = 0;
-                if (epEvent.events & EPOLLIN) // recv msg
+                for (int i = 0; i < evCount;i++)
                 {
-                    oplen = session->recv();
-                    isRecvEvent = true;
-                    if (oplen >= 0) // normal 
+                    CSession *session =  (CSession *)epEvent[i].data.ptr;
+                    int32 oplen = 0;
+                    if (epEvent[i].events & EPOLLIN) // recv msg
                     {
-                        if (oplen > 0)
+                        oplen = session->recv();
+                        isRecvEvent = true;
+                        if (oplen >= 0) // normal 
                         {
-                            cout << "CIoThread=======recvlen:" << oplen << endl;
+                            if (oplen > 0)
+                            {
+                                cout << "CIoThread=======recvlen:" << oplen << endl;
+                            }
+                            if (svr->getIoThreadNum() > 1)
+                            {
+                                session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
+                            }
+                            
+                            //if (0 == oplen)
+                            //{
+                              //  acct_time::sleepMs(300);
+                            //}
                         }
-                        if (svr->getIoThreadNum() > 1)
+                        else // socket error wait to free session
                         {
-                            session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
+                            session->delEpollEvent(svr->getIoEpollfd());
+                            session->setStatus(waitdel);
                         }
-                        
-                        if (0 == oplen)
-                        {
-                            usleep(10000);
-                        }
-                    }
-                    else // socket error wait to free session
-                    {
-                        session->delEpollEvent(svr->getIoEpollfd());
-                        session->setStatus(waitdel);
                     }
                 }
             }
             else if (0 == evCount) //epoll timeout
             {
+                acct_time::sleepMs(100);
                 // handle timeout??
             }
             else // ret < 0 error or interrupt
             {
                 if (evCount == -1 && errno == EINTR)
                 {
+                    acct_time::sleepMs(200);
                     continue;
                 }
-                usleep(10000);
+                acct_time::sleepMs(300);
                 perror("epoll_wait error!!!");
                 printf("CIoThread error!!! epoll_wait return:%d\n", evCount);
             }

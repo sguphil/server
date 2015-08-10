@@ -6,6 +6,7 @@
 #include "../Thread/Mutex.h"
 #include "../include/CServerBase.hpp"
 #include "../network/include/Session.h"
+#include "../include/acctTimeTool.hpp"
 
 class CSendThread: public CBaseThread
 {
@@ -22,38 +23,41 @@ public:
     {
         CSendThread *threadself = (CSendThread *)args;
         CServerBase *svr = threadself->getServerPtr();
-        struct epoll_event epEvent;
+        struct epoll_event epEvent[30];
         cout << "CSendThread start threadRoutine" << endl;
         //bool isRecvEvent = true;
         while (true)
         {
             //cout << "CSendThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
-            int32 evCount = epoll_wait(svr->getSendEpollfd(),&epEvent, 1, -1);//100ms wait timeout infinite wait just one event to one sockfd
+            int32 evCount = epoll_wait(svr->getSendEpollfd(),epEvent, 1, 100);//100ms wait timeout infinite wait just one event to one sockfd
             if (evCount > 0)
             {
-                CSession *session =  (CSession*)epEvent.data.ptr;
-                int32 oplen = 0;
-                if (epEvent.events & EPOLLOUT) // send msg to client
+                for (int i = 0; i < evCount; i++)
                 {
-                    oplen = session->sendToSocket();
-                    //isRecvEvent = false;
-                
-                    if (oplen >= 0) // normal 
+                    CSession *session =  (CSession *)epEvent[i].data.ptr;
+                    int32 oplen = 0;
+                    if (epEvent[i].events & EPOLLOUT) // send msg to client
                     {
-                        if (oplen > 0)
+                        oplen = session->sendToSocket();
+                        //isRecvEvent = false;
+                        
+                        if (oplen >= 0) // normal 
                         {
-                            cout << "CSendThread=======sendlen:" << oplen << endl;
+                            if (oplen > 0)
+                            {
+                                cout << "CSendThread=======sendlen:" << oplen << endl;
+                            }
+                            //session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);//single thread do not need epolloneshoot
+                            //if (0 == oplen)
+                            //{
+                              //  usleep(10000);
+                            //}
                         }
-                        //session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);//single thread do not need epolloneshoot
-                        if (0 == oplen)
+                        else // socket error wait to free session
                         {
-                            usleep(10000);
+                            session->delEpollEvent(svr->getSendEpollfd());
+                            session->setStatus(waitdel);
                         }
-                    }
-                    else // socket error wait to free session
-                    {
-                        session->delEpollEvent(svr->getSendEpollfd());
-                        session->setStatus(waitdel);
                     }
                 }
             }
@@ -65,9 +69,10 @@ public:
             {
                 if (evCount == -1 && errno == EINTR)
                 {
+                    acct_time::sleepMs(200);
                     continue;
                 }
-                usleep(10000);
+                acct_time::sleepMs(300);
                 perror("epoll_wait error!!!");
                 printf("CSendThread error!!! epoll_wait return:%d\n", evCount);
             }

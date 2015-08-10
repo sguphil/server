@@ -18,23 +18,15 @@ int main()
     TestClient* testClient = TestClient::GetInstance();
     cout << "Hello world! ServerID is:" << testClient->getServerID() << endl;
 
-    
+    /*
     CBaseFactory<CPlayer> playerFactory;
     playerFactory.init(10, 10);
     CPlayer *player = playerFactory.allocate();
     cout << "actor type is:" << player->getActorType() << endl;
-
+    */
     testClient->start();
-    Connector conn;
-    conn.start();
-    int i = 0;
-    while (i>0)
-    {
-        cout << "flash main thread" << endl;
-        conn.connect("127.0.0.1", 9997, eStrictClient);
-        sleep(1);
-        i--;
-    }
+    //Connector conn;
+    //conn.start();
 
     testClient->update();
 

@@ -8,6 +8,7 @@
 #include "../network/include/Connector.h"
 #include "../include/CIoThread.hpp"
 #include "../include/CSendThread.hpp"
+#include "../include/acctTimeTool.hpp"
 
 class AccountSvr: public CServerBase, public base::Singleton<AccountSvr>
 {
@@ -74,8 +75,7 @@ public:
         m_nIoThreadNum = threadNum;
     }
 
-    uint64 getSysTimeMs();
-private:
+ private:
     Acceptor m_acceptor;
     Connector m_connector;
     CommonList<CSession> m_waitSessionList;
@@ -85,9 +85,9 @@ private:
     int m_ServerID;
     int32 m_epollfd;
     eSERVERTYPE m_svrType;
-    uint32 m_nCycleTick;
-    uint32 m_nNextTick;
-    uint32 m_nInterval;
+    int32 m_nCycleTick;
+    int32 m_nNextTick;
+    int32 m_nInterval;
     int32 m_epollSendfd;
     int32 m_nIoThreadNum;
 };

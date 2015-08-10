@@ -19,6 +19,8 @@
 #include <sys/timeb.h>
 #include <assert.h>
 #include <signal.h>
+#include <sys/time.h>
+#include <semaphore.h>
 
 //容器
 #include <map>
@@ -50,7 +52,7 @@ typedef unsigned long long uInt64;
 typedef unsigned long long uint64;
 typedef  long long Int64;
 typedef  long long int64;
-typedef unsigned int uInt32;
+typedef unsigned int uInt32sem, i;
 typedef unsigned int uint32;
 typedef unsigned char uInt8;
 typedef unsigned char uint8;

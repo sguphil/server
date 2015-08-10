@@ -1,9 +1,10 @@
 #include "TestClient.h"
+#include "../include/acctTimeTool.hpp"
 
 TestClient::TestClient()
 {
-    m_nInterval = 100; //loop per 100ms
-    m_nCycleTick = getSysTimeMs();
+    m_nInterval = 10; //loop per Xms default
+    m_nCycleTick = acct_time::getCurTimeMs();
     m_nNextTick = m_nCycleTick + m_nInterval;
     m_nSendTimes = 0;
     m_ServerID = 1;
@@ -24,13 +25,6 @@ TestClient::~TestClient()
 
 }
 
-uint64 TestClient::getSysTimeMs()
-{
-    struct timeb t;
-    ftime(&t);
-    return 1000 * t.time + t.millitm;
-}
-
 void TestClient::start()
 {
     //m_acceptor.init();
@@ -38,13 +32,13 @@ void TestClient::start()
     //m_acceptor.start();
     m_connector.start();
     m_connector.connect("127.0.0.1", 9997, eStrictClient);
-
+    
     for (int i = 0; i < 1/*m_nIoThreadNum*/;i++)
     {
         CIoThread *newThread = new CIoThread(this);
         newThread->start();
     }
-
+    
     CSendThread *sendThread = new CSendThread(this);
     sendThread->start();
 }
@@ -182,7 +176,8 @@ void TestClient::handleActiveSession()
                         cout << "send buff is full!!!! stop!!!" << endl;
                         //session->setStatus(waitdel);
                         //assert(false);
-                        usleep(1000);
+                        //usleep(1000);
+                        acct_time::sleepMs(10);
                     }
                     else
                     {
@@ -199,16 +194,16 @@ void TestClient::update()
 {
     while (true)
     {
-        while (getSysTimeMs() >= m_nNextTick)
+        while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            //m_nNextTick = getSysTimeMs() + m_nInterval*3000; //300ms
-            usleep(100);
-            cout << "into logic loop" << endl;
+            m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;// 30 ms per logic handle
+            cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
-        //usleep(800*1000);
+        //cout << "out logic loop:" << acct_time::getCurTimeMs() << endl;
+        acct_time::sleepMs(100); // sleep 1ms per loop
     }
     
 }

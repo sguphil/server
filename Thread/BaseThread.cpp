@@ -15,7 +15,7 @@ void CBaseThread::start()
 
 void CBaseThread::terminate()
 {
-    pthread_attr_destroy(&m_threadAttr);
+    //pthread_attr_destroy(&m_threadAttr);
 }
 
 void* CBaseThread::threadRoutine(void *args)

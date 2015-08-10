@@ -74,7 +74,6 @@ public:
         m_nIoThreadNum = threadNum;
     }
 
-    uint64 getSysTimeMs();
 private:
     Acceptor m_acceptor;
     Connector m_connector;
@@ -85,9 +84,9 @@ private:
     int m_ServerID;
     int32 m_epollfd;
     eSERVERTYPE m_svrType;
-    uint32 m_nCycleTick;
-    uint32 m_nNextTick;
-    uint32 m_nInterval;
+    int32 m_nCycleTick;
+    int32 m_nNextTick;
+    int32 m_nInterval;
     int32 m_nSendTimes;
     int32 m_epollSendfd;
     bool m_bAlreadySend;

@@ -22,16 +22,16 @@ int main()
     //printItem(&acsObj);
     //cout << acsObj << endl;
 
-    CBaseFactory<CPlayer> playerFactory;
-    playerFactory.init(10, 10);
-    CPlayer *player = playerFactory.allocate();
-    cout << "actor type is:" << player->getActorType() << endl;
+    //CBaseFactory<CPlayer> playerFactory;
+    //playerFactory.init(10, 10);
+    //CPlayer *player = playerFactory.allocate();
+    //cout << "actor type is:" << player->getActorType() << endl;
 
     //Acceptor acc(eClient);
     //acc.init();
     //acc.startListen("127.0.0.1", 9997);
     //acc.start();
-    accountSvr->start();
+    accountSvr->start(); //listen start
     Connector conn;
     conn.start();
     

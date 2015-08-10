@@ -2,8 +2,8 @@
 
 AccountSvr::AccountSvr()
 {
-    m_nInterval = 100; //loop per 100ms
-    m_nCycleTick = getSysTimeMs();
+    m_nInterval = 10; //loop per Xms default
+    m_nCycleTick = acct_time::getCurTimeMs(); 
     m_nNextTick = m_nCycleTick + m_nInterval;
     m_ServerID = 1;
     m_nIoThreadNum = 1;
@@ -21,13 +21,6 @@ AccountSvr::AccountSvr()
 AccountSvr::~AccountSvr()
 {
 
-}
-
-uint64 AccountSvr::getSysTimeMs()
-{
-    struct timeb t;
-    ftime(&t);
-    return 1000 * t.time + t.millitm;
 }
 
 void AccountSvr::start()
@@ -133,14 +126,14 @@ void AccountSvr::update()
 {
     while (true)
     {
-        while (getSysTimeMs() >= m_nNextTick)
+        while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            m_nNextTick = getSysTimeMs() + m_nInterval;// 100 ms
-            //cout << "into logic loop" << endl;
+            m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;// 30 ms per logic handle
+            cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
-        usleep(1000);
+        acct_time::sleepMs(1); // sleep 1ms per loop
     }
 }

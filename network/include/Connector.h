@@ -36,5 +36,6 @@ private:
     CMutex m_connErrListLock;
     pthread_cond_t m_waitCond;
     pthread_mutex_t m_mutex;
+    sem_t m_waitSem;
 };
 #endif // __CONNECTOR_H__

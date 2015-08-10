@@ -5,20 +5,23 @@ Connector::Connector()
     m_sessionFactory.init(2,2);
     pthread_mutex_init(&m_mutex, NULL);
     pthread_cond_init(&m_waitCond, NULL);
+    sem_init(&m_waitSem, 0, 0);
 }
 
 Connector::~Connector()
 {
     pthread_mutex_destroy(&m_mutex);
     pthread_cond_destroy(&m_waitCond);
+    sem_destroy(&m_waitSem);
 }
 
 void Connector::addToWaitList(CSession *session)
 {
-    pthread_mutex_lock(&m_mutex);
+    //pthread_mutex_lock(&m_mutex);
     m_waitList.push_back(session);
-    pthread_cond_signal(&m_waitCond);
-    pthread_mutex_unlock(&m_mutex);
+    sem_post(&m_waitSem);
+    //pthread_cond_signal(&m_waitCond);
+    //pthread_mutex_unlock(&m_mutex);
 }
 
 bool Connector::connect(const char *szIp, Int32 Port, SESSION_TYPE type)
@@ -68,14 +71,22 @@ bool Connector::getConnList(std::vector<CSession*> &retVec)
 
 void* Connector::threadRoutine(void *args)
 {
+    if (false)
+    {
+        return NULL;
+    }
+
     while (true)
     {
-        pthread_mutex_lock(&m_mutex);
+        cout << "first while connect thread=======" << endl;
+        /*pthread_mutex_lock(&m_mutex);
         while(m_waitList.empty())
         {
+            cout << "connect thread=======list empty" << endl;
             pthread_cond_wait(&m_waitCond, &m_mutex);
-        }
-
+        }*/
+        sem_wait(&m_waitSem);
+        cout << "connect thread=======" << endl;
         while(!m_waitList.empty())
         {
             CSession *pSession = m_waitList.front();
@@ -97,7 +108,7 @@ void* Connector::threadRoutine(void *args)
             }
         }
 
-        pthread_mutex_unlock(&m_mutex);
+        //pthread_mutex_unlock(&m_mutex);
     }
     return NULL;
 }

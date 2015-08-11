@@ -12,12 +12,15 @@
 using namespace std;
 extern void printItem(TestAccess *accessObj);
 
+CBaseFactory<ClientSession> m_NetWorkObjectFactory;
+
 int main()
 {
     signal(SIGPIPE, SIG_IGN);
     TestClient* testClient = TestClient::GetInstance();
     cout << "Hello world! ServerID is:" << testClient->getServerID() << endl;
-
+    
+    m_NetWorkObjectFactory.init(1, 1);
     /*
     CBaseFactory<CPlayer> playerFactory;
     playerFactory.init(10, 10);

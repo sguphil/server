@@ -24,12 +24,17 @@ public:
     {
         m_recvBuff.getBuffQueuePtr()->clear();
         m_sendBuff.getBuffQueuePtr()->clear();
+
+        #if REUSE_NETWORKOBJ
+        m_NetWorkObjectFactory.reuse(m_pBindNetWorkObj);
+        #else
         delete m_pBindNetWorkObj;
         close(m_socket); // close socket fd
         if (NULL != m_pBindNetWorkObj)
         {
             m_pBindNetWorkObj = NULL;
         }
+        #endif
     }
 
     inline void setSocket(Int32 socket)

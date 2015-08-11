@@ -90,6 +90,9 @@ public:
     int32 m_nInterval;
     int32 m_epollSendfd;
     int32 m_nIoThreadNum;
+    int32 m_nHandleCount;
+    int32 m_nStatisticTick;
 };
+
 
 #endif // ACCOUNTSVR_H

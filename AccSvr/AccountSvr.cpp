@@ -4,6 +4,9 @@ AccountSvr::AccountSvr()
 {
     m_nInterval = 10; //loop per Xms default
     m_nCycleTick = acct_time::getCurTimeMs(); 
+    m_nStatisticTick = m_nCycleTick;
+    m_nHandleCount = 0;
+
     m_nNextTick = m_nCycleTick + m_nInterval;
     m_ServerID = 1;
     m_nIoThreadNum = 1;
@@ -118,6 +121,13 @@ void AccountSvr::handleActiveSession()
         {
             CSession *session = *iter;
             session->processPacket();
+            if ((acct_time::getCurTimeMs() - m_nStatisticTick)>1000) //1s
+            {
+                m_nStatisticTick = acct_time::getCurTimeMs() + 1000;
+                cout << "========================================session=====" << ++m_nHandleCount << endl;
+                m_nHandleCount = 0;
+            }
+            m_nHandleCount++;
         }
     }
 }

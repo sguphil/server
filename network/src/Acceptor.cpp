@@ -6,11 +6,12 @@ Acceptor::Acceptor(SESSION_TYPE type): m_eAcceptType(type)
     m_boIsListen = false;
     m_nServerSock = -1;
     m_epollfd = epoll_create(3000);
-    m_SessionFactory.init(5, 5);
+    m_SessionFactory.init(3000, 50);
     m_acceptListLock.lock();
     m_pReadList = &m_acceptList;
     m_pWriteList = &m_acceptListSec;
     m_acceptListLock.unLock();
+    cout << " Acceptor constructer finished!!!" << endl;
 }
 
 Acceptor::~Acceptor()

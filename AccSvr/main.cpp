@@ -6,18 +6,21 @@
 #include "../include/baseHeader.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
-
+#include "../Factory/BaseFactory.h"
+#include "../session/ClientSession.h"
 #define ULIMITSVR 1
 
 using namespace std;
 extern void printItem(TestAccess *accessObj);
+
+CBaseFactory<ClientSession> m_NetWorkObjectFactory;
 
 int main()
 {
     signal(SIGPIPE, SIG_IGN);
     AccountSvr* accountSvr = AccountSvr::GetInstance();
     cout << "Hello world! ServerID is:" << accountSvr->getServerID() << endl;
-
+    m_NetWorkObjectFactory.init(3000, 50);
     //TestAccess acsObj;
     //printItem(&acsObj);
     //cout << acsObj << endl;
@@ -32,8 +35,8 @@ int main()
     //acc.startListen("127.0.0.1", 9997);
     //acc.start();
     accountSvr->start(); //listen start
-    Connector conn;
-    conn.start();
+    //Connector conn;
+    //conn.start();
     
     accountSvr->update();
     while (false)

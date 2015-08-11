@@ -37,6 +37,7 @@ void handlePackage(CSession *pSession, PkgHeader *header, MsgHeader *msgHead, ch
         pSession->setStatus(waitdel);
         return;
     }
+    assert(NULL != networkObj->getSession());
     networkObj->onRecv(header, msgHead, msgbuf, msgsize);
 }
 

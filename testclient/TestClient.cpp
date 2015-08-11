@@ -31,7 +31,12 @@ void TestClient::start()
     //m_acceptor.startListen("127.0.0.1", 9997);
     //m_acceptor.start();
     m_connector.start();
-    m_connector.connect("127.0.0.1", 9997, eStrictClient);
+    for (int i = 0; i < 3000; i++)
+    {
+        m_connector.connect("127.0.0.1", 9997, eStrictClient);
+        acct_time::sleepMs(2);
+    }
+
     
     for (int i = 0; i < 1/*m_nIoThreadNum*/;i++)
     {

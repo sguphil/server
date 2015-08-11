@@ -1,4 +1,8 @@
 #include "../include/Session.h"
+#include "../../Factory/BaseFactory.h"
+
+extern CBaseFactory<ClientSession> m_NetWorkObjectFactory;
+#define REUSE_NETWORKOBJ 1
 
 CSession::CSession()
 {
@@ -93,7 +97,9 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
     {
     case 1: // client
         {
-            netobj = new ClientSession;
+            netobj = m_NetWorkObjectFactory.allocate();
+            //netobj = new ClientSession;
+            assert(netobj != NULL);
             bindNetWorkObj(netobj);
             ret.sessionType = 6; // modify the typeof client
             msglen = sizeof(msghead) + sizeof(ret);
@@ -120,6 +126,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
     case 6: // strict client for test
         {
             netobj = new StrictClient;
+            assert(NULL != netobj);
             bindNetWorkObj(netobj);
             cout << "strictclient got msg" << endl;
             break;

@@ -29,8 +29,6 @@ public:
         m_pHead = m_pData;
         m_pTail = m_pData;
         m_nLength = 0;
-        m_nSize = 0;
-        m_nExtraSize = 0;
     }
 
     bool init(int32 size, int32 extraSize)

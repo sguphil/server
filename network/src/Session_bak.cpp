@@ -1,6 +1,6 @@
-#include "../include/Session.h"
+#include "../include/Session_bak.h"
 #include "../../Factory/BaseFactory.h"
-
+#if 0
 extern CBaseFactory<ClientSession> m_NetWorkObjectFactory;
 #define REUSE_NETWORKOBJ 1
 
@@ -189,3 +189,5 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
         break;
     }
 }
+#endif
+

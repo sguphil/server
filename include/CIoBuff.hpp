@@ -74,6 +74,7 @@ public:
             if (rdLeftLen > 0)
             {
                 m_tempQueue.pushMsg(m_pRDQueue->getReadPtr(rdLeftLen), rdLeftLen);
+                m_pRDQueue->clear();
             }
             CBuffQueue<char> *tempRDptr = m_pRDQueue;
             m_pRDQueue = m_pWRQueue;
@@ -98,9 +99,9 @@ public:
                 }
                 
                 int32 leftMsgLen = m_tempQueue.getBufLen();
-                assert(leftMsgLen < msgSize);
+                
                 memcpy(msg, m_tempQueue.getReadPtr(leftMsgLen), leftMsgLen);
-                int32 leftMsgLen2 = msgSize - leftMsgLen;
+                int32 leftMsgLen2 = msgSize + sizeof(*head) - leftMsgLen;
                 if (leftMsgLen2 > 0)
                 {
                     if (leftMsgLen2 <= m_pRDQueue->getBufLen())
@@ -146,22 +147,22 @@ public:
                 }
                 int32 leftMsgLen = m_tempQueue.getBufLen();
                 memcpy(msg, m_tempQueue.getReadPtr(leftMsgLen), leftMsgLen);
-                int32 leftMsgSize = msgSize - leftMsgLen;
-                if (m_pRDQueue->getBufLen()>= (msgSize + leftHeadSize))
+                int32 leftMsgSize = msgSize + sizeof(*head) - leftMsgLen;
+                if (m_pRDQueue->getBufLen()>= (leftMsgSize))
                 {
                     memcpy((char *)msg+leftMsgLen, m_pRDQueue->getReadPtr(leftMsgSize), leftMsgSize);
+                    m_tempQueue.popMsg(NULL, leftLen);
+                    m_pRDQueue->popMsg(NULL, leftMsgSize);
                 }
                 else
                 {
                     int32 rdQlen = m_pRDQueue->getBufLen();
                     char buf[rdQlen];
                     memcpy((char *)buf, m_pRDQueue->getReadPtr(rdQlen), rdQlen);
+                    m_tempQueue.pushMsg(buf, rdQlen);
                     m_pRDQueue->popMsg(NULL, rdQlen);
                     return 0;
                 }
-                
-                m_tempQueue.popMsg(NULL, leftLen);
-                m_pRDQueue->popMsg(NULL, leftMsgSize);
                 return msgSize;
             }
         }

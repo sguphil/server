@@ -3,6 +3,8 @@
 #include "../../include/baseHeader.h"
 //#include "NetWorkObject.h"
 #include "../../include/CServerBase.hpp"
+#include "../../include/CRecvBuf.hpp"
+#include "../../include/CSendBuf.hpp"
 #include "../../include/CIoBuff.hpp"
 #include "../../include/packHeader.hpp"
 #include "../../include/packageStruct.hpp"
@@ -10,6 +12,8 @@
 #include "../../session/StrictClient.h"
 #include "../../include/PackageHandler.hpp"
 #include "../../include/CPackageFetch.hpp"
+
+#define USE_DOUBLE_QUEUE 1
 
 class NetWorkObject;
 //class ClientSession;
@@ -21,8 +25,13 @@ public:
     ~CSession();
     inline void clear() // call when reuse
     {
+        #ifdef USE_DOUBLE_QUEUE
         m_recvBuff.clear();
         m_sendBuff.clear();
+        #else
+        m_recvBuff.getBuffQueuePtr()->clear();
+        m_sendBuff.getBuffQueuePtr()->clear();
+        #endif
 
         #if REUSE_NETWORKOBJ
         m_NetWorkObjectFactory.reuse(m_pBindNetWorkObj);
@@ -143,8 +152,13 @@ private:
     SESSION_TYPE m_eSessionType;
     struct sockaddr_in m_sockAddr;
     NetWorkObject *m_pBindNetWorkObj;
+    #ifdef USE_DOUBLE_QUEUE
     CIoBuff m_recvBuff;
     CIoBuff m_sendBuff;
+    #else
+    CRecvBuf m_recvBuff;
+    CSendBuf m_sendBuff;
+    #endif
     CServerBase *m_ptrServer;
     eSESSIONSTATUS m_eStatus;
 };

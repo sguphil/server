@@ -30,10 +30,16 @@ int32 CSession::recv()
         return 0;
     }
     */
+    #ifdef USE_DOUBLE_QUEUE
     m_recvBuff.lockSwap();
-    int recvlen = m_recvBuff.getRDQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
+    int recvlen = m_recvBuff.getWRQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
     m_recvBuff.unLockSwap();
     return recvlen;
+    #else
+    int recvlen = m_recvBuff.getBuffQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
+    return recvlen;
+    #endif
+
 }
 
 int32 CSession::modEpollEvent(int32 epollfd, bool isRecv, bool addEvent)
@@ -67,18 +73,22 @@ int32 CSession::delEpollEvent(int32 epollfd)
 
 int32 CSession::sendToSocket()
 {
+    #ifdef USE_DOUBLE_QUEUE
     int32 sendLen = m_sendBuff.getRDQueuePtr()->sendToSocket(m_socket);
     if (m_sendBuff.getRDQueuePtr()->getReadableLen() == 0)
     {
-        m_sendBuff.lockSwap();
         m_sendBuff.swapQueue();
-        m_sendBuff.unLockSwap();
     }
+    #else
+    int32 sendLen = m_sendBuff.getBuffQueuePtr()->sendToSocket(m_socket);
+    #endif
+
     return sendLen;
 }
 
 void CSession::processPacket()
 {
+    #ifdef USE_DOUBLE_QUEUE
     bool isbreak = false;
     int handlePkgCount = 0;
     CpackageFetch pkgGet;
@@ -106,9 +116,7 @@ void CSession::processPacket()
         }
         if (!isbreak)
         {
-            m_recvBuff.lockSwap();
             m_recvBuff.swapQueue();
-            m_recvBuff.unLockSwap();
         }
     }
     else
@@ -116,6 +124,18 @@ void CSession::processPacket()
         setStatus(waitdel);
         assert(false);
     }
+    #else
+    int handlePkgCount = 0;
+    CpackageFetch pkgGet;
+    while (m_recvBuff.getBuffQueuePtr()->fetchFullPkg(pkgGet) > 0)
+    {
+        handlePackage(this, &pkgGet.m_pkgHeader, &pkgGet.m_msgHeader, pkgGet.m_msgbuf, pkgGet.m_nMsglen);
+        if (handlePkgCount++ > 30) // handle 30 packages each loop
+        {
+            break;
+        }
+    }
+    #endif
 }
 void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize) // first package to register
 {

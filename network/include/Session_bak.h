@@ -12,6 +12,8 @@
 #include "../../include/PackageHandler.hpp"
 #include "../../include/CPackageFetch.hpp"
 
+
+#if 0
 class NetWorkObject;
 //class ClientSession;
 
@@ -149,4 +151,6 @@ private:
     CServerBase *m_ptrServer;
     eSESSIONSTATUS m_eStatus;
 };
+#endif
+
 #endif // __SESSION_H__

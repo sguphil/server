@@ -73,9 +73,9 @@ public:
             int32 rdLeftLen = m_pRDQueue->getBufLen();
             if (rdLeftLen > 0)
             {
-                m_tempQueue.pushMsg(m_pRDQueue->getReadPtr(rdLeftLen), rdLeftLen);
-                m_pRDQueue->clear();
+                m_tempQueue.pushMsg(m_pRDQueue->getReadPtr(rdLeftLen), rdLeftLen); 
             }
+            m_pRDQueue->clear();
             CBuffQueue<char> *tempRDptr = m_pRDQueue;
             m_pRDQueue = m_pWRQueue;
             m_pWRQueue = tempRDptr;

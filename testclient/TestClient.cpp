@@ -31,7 +31,7 @@ void TestClient::start()
     //m_acceptor.startListen("127.0.0.1", 9997);
     //m_acceptor.start();
     m_connector.start();
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 10000; i++)
     {
         m_connector.connect("127.0.0.1", 9997, eStrictClient);
         acct_time::sleepMs(2);

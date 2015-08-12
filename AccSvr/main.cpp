@@ -20,7 +20,7 @@ int main()
     signal(SIGPIPE, SIG_IGN);
     AccountSvr* accountSvr = AccountSvr::GetInstance();
     cout << "Hello world! ServerID is:" << accountSvr->getServerID() << endl;
-    m_NetWorkObjectFactory.init(3000, 50);
+    m_NetWorkObjectFactory.init(10000, 50);
     //TestAccess acsObj;
     //printItem(&acsObj);
     //cout << acsObj << endl;

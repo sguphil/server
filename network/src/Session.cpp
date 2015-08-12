@@ -106,12 +106,13 @@ void CSession::processPacket()
 
         while (m_recvBuff.getRDQueuePtr()->fetchFullPkg(pkgGet) > 0)
         {
+            //printf("===========readQueuelen:%d\n", m_recvBuff.getTempQueLen());
             assert(m_recvBuff.getTempQueLen() == 0);
             handlePackage(this, &pkgGet.m_pkgHeader, &pkgGet.m_msgHeader, pkgGet.m_msgbuf, pkgGet.m_nMsglen);
             if (handlePkgCount++ > 30) // handle 30 packages each loop
             {
-                break;
                 isbreak = true;
+                break;                
             }
         }
         if (!isbreak)

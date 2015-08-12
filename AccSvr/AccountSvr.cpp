@@ -9,7 +9,7 @@ AccountSvr::AccountSvr()
 
     m_nNextTick = m_nCycleTick + m_nInterval;
     m_ServerID = 1;
-    m_nIoThreadNum = 1;
+    m_nIoThreadNum = 4;
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);

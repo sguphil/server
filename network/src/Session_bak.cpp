@@ -30,9 +30,7 @@ int32 CSession::recv()
         return 0;
     }
     */
-    m_recvBuff.lockSwap();
-    int recvlen = m_recvBuff.getRDQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
-    m_recvBuff.unLockSwap();
+    int recvlen = m_recvBuff.getBuffQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
     return recvlen;
 }
 
@@ -67,54 +65,21 @@ int32 CSession::delEpollEvent(int32 epollfd)
 
 int32 CSession::sendToSocket()
 {
-    int32 sendLen = m_sendBuff.getRDQueuePtr()->sendToSocket(m_socket);
-    if (m_sendBuff.getRDQueuePtr()->getReadableLen() == 0)
-    {
-        m_sendBuff.lockSwap();
-        m_sendBuff.swapQueue();
-        m_sendBuff.unLockSwap();
-    }
+    int32 sendLen = m_sendBuff.getBuffQueuePtr()->sendToSocket(m_socket);
     return sendLen;
 }
 
 void CSession::processPacket()
 {
-    bool isbreak = false;
     int handlePkgCount = 0;
     CpackageFetch pkgGet;
-    char pkg[MAXPKGLEN];
-    PkgHeader header;
-    int32 leftPkgRet = m_recvBuff.checkLeftQueue(pkg, &header);
-    if(leftPkgRet >= 0)
+    while (m_recvBuff.getBuffQueuePtr()->fetchFullPkg(pkgGet) > 0)
     {
-        if (leftPkgRet > 0)
+        handlePackage(this, &pkgGet.m_pkgHeader, &pkgGet.m_msgHeader, pkgGet.m_msgbuf, pkgGet.m_nMsglen);
+        if (handlePkgCount++ > 30) // handle 30 packages each loop
         {
-            handlePackage(this, &header, (MsgHeader*)(pkg+sizeof(header)), (pkg+sizeof(header)+sizeof(MsgHeader)), header.length-sizeof(MsgHeader));
-            handlePkgCount++;
-            assert(m_recvBuff.getTempQueLen() == 0);
+            break;
         }
-
-        while (m_recvBuff.getRDQueuePtr()->fetchFullPkg(pkgGet) > 0)
-        {
-            assert(m_recvBuff.getTempQueLen() == 0);
-            handlePackage(this, &pkgGet.m_pkgHeader, &pkgGet.m_msgHeader, pkgGet.m_msgbuf, pkgGet.m_nMsglen);
-            if (handlePkgCount++ > 30) // handle 30 packages each loop
-            {
-                break;
-                isbreak = true;
-            }
-        }
-        if (!isbreak)
-        {
-            m_recvBuff.lockSwap();
-            m_recvBuff.swapQueue();
-            m_recvBuff.unLockSwap();
-        }
-    }
-    else
-    {
-        setStatus(waitdel);
-        assert(false);
     }
 }
 void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize) // first package to register

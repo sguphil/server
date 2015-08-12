@@ -54,10 +54,14 @@ public:
                               //  usleep(10000);
                             //}
                         }
-                        else // socket error wait to free session
+                        else if (oplen == -1)// socket error wait to free session
                         {
                             session->delEpollEvent(svr->getSendEpollfd());
                             session->setStatus(waitdel);
+                        }
+                        else // EAGAIN
+                        {
+                            acct_time::sleepMs(100);
                         }
                     }
                 }

@@ -176,12 +176,10 @@ void TestClient::handleActiveSession()
                     memcpy(buf+sizeof(header), (char *)&msghead, sizeof(msghead));
                     memcpy(buf+sizeof(header)+sizeof(msghead), (char *)&(testStr.strlen), sizeof(testStr.strlen));
                     memcpy(buf+sizeof(header)+sizeof(msghead)+sizeof(testStr.strlen), (char *)sendStr, testStr.strlen);
-                    if (session->send(buf, sendlen)< 0)
+                    if (session->send(buf, sendlen) < 0)
                     {
                         cout << "send buff is full!!!! stop!!!" << endl;
                         //session->setStatus(waitdel);
-                        //assert(false);
-                        //usleep(1000);
                         acct_time::sleepMs(10);
                     }
                     else

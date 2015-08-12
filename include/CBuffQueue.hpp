@@ -249,7 +249,7 @@ public:
 
         if (0 == sendlen)
         {
-            printf("socket!!!!!!!!recv return 0!!!!!!!!\n");
+            printf("socket!!!!!!!!send return 0!!!!!!!!\n");
             return -1;
         }
         else if (sendlen > 0)
@@ -262,7 +262,7 @@ public:
             if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
             {
                 printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
-                return 0;
+                return -2;
             }
             else
             {

@@ -2,6 +2,7 @@
 
 StrictClient::StrictClient():m_llpkgCount(0)
 {
+    m_nNextTick = acct_time::getCurTimeMs();
     //ctor
 }
 
@@ -31,8 +32,13 @@ int32 StrictClient::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsiz
     memset(buf, 0x00, sizeof(buf));
     snprintf(buf, (pmsg->strlen), "%s", (char *)pmsg + sizeof(pmsg->strlen));
     printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
-    cout << "===========================================%d" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
-    
+    if (acct_time::getCurTimeMs() - m_nNextTick > 1000)
+    {
+        cout << "===========================================%d" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
+        m_llpkgCount = 0;
+        m_nNextTick = acct_time::getCurTimeMs() + 1000;
+    }
+    m_llpkgCount++;
     return processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
 }
 

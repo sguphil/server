@@ -21,6 +21,7 @@ class StrictClient : public NetWorkObject
     protected:
     private:
         uint64 m_llpkgCount;
+        int32 m_nNextTick;
 };
 
 #endif // StrictClient_H

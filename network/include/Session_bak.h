@@ -3,7 +3,8 @@
 #include "../../include/baseHeader.h"
 //#include "NetWorkObject.h"
 #include "../../include/CServerBase.hpp"
-#include "../../include/CIoBuff.hpp"
+#include "../../include/CRecvBuf.hpp"
+#include "../../include/CSendBuf.hpp"
 #include "../../include/packHeader.hpp"
 #include "../../include/packageStruct.hpp"
 #include "../../session/ClientSession.h"
@@ -21,8 +22,8 @@ public:
     ~CSession();
     inline void clear() // call when reuse
     {
-        m_recvBuff.clear();
-        m_sendBuff.clear();
+        m_recvBuff.getBuffQueuePtr()->clear();
+        m_sendBuff.getBuffQueuePtr()->clear();
 
         #if REUSE_NETWORKOBJ
         m_NetWorkObjectFactory.reuse(m_pBindNetWorkObj);
@@ -93,7 +94,7 @@ public:
         return m_ptrServer;
     }
 
-    int32 send(char *buff, int32 buffsize);  // logic module call to write msg to buffqueue return:-1 error -2 again >=0 success send length
+    int32 send(char *buff, int32 buffsize);  // logic module call to write msg to buffqueue
 
     int32 sendToSocket(); //network layer call to send msg with socket
     int32 recv();  // network layer call to recv msg with socket
@@ -124,7 +125,7 @@ public:
 
     void defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 msgsize); // first package to register
     void defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize);
-/*
+
     inline CSendBuf* getSendbufPtr()
     {
         return &m_sendBuff;
@@ -134,7 +135,7 @@ public:
     {
         return &m_recvBuff;
     }
-*/
+
 private:
     Int32 m_socket;
     char m_szIp[32];
@@ -143,8 +144,8 @@ private:
     SESSION_TYPE m_eSessionType;
     struct sockaddr_in m_sockAddr;
     NetWorkObject *m_pBindNetWorkObj;
-    CIoBuff m_recvBuff;
-    CIoBuff m_sendBuff;
+    CRecvBuf m_recvBuff;
+    CSendBuf m_sendBuff;
     CServerBase *m_ptrServer;
     eSESSIONSTATUS m_eStatus;
 };

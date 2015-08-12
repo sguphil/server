@@ -32,7 +32,7 @@ void AccountSvr::start()
     m_acceptor.startListen("127.0.0.1", 9997);
     m_acceptor.start();
 
-    for (int i = 0; i < 1/*m_nIoThreadNum*/;i++)
+    for (int i = 0; i < m_nIoThreadNum;i++)
     {
         CIoThread *newThread = new CIoThread(this);
         newThread->start();

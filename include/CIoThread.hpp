@@ -42,10 +42,12 @@ public:
                         isRecvEvent = true;
                         if (oplen >= 0) // normal 
                         {
-                            /*if (oplen > 0 )
+                            #if 0
+                            if (oplen > 0 )
                             {
                                 cout << "CIoThread=======recvlen:" << oplen << endl;
-                            }*/
+                            }
+                            #endif 
 
                             if (svr->getIoThreadNum() > 1)
                             {

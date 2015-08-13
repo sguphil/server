@@ -8,6 +8,8 @@
 #include "../network/include/Connector.h"
 #include "../Factory/BaseFactory.h"
 #include "../session/ClientSession.h"
+#include "../protocol/testMsg.pb.h"
+
 #define ULIMITSVR 1
 
 using namespace std;
@@ -24,7 +26,19 @@ int main()
     //TestAccess acsObj;
     //printItem(&acsObj);
     //cout << acsObj << endl;
+    test_package::testMsg tmsg;
+    tmsg.set_sendtime(123);
+    tmsg.set_msg("protobuf hello world!!");
+    
+    int32 buflen = tmsg.ByteSize();
+    
+    char buf[buflen];
+    tmsg.SerializeToArray(buf, buflen);
 
+    test_package::testMsg after;
+    after.ParseFromArray(buf, buflen);
+    cout << "after:" << after.sendtime() << "  msg:" << after.msg() << endl;
+    
     //CBaseFactory<CPlayer> playerFactory;
     //playerFactory.init(10, 10);
     //CPlayer *player = playerFactory.allocate();

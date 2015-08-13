@@ -30,4 +30,7 @@ struct c_s_refecttest
     char *buf;
 };
 */
+
+// c-s 1-3  proto: test_package:testMsg
+// s-c 1-3  proto: test_package:testMsg
 #endif

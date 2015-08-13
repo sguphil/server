@@ -12,7 +12,7 @@ ClientSession::~ClientSession()
 {
     //dtor
 }
-
+#if 0
 int32 ClientSession::testRefectSvr(char *msgbuf, int32 bufsize)
 {
     MsgHeader *msgHead = (MsgHeader *)msgbuf;
@@ -35,6 +35,7 @@ int32 ClientSession::testRefectSvr(char *msgbuf, int32 bufsize)
     m_llpkgCount++;
     return processSend(msgHead->sysId, msgHead->msgType, (char *)msgbuf+sizeof(*msgHead), pkglen);
 }
+#endif 
 
 int32 ClientSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsize)
 {
@@ -58,6 +59,15 @@ int32 ClientSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsi
     return processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
 }
 
+int32 ClientSession::testProtobuf(MsgHeader *msghead, char *msgbuf, int32 bufsize)
+{
+    test_package::testMsg recvmsg;
+    recvmsg.ParseFromArray(msgbuf, bufsize);
+    printf("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
+    return processSend(msghead->sysId, msghead->msgType, msgbuf, bufsize);
+}
+
+#if 0
 int32 ClientSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
 {
     MsgHeader *msghead = (MsgHeader *)msgbuf;
@@ -67,8 +77,10 @@ int32 ClientSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
     {
         testRefectSvr(msgbuf, buffsize);
     }
+
     return 0;
 }
+#endif
 
 int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int32 buffsize)
 {
@@ -78,6 +90,11 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     {
         testRefectSvr(msghead, msgbuf, buffsize);
     }
+    else if (sysid == 1 and msgtype ==3 )
+    {
+        testProtobuf(msghead, msgbuf, buffsize);
+    }
+
     return 0;
 }
 

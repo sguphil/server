@@ -8,6 +8,7 @@
 #include "../include/CIoThread.hpp"
 #include "../include/PackageHandler.hpp"
 #include "../include/CSendThread.hpp"
+#include "../protocol/testMsg.pb.h"
 
 class TestClient: public CServerBase, public base::Singleton<TestClient>
 {

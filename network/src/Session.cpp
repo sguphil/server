@@ -10,6 +10,7 @@ CSession::CSession()
     m_boActive = false;
     m_recvBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
     m_sendBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
+    m_pBindNetWorkObj = NULL;
 }
 
 CSession::~CSession()

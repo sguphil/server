@@ -31,7 +31,7 @@ void TestClient::start()
     //m_acceptor.startListen("127.0.0.1", 9997);
     //m_acceptor.start();
     m_connector.start();
-    for (int i = 0; i < 10000; i++)
+    for (int i = 0; i < 1; i++)
     {
         m_connector.connect("127.0.0.1", 9997, eStrictClient);
         acct_time::sleepMs(2);
@@ -159,7 +159,7 @@ void TestClient::handleActiveSession()
                     cout << "ready to send msg:" << totallen << endl;
                     session->setStatus(registered);
                 }
-                else //if (!m_bAlreadySend)
+                else if (m_nSendTimes++ == 0)
                 {
                     m_bAlreadySend = true;
                     msghead.sysId = 1;
@@ -187,6 +187,35 @@ void TestClient::handleActiveSession()
                         cout << "2ready to send msg:" << sendlen << endl;
                     }
                     
+                }
+                else //2 protobuf test
+                {
+                    m_nSendTimes = 1;
+                    msghead.sysId = 1;
+                    msghead.msgType = 3;
+                    test_package::testMsg tmsg;
+                    tmsg.set_sendtime(acct_time::getCurTimeMs());
+                    char *sendStr = (char*)"hello ulserver";
+                    tmsg.set_msg(sendStr);
+                    int32 bytelen = tmsg.ByteSize();
+                    int32 msglen = sizeof(msghead) + bytelen;
+                    sendlen = msglen + sizeof(header);
+                    char protomsg[bytelen];
+                    tmsg.SerializeToArray(protomsg, bytelen);
+
+                    header.length = msglen;
+                    char buf[sendlen];
+                    encodepkg(buf, &header, &msghead, (char *)protomsg, (int16)bytelen);
+                    if (session->send(buf, sendlen) < 0)
+                    {
+                        cout << "3send buff is full!!!! stop!!!" << endl;
+                        //session->setStatus(waitdel);
+                        acct_time::sleepMs(10);
+                    }
+                    else
+                    {
+                        cout << "3ready to send msg:" << sendlen << endl;
+                    }
                 }
             }
         }

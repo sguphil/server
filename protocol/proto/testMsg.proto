@@ -1,0 +1,8 @@
+syntax = "proto2";
+package test_package;
+
+message testMsg{
+required int32 sendtime = 1;
+required string msg = 2;
+}
+

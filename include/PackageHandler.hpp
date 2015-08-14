@@ -24,4 +24,24 @@ void decodeMsgHead(MsgHeader &msghead, char *buf, int32 buffsize);
 
 void encodepkg(char *buf, PkgHeader *head, MsgHeader *msgHead, char *msgbuf, int32 msgbufsize);
 
+typedef struct pkgFuncBase
+{
+    int32 funckey;
+}PKGFUNCBASE;
+
+
+
+template<typename FUNCTYPE>
+class CPackageMgr
+{
+    typedef map<int32, PKGFUNCBASE *> FuncMap;
+public:
+    CPackageMgr();
+    ~CPackageMgr();
+    void registerFunc(int16 sysid, int16 msgid, )
+
+private:
+    FuncMap m_functionMap;
+};
+
 #endif

@@ -24,23 +24,38 @@ void decodeMsgHead(MsgHeader &msghead, char *buf, int32 buffsize);
 
 void encodepkg(char *buf, PkgHeader *head, MsgHeader *msgHead, char *msgbuf, int32 msgbufsize);
 
-typedef struct pkgFuncBase
+struct pkgFuncBase
 {
-    int32 funckey;
-}PKGFUNCBASE;
+    uint32 funckey;
+    pkgFuncBase() : funckey(0)
+    {
 
+    }
+
+    static int32 makeKey(int16 sysid, int16 systype)
+    {
+        uint32 key = sysid << 16 | systype;
+        return key;
+    }
+};
+
+typedef struct pkgFuncBase PKGFUNCBASE;
+
+//========define type of handle function type here======
 
 
 template<typename FUNCTYPE>
 class CPackageMgr
 {
-    typedef map<int32, PKGFUNCBASE *> FuncMap;
+    typedef map<int32, FUNCTYPE *> FuncMap;
 public:
     CPackageMgr();
     ~CPackageMgr();
-    void registerFunc(int16 sysid, int16 msgid, )
+    void addAllHandle() = 0;
+    void registerFunc(int16 sysid, int16 msgid, FUNCTYPE *funcStruct) = 0;
+    void findFuncStruct(int32 key) = 0;
 
-private:
+protected:
     FuncMap m_functionMap;
 };
 

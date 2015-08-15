@@ -9,6 +9,7 @@
 #include "../Factory/BaseFactory.h"
 #include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
+#include "./include/CHandlerFunc.hpp"
 
 #define ULIMITSVR 1
 
@@ -16,6 +17,7 @@ using namespace std;
 extern void printItem(TestAccess *accessObj);
 
 CBaseFactory<ClientSession> m_NetWorkObjectFactory;
+CAccHandlerMgr g_AccHandlerMgr;
 
 int main()
 {
@@ -23,6 +25,8 @@ int main()
     AccountSvr* accountSvr = AccountSvr::GetInstance();
     cout << "Hello world! ServerID is:" << accountSvr->getServerID() << endl;
     m_NetWorkObjectFactory.init(10000, 50);
+
+    g_AccHandlerMgr.addAllHandle();
     //TestAccess acsObj;
     //printItem(&acsObj);
     //cout << acsObj << endl;

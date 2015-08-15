@@ -94,7 +94,19 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     {
         testProtobuf(msghead, msgbuf, buffsize);
     }
-
+    else
+    {
+        int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
+        accFuncStruct *funcStruct = g_AccHandlerMgr.findFuncStruct(key);
+        if (NULL == funcStruct)
+        {
+            printf("find no func by sysid and msgtype\n");
+        }
+        else
+        {
+            funcStruct->handler(NULL, msgbuf, buffsize);
+        }
+    }
     return 0;
 }
 

@@ -17,7 +17,7 @@ using namespace std;
 extern void printItem(TestAccess *accessObj);
 
 CBaseFactory<ClientSession> m_NetWorkObjectFactory;
-CAccHandlerMgr g_AccHandlerMgr;
+CAccHandlerMgr<struct accFuncStruct> g_AccHandlerMgr;
 
 int main()
 {

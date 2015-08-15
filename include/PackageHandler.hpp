@@ -24,8 +24,9 @@ void decodeMsgHead(MsgHeader &msghead, char *buf, int32 buffsize);
 
 void encodepkg(char *buf, PkgHeader *head, MsgHeader *msgHead, char *msgbuf, int32 msgbufsize);
 
-struct pkgFuncBase
+class pkgFuncBase
 {
+public:
     uint32 funckey;
     pkgFuncBase() : funckey(0)
     {
@@ -47,13 +48,13 @@ typedef struct pkgFuncBase PKGFUNCBASE;
 template<typename FUNCTYPE>
 class CPackageMgr
 {
-    typedef map<int32, FUNCTYPE *> FuncMap;
+    typedef std::map<int32, FUNCTYPE *> FuncMap;
 public:
-    CPackageMgr();
-    ~CPackageMgr();
-    void addAllHandle() = 0;
-    void registerFunc(int16 sysid, int16 msgid, FUNCTYPE *funcStruct) = 0;
-    void findFuncStruct(int32 key) = 0;
+    CPackageMgr(){}
+    virtual ~CPackageMgr(){}
+    virtual void addAllHandle() = 0;
+    virtual void registerFunc(int16 sysid, int16 msgid, FUNCTYPE *funcStruct) = 0;
+    virtual FUNCTYPE* findFuncStruct(int32 key) = 0;
 
 protected:
     FuncMap m_functionMap;

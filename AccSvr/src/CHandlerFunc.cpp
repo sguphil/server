@@ -6,7 +6,7 @@ int32 CHandlerFunc::testfunc(CSession *session, char *pMsg, int32 msglen)
     return 0;
 }
 
-
+/*
 //========add all the handler functions in this function,
 //and it will trigger by session prasePackage()
 void CAccHandlerMgr::addAllHandle()
@@ -45,3 +45,4 @@ accFuncStruct* CAccHandlerMgr::findFuncStruct(int32 key)
          return NULL;
     }
 }
+*/

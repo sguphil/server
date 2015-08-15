@@ -8,6 +8,7 @@
 #include "../include/packageStruct.hpp"
 #include "../include/acctTimeTool.hpp"
 #include "../protocol/testMsg.pb.h"
+#include "../AccSvr/include/CHandlerFunc.hpp"
 
 class ClientSession : public NetWorkObject
 {

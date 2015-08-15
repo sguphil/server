@@ -1,5 +1,7 @@
 #include "ClientSession.h"
 
+extern CAccHandlerMgr<struct accFuncStruct> g_AccHandlerMgr;
+
 ClientSession::ClientSession()
 {
     m_llpkgCount = 0;

@@ -7,9 +7,9 @@
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
 #include "../Factory/BaseFactory.h"
-#include "../session/ClientSession.h"
+#include "../AccSvr/session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
-#include "./include/CHandlerFunc.hpp"
+#include "../include/PackageHandler.hpp"
 
 #define ULIMITSVR 1
 
@@ -17,7 +17,7 @@ using namespace std;
 extern void printItem(TestAccess *accessObj);
 
 CBaseFactory<ClientSession> m_NetWorkObjectFactory;
-CAccHandlerMgr<struct accFuncStruct> g_AccHandlerMgr;
+CAccHandlerMgr g_AccHandlerMgr;
 
 int main()
 {

@@ -1,12 +1,12 @@
 #ifndef __STRICTCLIENT_H__
 #define __STRICTCLIENT_H__
 
-#include "../network/include/NetWorkObject.h"
-#include "../include/baseHeader.h"
-#include "../include/PackageHandler.hpp"
-#include "../include/packHeader.hpp"
-#include "../include/packageStruct.hpp"
-#include "../protocol/testMsg.pb.h"
+#include "../../network/include/NetWorkObject.h"
+#include "../../include/baseHeader.h"
+#include "../../include/PackageHandler.hpp"
+#include "../../include/packHeader.hpp"
+#include "../../include/packageStruct.hpp"
+#include "../../protocol/testMsg.pb.h"
 
 
 class StrictClient : public NetWorkObject

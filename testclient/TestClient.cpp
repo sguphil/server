@@ -159,7 +159,7 @@ void TestClient::handleActiveSession()
                     cout << "ready to send msg:" << totallen << endl;
                     session->setStatus(registered);
                 }
-                else if (m_nSendTimes++ == 0)
+                else if (m_nSendTimes++ == 0) //BIN DATA protocol test
                 {
                     m_bAlreadySend = true;
                     msghead.sysId = 1;
@@ -192,7 +192,7 @@ void TestClient::handleActiveSession()
                 {
                     m_nSendTimes = 1;
                     msghead.sysId = 1;
-                    msghead.msgType = 3;
+                    msghead.msgType = 4;
                     test_package::testMsg tmsg;
                     tmsg.set_sendtime(acct_time::getCurTimeMs());
                     char *sendStr = (char*)"hello ulserver";

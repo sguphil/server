@@ -1,4 +1,4 @@
-#include "ClientSession.h"
+#include "StrictClient.h"
 
 StrictClient::StrictClient():m_llpkgCount(0)
 {

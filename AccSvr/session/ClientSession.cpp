@@ -1,6 +1,6 @@
 #include "ClientSession.h"
 
-extern CAccHandlerMgr<struct accFuncStruct> g_AccHandlerMgr;
+extern CAccHandlerMgr g_AccHandlerMgr;
 
 ClientSession::ClientSession()
 {
@@ -98,6 +98,7 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     }
     else
     {
+        
         int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
         accFuncStruct *funcStruct = g_AccHandlerMgr.findFuncStruct(key);
         if (NULL == funcStruct)
@@ -108,6 +109,7 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
         {
             funcStruct->handler(NULL, msgbuf, buffsize);
         }
+        
     }
     return 0;
 }

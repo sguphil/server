@@ -1,14 +1,14 @@
 #ifndef CLIENTSESSION_H
 #define CLIENTSESSION_H
 
-#include "../network/include/NetWorkObject.h"
-#include "../include/baseHeader.h"
-#include "../include/PackageHandler.hpp"
-#include "../include/packHeader.hpp"
-#include "../include/packageStruct.hpp"
-#include "../include/acctTimeTool.hpp"
-#include "../protocol/testMsg.pb.h"
-#include "../AccSvr/include/CHandlerFunc.hpp"
+#include "../../network/include/NetWorkObject.h"
+#include "../../include/baseHeader.h"
+#include "../../include/PackageHandler.hpp"
+#include "../../include/packHeader.hpp"
+#include "../../include/packageStruct.hpp"
+#include "../../include/acctTimeTool.hpp"
+#include "../../protocol/testMsg.pb.h"
+#include "../include/CHandlerFunc.hpp"
 
 class ClientSession : public NetWorkObject
 {

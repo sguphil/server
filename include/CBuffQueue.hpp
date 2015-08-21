@@ -58,7 +58,7 @@ public:
         if (calcFreeSpace() < size)
         {
             
-            printf("FILE:%s LINE:%d FUNC:%s m_nLength:%d < size:%d lost pakage!!!!need to add solution!!!",__FILE__, __LINE__, __FUNCTION__, calcFreeSpace(), size);
+            printf("FILE:%s LINE:%d FUNC:%s m_nLength:%d < size:%d lost pakage!!!!need to add solution!!!\n",__FILE__, __LINE__, __FUNCTION__, calcFreeSpace(), size);
             //assert(calcFreeSpace() >= size);
             return -1;
         }

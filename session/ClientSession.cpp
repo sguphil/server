@@ -54,7 +54,7 @@ int32 ClientSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsi
     if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
     {
         m_nNextTick = acct_time::getCurTimeMs() + 1000;
-        cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
+        //cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
         m_llpkgCount = 0;
     }
 
@@ -66,7 +66,7 @@ int32 ClientSession::testProtobuf(MsgHeader *msghead, char *msgbuf, int32 bufsiz
 {
     test_package::testMsg recvmsg;
     recvmsg.ParseFromArray(msgbuf, bufsize);
-    printf("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
+    //printf("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
     return processSend(msghead->sysId, msghead->msgType, msgbuf, bufsize);
 }
 

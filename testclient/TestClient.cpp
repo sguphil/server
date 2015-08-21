@@ -44,8 +44,12 @@ void TestClient::start()
         newThread->start();
     }
     
-    CSendThread *sendThread = new CSendThread(this);
-    sendThread->start();
+    for (int i = 0; i < 3;i++)
+    {
+        CSendThread *sendThread = new CSendThread(this);
+        sendThread->start();
+    }
+
 }
 
 void TestClient::updateSessionList()
@@ -192,7 +196,7 @@ void TestClient::handleActiveSession()
                 {
                     m_nSendTimes = 1;
                     msghead.sysId = 1;
-                    msghead.msgType = 4;
+                    msghead.msgType = 3; //4;
                     test_package::testMsg tmsg;
                     tmsg.set_sendtime(acct_time::getCurTimeMs());
                     char *sendStr = (char*)"hello ulserver";
@@ -231,11 +235,11 @@ void TestClient::update()
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;// 30 ms per logic handle
+            //m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;// 30 ms per logic handle
             //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
         //cout << "out logic loop:" << acct_time::getCurTimeMs() << endl;
-        acct_time::sleepMs(1); // sleep 1ms per loop
+        //acct_time::sleepMs(1); // sleep 1ms per loop
     }
     
 }

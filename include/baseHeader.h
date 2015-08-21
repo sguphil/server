@@ -62,8 +62,8 @@ typedef short int16;
 typedef short Int16;
 
 
-#define MAXPKGLEN 1024*8
-#define SESSIONBUFLEN 102400*8
+#define MAXPKGLEN 1024*8 //8KB
+#define SESSIONBUFLEN 1024*1024*8 // 8MB
 
 #define SAFE_DELETE(p) {if(NULL != (p)) { delete (p); (p) == NULL;}}
 

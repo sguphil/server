@@ -60,7 +60,14 @@ int32 StrictClient::testProtobuf(MsgHeader *msghead, char *msgbuf, int32 bufsize
 {
     test_package::testMsg recvmsg;
     recvmsg.ParseFromArray(msgbuf, bufsize);
-    printf("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
+    //printf("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
+    if (acct_time::getCurTimeMs() - m_nNextTick > 1000)
+    {
+        //cout << "===========================================%d" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
+        m_llpkgCount = 0;
+        m_nNextTick = acct_time::getCurTimeMs() + 1000;
+    }
+    m_llpkgCount++;
     return processSend(msghead->sysId, msghead->msgType, msgbuf, bufsize);
 }
 

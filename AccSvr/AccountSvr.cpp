@@ -9,7 +9,7 @@ AccountSvr::AccountSvr()
 
     m_nNextTick = m_nCycleTick + m_nInterval;
     m_ServerID = 1;
-    m_nIoThreadNum = 4;
+    m_nIoThreadNum = 1;
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
@@ -124,7 +124,7 @@ void AccountSvr::handleActiveSession()
             if ((acct_time::getCurTimeMs() - m_nStatisticTick)>1000) //1s
             {
                 m_nStatisticTick = acct_time::getCurTimeMs() + 1000;
-                cout << "========================================session=====" << ++m_nHandleCount << endl;
+                //cout << "========================================session=====" << ++m_nHandleCount << endl;
                 m_nHandleCount = 0;
             }
             m_nHandleCount++;

@@ -3,7 +3,7 @@
 #include "../include/Singleton.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/CommonList.h"
-//#include "../network/include/Session.h"
+#include "../network/include/Session.h"
 #include "../include/CServerBase.hpp"
 #include "../network/include/Connector.h"
 #include "../include/CIoThread.hpp"

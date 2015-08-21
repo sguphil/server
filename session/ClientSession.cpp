@@ -1,4 +1,5 @@
 #include "ClientSession.h"
+#include "../AccSvr/include/SessionHandler.hpp"
 
 extern CAccHandlerMgr g_AccHandlerMgr;
 
@@ -126,3 +127,4 @@ int32 ClientSession::processSend(uint16 sysid, uint16 msgid, char *msg, int32 ms
     encodepkg(buf, &header, &msgHead, msg, msgsize);
     return getSession()->send(buf, (int32)pkglen);
 }
+

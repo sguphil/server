@@ -8,8 +8,8 @@
 #include "../../include/CIoBuff.hpp"
 #include "../../include/packHeader.hpp"
 #include "../../include/packageStruct.hpp"
-#include "../../AccSvr/session/ClientSession.h"
-#include "../../testclient/session/StrictClient.h"
+#include "../../session/ClientSession.h"
+#include "../../session/StrictClient.h"
 #include "../../include/PackageHandler.hpp"
 #include "../../include/CPackageFetch.hpp"
 

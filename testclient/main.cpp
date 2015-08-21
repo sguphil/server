@@ -6,6 +6,7 @@
 #include "../include/baseHeader.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
+#include "../AccSvr/include/SessionHandler.hpp"
 
 #define ULIMITSVR 1
 

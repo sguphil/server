@@ -7,9 +7,9 @@
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
 #include "../Factory/BaseFactory.h"
-#include "../AccSvr/session/ClientSession.h"
+#include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
-#include "../include/PackageHandler.hpp"
+#include "./include/SessionHandler.hpp"
 
 #define ULIMITSVR 1
 

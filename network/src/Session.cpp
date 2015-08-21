@@ -1,5 +1,6 @@
 #include "../include/Session.h"
 #include "../../Factory/BaseFactory.h"
+#include "../../session/ClientSession.h"
 
 extern CBaseFactory<ClientSession> m_NetWorkObjectFactory;
 #define REUSE_NETWORKOBJ 1

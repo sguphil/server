@@ -75,7 +75,17 @@ public:
         m_nIoThreadNum = threadNum;
     }
 
- private:
+    inline int32 getSessionSwapTick()
+    {
+        return m_nSessionSwapTick;
+    }
+
+    inline void setSessionSwapTick(int32 tick)
+    {
+        m_nSessionSwapTick = tick;
+    }
+
+private:
     Acceptor m_acceptor;
     Connector m_connector;
     CommonList<CSession> m_waitSessionList;
@@ -92,6 +102,7 @@ public:
     int32 m_nIoThreadNum;
     int32 m_nHandleCount;
     int32 m_nStatisticTick;
+    int32 m_nSessionSwapTick;
 };
 
 

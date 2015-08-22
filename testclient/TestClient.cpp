@@ -123,7 +123,7 @@ void TestClient::removeDeadSession()
         if (m_activeSessionList.size() <= 0)
         {
             cout << "no session!!! exit!!!" << endl;
-            assert(false);
+            //assert(false);
         }
     }
 }

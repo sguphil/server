@@ -4,6 +4,7 @@
 #include "baseHeader.h"
 #include "CBuffQueue.hpp"
 #include "packHeader.hpp"
+#include "acctTimeTool.hpp"
 
 class CIoBuff
 {
@@ -67,9 +68,15 @@ public:
 
     inline void swapQueue()
     {
+        if (acct_time::getCurTimeMs() - m_nBuffSwapTick < m_nSwapFPS) 
+        {
+            return;
+        }
+
         lockSwap();
         if (m_pWRQueue->getBufLen() > 0)
         {
+            cout << "=================swap len is:" << m_pWRQueue->getBufLen() << endl;
             int32 rdLeftLen = m_pRDQueue->getBufLen();
             if (rdLeftLen > 0)
             {
@@ -196,6 +203,15 @@ public:
         return m_tempQueue.getBufLen();
     }
 
+    inline int32 getBuffSwapTick()
+    {
+        return m_nBuffSwapTick;
+    }
+
+    inline void setBuffSwapTick(int32 tick)
+    {
+        m_nBuffSwapTick = tick;
+    }
 protected:
     CIoBuff(CIoBuff& bufqueue);
 
@@ -208,7 +224,8 @@ private:
     CBuffQueue<char> *m_pWRQueue;
 
     CMutex m_swapMutex;
-
+    int32 m_nBuffSwapTick;
+    int32 m_nSwapFPS;
 };
 
 #endif

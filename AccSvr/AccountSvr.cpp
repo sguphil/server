@@ -2,7 +2,7 @@
 
 AccountSvr::AccountSvr()
 {
-    m_nInterval = 10; //loop per Xms default
+    m_nInterval = 41; //loop per Xms default
     m_nCycleTick = acct_time::getCurTimeMs(); 
     m_nStatisticTick = m_nCycleTick;
     m_nHandleCount = 0;
@@ -144,6 +144,7 @@ void AccountSvr::update()
             m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;// 30 ms per logic handle
             //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
+        //cout << "======out of frame!!!" << endl;
         acct_time::sleepMs(1); // sleep 1ms per loop
     }
 }

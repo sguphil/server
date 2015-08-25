@@ -6,25 +6,22 @@
 #include "../include/baseHeader.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
-#include "../Factory/BaseFactory.h"
 #include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
 #include "./include/SessionHandler.hpp"
+#include "../include/ServerInclude.hpp"
 
 #define ULIMITSVR 1
 
 using namespace std;
 extern void printItem(TestAccess *accessObj);
 
-CBaseFactory<ClientSession> m_NetWorkObjectFactory;
-CAccHandlerMgr g_AccHandlerMgr;
-
 int main()
 {
     signal(SIGPIPE, SIG_IGN);
     AccountSvr* accountSvr = AccountSvr::GetInstance();
     cout << "Hello world! ServerID is:" << accountSvr->getServerID() << endl;
-    m_NetWorkObjectFactory.init(10000, 50);
+    g_ClientNetWorkObjectFactory.init(10000, 50);
 
     g_AccHandlerMgr.addAllHandle();
     //TestAccess acsObj;

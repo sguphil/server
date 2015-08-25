@@ -31,7 +31,7 @@ public:
         while (true)
         {
             //cout << "CSendThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
-            int32 evCount = epoll_wait(svr->getSendEpollfd(),epEvent, 1, 1000);//100ms wait timeout infinite wait just one event to one sockfd
+            int32 evCount = epoll_wait(svr->getSendEpollfd(),epEvent, 30, 1000);//100ms wait timeout infinite wait just one event to one sockfd
             if (evCount > 0)
             {
                 for (int i = 0; i < evCount; i++)
@@ -45,18 +45,18 @@ public:
                         
                         if (oplen >= 0) // normal 
                         {
-                            if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
-                            {
-                                m_nNextTick = acct_time::getCurTimeMs() + 1000;
-                                cout << "=================sendThread============" << m_llpkgCount++ << endl;
-                                m_llpkgCount = 0;
+                            if (oplen > 0)
+                            { 
+                                if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
+                                {
+                                    m_nNextTick = acct_time::getCurTimeMs() + 1000;
+                                    cout << "=================sendThread============" << m_llpkgCount++ << endl;
+                                    m_llpkgCount = 0;
+                                }
+                                
+                                m_llpkgCount++; 
+                                //cout << "CSendThread=======sendlen:" << oplen << endl;
                             }
-                    
-                            m_llpkgCount++;
-                            /*if (oplen > 0)
-                            {
-                                cout << "CSendThread=======sendlen:" << oplen << endl;
-                            }*/
 
                             //session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);//single thread do not need epolloneshoot
                             //if (0 == oplen)

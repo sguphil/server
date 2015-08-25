@@ -65,7 +65,7 @@ void AccountSvr::updateSessionList()
     }
     
     // 2.process connect session
-    CommonList<CSession> *connSessionList =  m_connector.getConnList();
+    CommonList<CSession> *connSessionList =  m_connector.getConnList(); //all connector's session  connect to other server, we use mutilMap to record them
     if (connSessionList->size() > 0)
     {
         std::vector<CSession *> connectSessions;
@@ -76,6 +76,7 @@ void AccountSvr::updateSessionList()
             CSession *newSession = *iter;
             newSession->setStatus(active);
             m_activeSessionList.push_back(newSession);
+            m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession*>(newSession->getType(), newSession));
             //add to epoll event loop
             addFdToRecvEpoll(newSession);
             addFdToSendEpoll(newSession);
@@ -102,6 +103,22 @@ void AccountSvr::removeDeadSession()
                 if (session->getType() == eClient)
                 {
                     m_acceptor.sessionReUse(session);
+                }
+                else
+                {
+                    typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
+                    typedef std::pair<mapiter, mapiter> rangeBeginEnd;
+                    rangeBeginEnd range = m_ServerSessionMap.equal_range(session->getType());
+                    for (mapiter be = range.first; be != range.second; be++)
+                    {
+                        if (be->second->getSessionId() == session->getSessionId())
+                        {
+                            m_ServerSessionMap.erase(be);
+                            //put in connector errrolist, wait for reconnect...
+                            m_connector.addToErrorList(session);
+                            break;
+                        }
+                    }
                 }
             }
             else

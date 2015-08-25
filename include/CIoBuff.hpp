@@ -73,6 +73,8 @@ public:
             return;
         }
 
+        m_nBuffSwapTick = acct_time::getCurTimeMs();
+
         lockSwap();
         if (m_pWRQueue->getBufLen() > 0)
         {
@@ -205,12 +207,12 @@ public:
 
     inline int32 getBuffSwapTick()
     {
-        return m_nBuffSwapTick;
+        return m_nSwapFPS;
     }
 
     inline void setBuffSwapTick(int32 tick)
     {
-        m_nBuffSwapTick = tick;
+        m_nSwapFPS = tick;
     }
 protected:
     CIoBuff(CIoBuff& bufqueue);

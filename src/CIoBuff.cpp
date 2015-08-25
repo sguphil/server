@@ -9,7 +9,7 @@ CIoBuff::CIoBuff(int32 size, int32 extraSize)
 {
     init(size, extraSize);
     m_nBuffSwapTick = acct_time::getCurTimeMs();
-    m_nSwapFPS = 500;
+    m_nSwapFPS = 0;
 }
 
 CIoBuff::~CIoBuff()

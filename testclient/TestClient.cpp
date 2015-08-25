@@ -239,7 +239,7 @@ void TestClient::update()
             //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
         //cout << "out logic loop:" << acct_time::getCurTimeMs() << endl;
-        //acct_time::sleepMs(1); // sleep 1ms per loop
+        acct_time::sleepMs(1000); // sleep 1ms per loop
     }
     
 }

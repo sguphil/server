@@ -7,14 +7,12 @@
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
 #include "../AccSvr/include/SessionHandler.hpp"
+#include "../include/ServerInclude.hpp"
 
 #define ULIMITSVR 1
 
 using namespace std;
 extern void printItem(TestAccess *accessObj);
-
-CBaseFactory<ClientSession> m_NetWorkObjectFactory;
-CAccHandlerMgr g_AccHandlerMgr;
 
 int main()
 {
@@ -22,7 +20,7 @@ int main()
     TestClient* testClient = TestClient::GetInstance();
     cout << "Hello world! ServerID is:" << testClient->getServerID() << endl;
     
-    m_NetWorkObjectFactory.init(1, 1);
+    g_ClientNetWorkObjectFactory.init(1, 1);
     /*
     CBaseFactory<CPlayer> playerFactory;
     playerFactory.init(10, 10);

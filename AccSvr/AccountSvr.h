@@ -55,7 +55,7 @@ public:
     int32 addFdToSendEpoll(CSession* session)
     {
         struct epoll_event ev;
-        ev.events = EPOLLOUT;// | EPOLLONESHOT; // default EPOLLOUT event , signal thread without EPOLLONESHOT
+        ev.events = EPOLLOUT;// | EPOLLONESHOT; // default EPOLLOUT event , single thread without EPOLLONESHOT
         ev.data.ptr = session;
         return epoll_ctl(m_epollSendfd, EPOLL_CTL_ADD, session->getSocket(), &ev);
     }
@@ -103,6 +103,7 @@ private:
     int32 m_nHandleCount;
     int32 m_nStatisticTick;
     int32 m_nSessionSwapTick;
+    std::multimap<SESSION_TYPE, CSession *> m_ServerSessionMap; //need to update session in loop
 };
 
 

@@ -8,7 +8,7 @@ template<typename T>
 class CBaseFactory
 {
 public:
-    CBaseFactory() {}
+    CBaseFactory() { m_nAccNum = 1;} // defualt increase one item
     virtual ~CBaseFactory() 
     {
         /*
@@ -32,7 +32,7 @@ public:
     {
         if (m_nItemLess <= 0)
         {
-            addItem(m_nAccNum, false);
+            addItem(m_nAccNum, true);
         }
 
         T* allocItem = m_ItemList.front();
@@ -55,8 +55,8 @@ protected:
         {
             for (int i=0; i<num; i++)
             {
-                T *addPlayer = new T;
-                m_ItemList.push_back(addPlayer);
+                T *addItem = new T;
+                m_ItemList.push_back(addItem);
                 m_nItemLess++;
                 if (flashTotalNum)
                     m_nTotalItem++;

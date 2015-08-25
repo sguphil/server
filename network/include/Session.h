@@ -12,11 +12,13 @@
 #include "../../session/StrictClient.h"
 #include "../../include/PackageHandler.hpp"
 #include "../../include/CPackageFetch.hpp"
+//#include "../../include/queue.hpp"
 
 #define USE_DOUBLE_QUEUE 1
 
 class NetWorkObject;
 //class ClientSession;
+
 
 class CSession
 {
@@ -34,7 +36,7 @@ public:
         #endif
 
         #if REUSE_NETWORKOBJ
-        m_NetWorkObjectFactory.reuse(m_pBindNetWorkObj);
+        g_ClientNetWorkObjectFactory.reuse(m_pBindNetWorkObj);
         #else
         delete m_pBindNetWorkObj;
         close(m_socket); // close socket fd
@@ -131,6 +133,16 @@ public:
         return m_eStatus;
     }
 
+    inline uint32 getSessionId()
+    {
+        return m_nSessionId;
+    }
+
+    inline void setm_nSessionId(uint32 sessionId)
+    {
+        m_nSessionId = sessionId;
+    }
+
     void defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 msgsize); // first package to register
     void defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize);
 /*
@@ -144,6 +156,25 @@ public:
         return &m_recvBuff;
     }
 */
+    #ifdef USE_DOUBLE_QUEUE
+    inline CIoBuff* getRecvBuffPtr()
+    {
+        return &m_recvBuff;
+    }
+
+    inline CIoBuff* getSendBuffPtr()
+    {
+        return &m_sendBuff;
+    } 
+    #endif
+
+    inline void setRecvNSendBuffSwapTick(int32 recvSwapTick, int32 sendSwapTick)
+    {
+        #ifdef USE_DOUBLE_QUEUE
+        m_recvBuff.setBuffSwapTick(recvSwapTick);
+        m_sendBuff.setBuffSwapTick(sendSwapTick);
+        #endif
+    }
 private:
     Int32 m_socket;
     char m_szIp[32];
@@ -159,7 +190,12 @@ private:
     CRecvBuf m_recvBuff;
     CSendBuf m_sendBuff;
     #endif
+    /*
+    clwCore::CTwoQueues m_RecvTwoQueue;
+    clwCore::CTwoQueues m_SendTwoQueue;
+    */
     CServerBase *m_ptrServer;
     eSESSIONSTATUS m_eStatus;
+    uint32 m_nSessionId;
 };
 #endif // __SESSION_H__

@@ -2,7 +2,7 @@
 #include "../../Factory/BaseFactory.h"
 #include "../../session/ClientSession.h"
 
-extern CBaseFactory<ClientSession> m_NetWorkObjectFactory;
+extern CBaseFactory<ClientSession> g_ClientNetWorkObjectFactory;
 #define REUSE_NETWORKOBJ 1
 
 CSession::CSession()
@@ -12,6 +12,11 @@ CSession::CSession()
     m_recvBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
     m_sendBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
     m_pBindNetWorkObj = NULL;
+    m_nSessionId = 0;
+    /*
+    m_RecvTwoQueue.init(SESSIONBUFLEN);
+    m_SendTwoQueue.init(SESSIONBUFLEN); 
+    */ 
 }
 
 CSession::~CSession()
@@ -41,7 +46,6 @@ int32 CSession::recv()
     int recvlen = m_recvBuff.getBuffQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
     return recvlen;
     #endif
-
 }
 
 int32 CSession::modEpollEvent(int32 epollfd, bool isRecv, bool addEvent)
@@ -155,7 +159,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
     {
     case 1: // client
         {
-            netobj = m_NetWorkObjectFactory.allocate();
+            netobj = g_ClientNetWorkObjectFactory.allocate();
             //netobj = new ClientSession;
             assert(netobj != NULL);
             bindNetWorkObj(netobj);

@@ -35,9 +35,29 @@ void Connector::addToWaitList(CSession *session)
     pthread_mutex_unlock(&m_mutex);
 }
 
+void Connector::addToErrorList(CSession *session)
+{
+    AutoLock lock(&m_connErrListLock);
+    m_connErrList.push_back(session);
+}
+
+void Connector::reConnectAll()
+{
+    AutoLock lock(&m_connErrListLock);
+    if (!m_connErrList.empty())
+    {
+        CommonList<CSession>::iterator iter;
+        for (iter = m_connErrList.begin(); iter != m_connErrList.end(); iter++)
+        {
+            addToWaitList(*iter);
+        }
+    }
+}
+
 bool Connector::connect(const char *szIp, Int32 Port, SESSION_TYPE type)
 {
     CSession *pSession = m_sessionFactory.allocate();
+    pSession->setType(type);
     if (NULL == pSession)
     {
         printf("connector can not alloc Session\n");

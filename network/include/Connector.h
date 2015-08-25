@@ -20,6 +20,8 @@ public:
     bool connect(const char *szIp, Int32 Port, SESSION_TYPE type);
     void *threadRoutine(void *args);
     void addToWaitList(CSession *session);
+    void addToErrorList(CSession *session);
+    void reConnectAll();
     bool getConnList(std::vector<CSession*> &retVec);
 
     inline CommonList<CSession>* getConnList()

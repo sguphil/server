@@ -44,19 +44,18 @@ public:
                         isRecvEvent = true;
                         if (oplen >= 0) // normal 
                         {
-                            if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
-                            {
-                                m_nNextTick = acct_time::getCurTimeMs() + 1000;
-                                cout << "=============================" << m_llpkgCount++ << endl;
-                                m_llpkgCount = 0;
-                            }
-                            
-                            m_llpkgCount++;
-
-                            #if 0
+                            #if 1
                             if (oplen > 0 )
                             {
-                                cout << "CIoThread=======recvlen:" << oplen << endl;
+                                if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
+                                {
+                                    m_nNextTick = acct_time::getCurTimeMs() + 1000;
+                                    cout << "===========================================================" << m_llpkgCount++ << endl;
+                                    m_llpkgCount = 0;
+                                }
+                            
+                                m_llpkgCount++;
+                                //cout << "CIoThread=======recvlen:" << oplen << endl;
                             }
                             #endif 
 

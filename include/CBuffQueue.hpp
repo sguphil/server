@@ -140,7 +140,7 @@ public:
     {
         AutoLock qlock(&m_mutex);
         T *ret = m_pHead;
-        if (copySize>0 && m_pHead > m_pTail) // always do
+        if (copySize>0 && m_pHead >= m_pTail) // always do
         {
             memcpy(m_pData + m_nSize, m_pData, copySize);
         }
@@ -204,6 +204,7 @@ public:
         int32 canRecvlen = getWriteableLen();
         if (0 == canRecvlen)
         {
+            printf("recvFromSocket ======================canRecvlen!!!!!!!! 0!!!!!!!!\n");
             return 0;
         }
 
@@ -297,8 +298,8 @@ private:
 public:
     int32 fetchFullPkg(CpackageFetch& pkgret)
     {
-        AutoLock qlock(&m_mutex);
-        if (getHead(&pkgret.m_pkgHeader) > 0) //pkghead len enouth
+        //AutoLock qlock(&m_mutex);
+        if (getHead(&pkgret.m_pkgHeader) > 0) //pkghead len enough
         {
             int32 allMsglen = pkgret.m_pkgHeader.length;
             char buf[allMsglen];

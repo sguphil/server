@@ -75,6 +75,11 @@ public:
         m_nIoThreadNum = threadNum;
     }
 
+    inline void setConnectCount(int32 count=1)
+    {
+        m_ConnCount = count;
+    }
+
 private:
     Acceptor m_acceptor;
     Connector m_connector;
@@ -92,6 +97,7 @@ private:
     int32 m_epollSendfd;
     bool m_bAlreadySend;
     int32 m_nIoThreadNum;
+    int32 m_ConnCount;
 };
 
 #endif // __TESTCLIENT_H__

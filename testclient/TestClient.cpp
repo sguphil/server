@@ -31,9 +31,9 @@ void TestClient::start()
     //m_acceptor.startListen("127.0.0.1", 9997);
     //m_acceptor.start();
     m_connector.start();
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < m_ConnCount; i++)
     {
-        m_connector.connect("127.0.0.1", 9997, eStrictClient);
+        m_connector.connect("192.168.2.75", 9997, eStrictClient);
         acct_time::sleepMs(2);
     }
 
@@ -44,7 +44,7 @@ void TestClient::start()
         newThread->start();
     }
     
-    for (int i = 0; i < 3;i++)
+    for (int i = 0; i < 1;i++)
     {
         CSendThread *sendThread = new CSendThread(this);
         sendThread->start();

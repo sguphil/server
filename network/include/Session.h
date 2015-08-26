@@ -197,5 +197,6 @@ private:
     CServerBase *m_ptrServer;
     eSESSIONSTATUS m_eStatus;
     uint32 m_nSessionId;
+    char m_LeftPkgBuf[MAXPKGLEN];
 };
 #endif // __SESSION_H__

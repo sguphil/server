@@ -13,6 +13,8 @@ CSession::CSession()
     m_sendBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
     m_pBindNetWorkObj = NULL;
     m_nSessionId = 0;
+
+    //m_LeftPkgBuf = new char[MAXPKGLEN];
     /*
     m_RecvTwoQueue.init(SESSIONBUFLEN);
     m_SendTwoQueue.init(SESSIONBUFLEN); 
@@ -21,7 +23,7 @@ CSession::CSession()
 
 CSession::~CSession()
 {
-
+    //delete[] m_LeftPkgBuf;
 }
 int32 CSession::send(char *buff, int32 buffsize)
 {
@@ -40,6 +42,10 @@ int32 CSession::recv()
     #ifdef USE_DOUBLE_QUEUE
     m_recvBuff.lockSwap();
     int recvlen = m_recvBuff.getWRQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
+    if (0 == recvlen)
+    {
+        cout << "===============test===========send buff len:" << m_recvBuff.getRDQueuePtr()->getBufLen() << endl;
+    }
     m_recvBuff.unLockSwap();
     return recvlen;
     #else
@@ -98,32 +104,56 @@ void CSession::processPacket()
     bool isbreak = false;
     int handlePkgCount = 0;
     CpackageFetch pkgGet;
-    char pkg[MAXPKGLEN];
     PkgHeader header;
-    int32 leftPkgRet = m_recvBuff.checkLeftQueue(pkg, &header);
+    int32 leftPkgRet = m_recvBuff.checkLeftQueue(m_LeftPkgBuf, &header);
     if(leftPkgRet >= 0)
     {
         if (leftPkgRet > 0)
         {
-            handlePackage(this, &header, (MsgHeader*)(pkg+sizeof(header)), (pkg+sizeof(header)+sizeof(MsgHeader)), header.length-sizeof(MsgHeader));
+            handlePackage(this, &header, (MsgHeader *)(m_LeftPkgBuf + sizeof(header)), (m_LeftPkgBuf + sizeof(header) + sizeof(MsgHeader)), header.length - sizeof(MsgHeader));
             handlePkgCount++;
             assert(m_recvBuff.getTempQueLen() == 0);
-        }
 
-        while (m_recvBuff.getRDQueuePtr()->fetchFullPkg(pkgGet) > 0)
-        {
-            //printf("===========readQueuelen:%d\n", m_recvBuff.getTempQueLen());
-            assert(m_recvBuff.getTempQueLen() == 0);
-            handlePackage(this, &pkgGet.m_pkgHeader, &pkgGet.m_msgHeader, pkgGet.m_msgbuf, pkgGet.m_nMsglen);
-            if (handlePkgCount++ > 30) // handle 30 packages each loop
+            if (m_recvBuff.getTempQueLen() == 0)
             {
-                isbreak = true;
-                break;                
+                while (m_recvBuff.getRDQueuePtr()->fetchFullPkg(pkgGet) > 0)
+                {
+                    //printf("===========readQueuelen:%d\n", m_recvBuff.getTempQueLen());
+                    assert(m_recvBuff.getTempQueLen() == 0);
+                    handlePackage(this, &pkgGet.m_pkgHeader, &pkgGet.m_msgHeader, pkgGet.m_msgbuf, pkgGet.m_nMsglen);
+                    /*if (handlePkgCount++ > 30) // handle 30 packages each loop
+                    {
+                        isbreak = true;
+                        break;
+                    }*/
+                }
+                if (!isbreak)
+                {
+                    m_recvBuff.swapQueue();
+                }
             }
         }
-        if (!isbreak)
+        else if (m_recvBuff.getRDQueuePtr()->getBufLen() == 0)
         {
             m_recvBuff.swapQueue();
+        }
+        else
+        {
+            while (m_recvBuff.getRDQueuePtr()->fetchFullPkg(pkgGet) > 0)
+            {
+                //printf("===========readQueuelen:%d\n", m_recvBuff.getTempQueLen());
+                assert(m_recvBuff.getTempQueLen() == 0);
+                handlePackage(this, &pkgGet.m_pkgHeader, &pkgGet.m_msgHeader, pkgGet.m_msgbuf, pkgGet.m_nMsglen);
+                /*if (handlePkgCount++ > 30) // handle 30 packages each loop
+                {
+                    isbreak = true;
+                    break;
+                }*/
+            }
+            if (!isbreak)
+            {
+                m_recvBuff.swapQueue();
+            }
         }
     }
     else

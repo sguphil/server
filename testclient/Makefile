@@ -12,14 +12,14 @@ PROBUFOBJS += $(patsubst %cpp, %o, $(SOURCE))
 OBJS = $(PROBUFOBJS)
 
 #3.编译选项
-CCFLAGS = -Wall -c -g -O3
+CCFLAGS = -Wall -c -g #-O3
 
 #4.链接选项及搜索目录
 LIB_PATH = /usr/lib
 PROBUFPATH = /usr/local/lib
 GEN_LIBPATH = /usr/lib64/mysql
 LDFLAGS = -L$(LIB_PATH) -L$(GEN_LIBPATH) -L$(PROBUFPATH)
-LDLIBS = -ldl -lmysqlclient -lpthread -lprotobuf
+LDLIBS = -ldl -lpthread -lprotobuf #-lmysqlclient 
 
 #5.生成动态库选项
 

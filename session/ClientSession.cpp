@@ -46,7 +46,7 @@ int32 ClientSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsi
     int32 pkglen = bufsize;
     char buf[(pmsg->strlen)+1];
     memset(buf, 0x00, sizeof(buf));
-    snprintf(buf, (pmsg->strlen), "%s", (char *)pmsg + sizeof(pmsg->strlen));
+    snprintf(buf, (pmsg->strlen), "%s", (char *)msgbuf + sizeof(pmsg->strlen));
     #if 0
     printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
     #endif

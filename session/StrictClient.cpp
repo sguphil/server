@@ -96,5 +96,5 @@ int32 StrictClient::processSend(uint16 sysid, uint16 msgid, char *msgbuf, int32 
     uint16 allPkgLen = pkglen + sizeof(header);
     char buf[allPkgLen];
     encodepkg(buf, &header, &msgHead, msgbuf, bufsize);
-    return getSession()->send(buf, (int32)allPkgLen);
+    return 0; //getSession()->send(buf, (int32)allPkgLen);
 }

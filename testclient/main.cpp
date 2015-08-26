@@ -14,7 +14,7 @@
 using namespace std;
 extern void printItem(TestAccess *accessObj);
 
-int main()
+int main(int argc, char **argv)
 {
     signal(SIGPIPE, SIG_IGN);
     TestClient* testClient = TestClient::GetInstance();
@@ -27,6 +27,12 @@ int main()
     CPlayer *player = playerFactory.allocate();
     cout << "actor type is:" << player->getActorType() << endl;
     */
+    int32 count = 1;
+    if (argc == 2)
+    {
+        count = atoi(argv[1]);
+    }
+    testClient->setConnectCount(count);
     testClient->start();
     //Connector conn;
     //conn.start();

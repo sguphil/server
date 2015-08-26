@@ -70,7 +70,7 @@ public:
     {
         if (acct_time::getCurTimeMs() - m_nBuffSwapTick < m_nSwapFPS) 
         {
-            return;
+            //return;
         }
 
         m_nBuffSwapTick = acct_time::getCurTimeMs();
@@ -78,7 +78,7 @@ public:
         lockSwap();
         if (m_pWRQueue->getBufLen() > 0)
         {
-            cout << "=================swap len is:" << m_pWRQueue->getBufLen() << endl;
+            //cout << "=================swap len is:" << m_pWRQueue->getBufLen() << endl;
             int32 rdLeftLen = m_pRDQueue->getBufLen();
             if (rdLeftLen > 0)
             {
@@ -107,24 +107,25 @@ public:
                     return -1;
                 }
                 
-                int32 leftMsgLen = m_tempQueue.getBufLen();
+                //int32 leftMsgLen = m_tempQueue.getBufLen();
                 
-                memcpy(msg, m_tempQueue.getReadPtr(leftMsgLen), leftMsgLen);
-                int32 leftMsgLen2 = msgSize + sizeof(*head) - leftMsgLen;
+                memcpy(msg, m_tempQueue.getReadPtr(leftLen), leftLen);
+                int32 leftMsgLen2 = msgSize + sizeof(*head) - leftLen;
                 if (leftMsgLen2 > 0)
                 {
-                    if (leftMsgLen2 <= m_pRDQueue->getBufLen())
+                    int32 readQueueLen = m_pRDQueue->getBufLen();
+                    if (leftMsgLen2 <= readQueueLen)
                     {
-                        memcpy(msg + leftMsgLen, m_pRDQueue->getReadPtr(leftMsgLen2), leftMsgLen2);
-                        m_tempQueue.popMsg(NULL, leftMsgLen);
+                        memcpy(msg + leftLen, m_pRDQueue->getReadPtr(leftMsgLen2), leftMsgLen2);
+                        m_tempQueue.popMsg(NULL, leftLen);
                         m_pRDQueue->popMsg(NULL, leftMsgLen2);
                     }
                     else
                     {
-                        char buf[leftMsgLen2];
-                        memcpy(buf, m_pRDQueue->getReadPtr(leftMsgLen2), leftMsgLen2);
-                        m_tempQueue.pushMsg(buf, leftMsgLen2);
-                        m_pRDQueue->popMsg(NULL, leftMsgLen2);
+                        char buf[readQueueLen];
+                        memcpy(buf, m_pRDQueue->getReadPtr(readQueueLen), readQueueLen);
+                        assert(m_tempQueue.pushMsg(buf, readQueueLen) > 0);
+                        m_pRDQueue->popMsg(NULL, readQueueLen);
                         return 0;
                     }
                 }
@@ -154,18 +155,18 @@ public:
                 {
                     return -1;
                 }
-                int32 leftMsgLen = m_tempQueue.getBufLen();
-                memcpy(msg, m_tempQueue.getReadPtr(leftMsgLen), leftMsgLen);
-                int32 leftMsgSize = msgSize + sizeof(*head) - leftMsgLen;
-                if (m_pRDQueue->getBufLen()>= (leftMsgSize))
+                //int32 leftMsgLen = m_tempQueue.getBufLen();
+                memcpy(msg, m_tempQueue.getReadPtr(leftLen), leftLen);
+                int32 leftMsgSize = msgSize + sizeof(*head) - leftLen;
+                int32 rdQlen = m_pRDQueue->getBufLen();
+                if (rdQlen >= (leftMsgSize))
                 {
-                    memcpy((char *)msg+leftMsgLen, m_pRDQueue->getReadPtr(leftMsgSize), leftMsgSize);
+                    memcpy((char *)msg+leftLen, m_pRDQueue->getReadPtr(leftMsgSize), leftMsgSize);
                     m_tempQueue.popMsg(NULL, leftLen);
                     m_pRDQueue->popMsg(NULL, leftMsgSize);
                 }
                 else
                 {
-                    int32 rdQlen = m_pRDQueue->getBufLen();
                     char buf[rdQlen];
                     memcpy((char *)buf, m_pRDQueue->getReadPtr(rdQlen), rdQlen);
                     m_tempQueue.pushMsg(buf, rdQlen);
@@ -182,13 +183,13 @@ public:
     //about send msg
     int32 putMsg(PkgHeader *header, char* msg, int32 msgSize)
     {
-        lockSwap();
+        //lockSwap();
         int32 pkgLen = msgSize + sizeof(*header);
         char buf[pkgLen];
         memcpy(buf, (char*)header, sizeof(*header));
         memcpy(buf + sizeof(*header), msg, msgSize);
         m_pWRQueue->pushMsg(buf,msgSize+sizeof(*header));
-        unLockSwap();
+        //unLockSwap();
         return pkgLen;
     }
 

@@ -36,19 +36,10 @@ public:
 
     inline int32 setMsgBuff(char* buff, int32 size)
     {
-        if (size > m_nMsglen && m_msgbuf != NULL)
-        {
-            m_msgbuf = (char*)realloc((char*)m_msgbuf, sizeof(char)*size);
-        }
-        else if (NULL == m_msgbuf)
-        {
-            m_msgbuf = (char*)malloc(sizeof(char)*size);
-        }
-
-        if (NULL == m_msgbuf)
+        if (size > MAXPKGLEN)
         {
             printf("getpackage error!!!");
-            assert(NULL != m_msgbuf);
+            assert(size <= MAXPKGLEN);
             return -1;
         }
         memcpy(m_msgbuf,buff, size);
@@ -64,7 +55,7 @@ public:
 public:// all can access the items
     PkgHeader m_pkgHeader;
     MsgHeader m_msgHeader;
-    char *m_msgbuf;
+    char m_msgbuf[MAXPKGLEN];
     int32 m_nMsglen;
 };
 

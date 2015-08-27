@@ -18,7 +18,7 @@ extern int32 MAXPKGLEN;
 extern int32 SESSIONBUFLEN;
 
 #define USE_DOUBLE_QUEUE 1
-
+//#define REUSE_NETWORKOBJ 1
 class NetWorkObject;
 //class ClientSession;
 

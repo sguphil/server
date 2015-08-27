@@ -68,12 +68,14 @@ public:
 
     inline void swapQueue()
     {
+        #if 0
         if (acct_time::getCurTimeMs() - m_nBuffSwapTick < m_nSwapFPS) 
         {
             return;
         }
 
         m_nBuffSwapTick = acct_time::getCurTimeMs();
+        #endif
 
         lockSwap();
         if (m_pWRQueue->getBufLen() > 0)

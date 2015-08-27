@@ -10,6 +10,7 @@
 #include "../protocol/testMsg.pb.h"
 #include "./include/SessionHandler.hpp"
 #include "../include/ServerInclude.hpp"
+#include "../include/log4z.h"
 
 #define ULIMITSVR 1
 
@@ -18,6 +19,9 @@ extern void printItem(TestAccess *accessObj);
 
 int main()
 {
+    //using namespace zsummer::log4z;
+    //ILog4zManager::getRef().start();
+    //ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
     signal(SIGPIPE, SIG_IGN);
     AccountSvr* accountSvr = AccountSvr::GetInstance();
     cout << "Hello world! ServerID is:" << accountSvr->getServerID() << endl;
@@ -38,7 +42,9 @@ int main()
 
     test_package::testMsg after;
     after.ParseFromArray(buf, buflen);
-    cout << "after:" << after.sendtime() << "  msg:" << after.msg() << endl;
+
+    
+    LOGI("after:" << after.sendtime() << "  msg:" << after.msg());
     
     //CBaseFactory<CPlayer> playerFactory;
     //playerFactory.init(10, 10);

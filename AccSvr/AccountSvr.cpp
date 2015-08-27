@@ -16,7 +16,7 @@ AccountSvr::AccountSvr()
     m_nNextTick = m_nCycleTick + m_nInterval;
     m_ServerID = m_Config.m_accConfig.serverid;
     m_nIoThreadNum = m_Config.m_accConfig.recvThread;
-    printf("=====e======m_nIoThreadNum:%d\n", m_nIoThreadNum);
+    LOGI("=====e======m_nIoThreadNum:%d" <<  m_nIoThreadNum);
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);

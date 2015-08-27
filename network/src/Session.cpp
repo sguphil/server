@@ -2,8 +2,8 @@
 #include "../../Factory/BaseFactory.h"
 #include "../../session/ClientSession.h"
 
-extern CBaseFactory<ClientSession> g_ClientNetWorkObjectFactory;
 #define REUSE_NETWORKOBJ 1
+extern CBaseFactory<ClientSession> g_ClientNetWorkObjectFactory;
 
 CSession::CSession()
 {

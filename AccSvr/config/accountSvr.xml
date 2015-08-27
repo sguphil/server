@@ -8,7 +8,7 @@
 	<maxclient>3000</maxclient>
 	<recvThread>1</recvThread>  
 	<sendThread>1</sendThread>
-	<sessionbuflen>10240000</sessionbuflen>
+	<sessionbuflen>1024000</sessionbuflen>
 	<maxpkglen>8192</maxpkglen>
 	<updateFps>41</updateFps>
     </localconfig>

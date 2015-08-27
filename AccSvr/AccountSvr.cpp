@@ -2,14 +2,21 @@
 
 AccountSvr::AccountSvr()
 {
-    m_nInterval = 41; //loop per Xms default
+    m_Config.init("./config/accountSvr.xml");
+    m_Config.parseXml();
+
+    m_nInterval = m_Config.m_accConfig.updateFps; //loop per Xms default
     m_nCycleTick = acct_time::getCurTimeMs(); 
+    MAXPKGLEN = m_Config.m_accConfig.sessionbuflen;
+    SESSIONBUFLEN = m_Config.m_accConfig.maxpkglen;
+
     m_nStatisticTick = m_nCycleTick;
     m_nHandleCount = 0;
 
     m_nNextTick = m_nCycleTick + m_nInterval;
-    m_ServerID = 1;
-    m_nIoThreadNum = 1;
+    m_ServerID = m_Config.m_accConfig.serverid;
+    m_nIoThreadNum = m_Config.m_accConfig.recvThread;
+    printf("=====e======m_nIoThreadNum:%d\n", m_nIoThreadNum);
     m_svrType = ACCSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
@@ -28,8 +35,8 @@ AccountSvr::~AccountSvr()
 
 void AccountSvr::start()
 {
-    m_acceptor.init();
-    m_acceptor.startListen("127.0.0.1", 9997);
+    m_acceptor.init(m_Config.m_accConfig.maxclient);
+    m_acceptor.startListen(m_Config.m_accConfig.ip, m_Config.m_accConfig.port);
     m_acceptor.start();
 
     for (int i = 0; i < m_nIoThreadNum;i++)

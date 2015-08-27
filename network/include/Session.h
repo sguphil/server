@@ -14,6 +14,9 @@
 #include "../../include/CPackageFetch.hpp"
 //#include "../../include/queue.hpp"
 
+extern int32 MAXPKGLEN;
+extern int32 SESSIONBUFLEN;
+
 #define USE_DOUBLE_QUEUE 1
 
 class NetWorkObject;
@@ -197,6 +200,8 @@ private:
     CServerBase *m_ptrServer;
     eSESSIONSTATUS m_eStatus;
     uint32 m_nSessionId;
-    char m_LeftPkgBuf[MAXPKGLEN];
+    char *m_LeftPkgBuf;
+    CpackageFetch m_pkgGet;
+    PkgHeader m_header;
 };
 #endif // __SESSION_H__

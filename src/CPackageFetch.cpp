@@ -3,11 +3,13 @@
 CpackageFetch::CpackageFetch():
 m_nMsglen(0)
 {
-
+    m_msgbuf = new char[MAXPKGLEN];
+    assert(m_msgbuf != NULL);
 }
 
 CpackageFetch::~CpackageFetch()
 {
+    delete[] m_msgbuf;
     m_nMsglen = 0;
 }
 

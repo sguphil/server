@@ -61,10 +61,6 @@ typedef unsigned short uInt16;
 typedef short int16;
 typedef short Int16;
 
-
-#define MAXPKGLEN 1024*8 //8KB
-#define SESSIONBUFLEN 1024*1024*8 // 8k
-
 #define SAFE_DELETE(p) {if(NULL != (p)) { delete (p); (p) == NULL;}}
 
 enum eSESSIONSTATUS

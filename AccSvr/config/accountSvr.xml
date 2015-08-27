@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<AccSvrConfig>  
+    <!--list all config.-->  
+    <localconfig>  
+	<serverid>1</serverid>
+        <ip>127.0.0.1</ip>  
+	<port>9997</port>
+	<maxclient>3000</maxclient>
+	<recvThread>1</recvThread>  
+	<sendThread>1</sendThread>
+	<sessionbuflen>10240000</sessionbuflen>
+	<maxpkglen>8192</maxpkglen>
+	<updateFps>41</updateFps>
+    </localconfig>
+
+    <mysql>  
+	<serverid>1</serverid>
+        <ip>127.0.0.1</ip>  
+	<port>3306</port>
+	<instNum>10</instNum>
+    </mysql>
+
+    <dbSvr>  
+	<serverid>1</serverid>
+        <ip>127.0.0.1</ip>  
+	<port>9998</port>
+    </dbSvr>
+
+    <logicSvr>
+	<serverid>1</serverid>
+	<ip>127.0.0.1</ip>  
+	<port>9998</port>
+    </logicSvr>
+
+    <!--more config.-->  
+</AccSvrConfig>  

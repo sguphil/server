@@ -9,6 +9,10 @@
 #include "../include/CIoThread.hpp"
 #include "../include/CSendThread.hpp"
 #include "../include/acctTimeTool.hpp"
+#include "AccSvrConfig.hpp"
+
+extern int32 MAXPKGLEN;
+extern int32 SESSIONBUFLEN;
 
 class AccountSvr: public CServerBase, public base::Singleton<AccountSvr>
 {
@@ -104,6 +108,7 @@ private:
     int32 m_nStatisticTick;
     int32 m_nSessionSwapTick;
     std::multimap<SESSION_TYPE, CSession *> m_ServerSessionMap; //need to update session in loop
+    CAccSvrConfig m_Config;
 };
 
 

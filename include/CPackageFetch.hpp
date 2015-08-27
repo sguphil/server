@@ -1,15 +1,18 @@
 #ifndef __CPACKAGEFETCH_H__
 #define __CPACKAGEFETCH_H__
 #include "packHeader.hpp"
+extern int32 MAXPKGLEN;
+extern int32 SESSIONBUFLEN;
 
 class CpackageFetch
 {
 public:
     CpackageFetch();
     ~CpackageFetch();
+private:
     CpackageFetch(CpackageFetch &inst);
     CpackageFetch& operator=(CpackageFetch& inst);
-    
+public:
     inline int32 getPackageLen()
     {
         return sizeof(m_pkgHeader)+sizeof(m_msgHeader)+m_nMsglen;
@@ -55,7 +58,7 @@ public:
 public:// all can access the items
     PkgHeader m_pkgHeader;
     MsgHeader m_msgHeader;
-    char m_msgbuf[MAXPKGLEN];
+    char *m_msgbuf;;
     int32 m_nMsglen;
 };
 

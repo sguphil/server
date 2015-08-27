@@ -33,7 +33,7 @@ void TestClient::start()
     m_connector.start();
     for (int i = 0; i < m_ConnCount; i++)
     {
-        m_connector.connect("192.168.2.75", 9997, eStrictClient);
+        m_connector.connect("127.0.0.1", 9997, eStrictClient);
         acct_time::sleepMs(2);
     }
 

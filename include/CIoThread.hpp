@@ -31,7 +31,7 @@ public:
         while (true)
         {
             //cout << "CIoThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
-            int32 evCount = epoll_wait(svr->getIoEpollfd(),epEvent, 10, 1000);//100ms wait timeout infinite wait just one event to one sockfd
+            int32 evCount = epoll_wait(svr->getIoEpollfd(),epEvent, 10, -1);//100ms wait timeout infinite wait just one event to one sockfd
             if (evCount > 0)
             {
                 for (int i = 0; i < evCount;i++)

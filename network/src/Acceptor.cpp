@@ -88,10 +88,10 @@ void* Acceptor::threadRoutine(void *args)
 {
     //Acceptor *acceptor = (Acceptor*)args;
     struct epoll_event epEvent;
-    cout << "Acceptor::threadRoutine(void *args)1" << endl;
+    cout << "Acceptor::threadRoutine start" << endl;
     while(true)
     {
-        cout << "Acceptor::threadRoutine(void *args)2" << endl;
+        //cout << "Acceptor::threadRoutine(void *args)2" << endl;
         Int32 evCount = epoll_wait(m_epollfd, &epEvent, 1, -1);
         if (evCount > 0)
         {

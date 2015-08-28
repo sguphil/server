@@ -80,7 +80,7 @@ public:
         lockSwap();
         if (m_pWRQueue->getBufLen() > 0)
         {
-            cout << "=================swap len is:" << m_pWRQueue->getBufLen() << endl;
+            //cout << "=================swap len is:" << m_pWRQueue->getBufLen() << endl;
             int32 rdLeftLen = m_pRDQueue->getBufLen();
             if (rdLeftLen > 0)
             {

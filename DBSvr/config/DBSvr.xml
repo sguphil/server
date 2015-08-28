@@ -4,8 +4,8 @@
     <localconfig>  
 	<serverid>1</serverid>
         <ip>127.0.0.1</ip>  
-	<port>9997</port>
-	<maxclient>3000</maxclient>
+	<port>9999</port>
+	<maxclient>1</maxclient>
 	<recvThread>1</recvThread>  
 	<sendThread>1</sendThread>
 	<sessionbuflen>102400</sessionbuflen>
@@ -23,7 +23,7 @@
     <dbSvr>  
 	<serverid>1</serverid>
         <ip>127.0.0.1</ip>  
-	<port>9998</port>
+	<port>9999</port>
     </dbSvr>
 
     <logicSvr>

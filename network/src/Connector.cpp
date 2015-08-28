@@ -109,7 +109,7 @@ void* Connector::threadRoutine(void *args)
 
     while (true)
     {
-        cout << "first while connect thread=======" << endl;
+        //cout << "first while connect thread=======" << endl;
         /*pthread_mutex_lock(&m_mutex);
         while(m_waitList.empty())
         {
@@ -119,14 +119,10 @@ void* Connector::threadRoutine(void *args)
         if (sem_wait(&m_waitSem) < 0)
         {
             perror("sem_wait error");
-            if (errno )
-            {
-                printf("sem_wait errno:%d == EINTR", errno);
-            }
             assert(false);
         }
 
-        cout << "connect thread=======" << endl;
+        //cout << "connect thread=======" << endl;
         pthread_mutex_lock(&m_mutex);
         while(!m_waitList.empty())
         {

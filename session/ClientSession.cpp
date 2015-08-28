@@ -108,7 +108,7 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
         }
         else
         {
-            funcStruct->handler(NULL, msgbuf, buffsize);
+            funcStruct->handler(this->getSession(), msgbuf, buffsize);
         }
         
     }

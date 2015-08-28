@@ -45,6 +45,7 @@ public:
                         
                         if (oplen >= 0) // normal 
                         {
+                            #if 0
                             if (oplen > 0)
                             { 
                                 if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
@@ -57,7 +58,7 @@ public:
                                 m_llpkgCount++; 
                                 //cout << "CSendThread=======sendlen:" << oplen << endl;
                             }
-
+                            #endif
                             //session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);//single thread do not need epolloneshoot
                             //if (0 == oplen)
                             //{

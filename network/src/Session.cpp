@@ -45,7 +45,7 @@ int32 CSession::recv()
     int recvlen = m_recvBuff.getWRQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
     if (0 == recvlen)
     {
-        cout << "===============test===========send buff len:" << m_recvBuff.getRDQueuePtr()->getBufLen() << endl;
+        cout << "===============test===========recv readbuff len:" << m_recvBuff.getRDQueuePtr()->getBufLen() << endl;
     }
     m_recvBuff.unLockSwap();
     return recvlen;
@@ -202,7 +202,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
             encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
             send(buf, totalsize);// send back the same struct
 
-            cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
+            //cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
             break;
         }
     case 2: // gateway

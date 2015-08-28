@@ -1,8 +1,8 @@
-#include "AccountSvr.h"
+#include "DBSvr.h"
 
-AccountSvr::AccountSvr()
+DBSvr::DBSvr()
 {
-    m_Config.init("./config/accountSvr.xml");
+    m_Config.init("./config/DBSvr.xml");
     m_Config.parseXml();
 
     m_nInterval = m_Config.m_accConfig.updateFps; //loop per Xms default
@@ -17,23 +17,23 @@ AccountSvr::AccountSvr()
     m_ServerID = m_Config.m_accConfig.serverid;
     m_nIoThreadNum = m_Config.m_accConfig.recvThread;
     LOGI("=====e======m_nIoThreadNum:" <<  m_nIoThreadNum);
-    m_svrType = ACCSvr;
+    m_svrType = DBSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
 
     if (m_epollfd <= 0 || m_epollSendfd <= 0)
     {
-        printf("AccountSvr create epollfd error!!!");
+        printf("DBSvr create epollfd error!!!");
         assert(false);
     }
 }
 
-AccountSvr::~AccountSvr()
+DBSvr::~DBSvr()
 {
 
 }
 
-void AccountSvr::start()
+void DBSvr::start()
 {
     m_acceptor.init(m_Config.m_accConfig.maxclient);
     m_acceptor.startListen(m_Config.m_accConfig.ip, m_Config.m_accConfig.port);
@@ -49,7 +49,7 @@ void AccountSvr::start()
     sendThread->start();
 }
 
-void AccountSvr::updateSessionList()
+void DBSvr::updateSessionList()
 {
     // 1.process accept session
     CommonList<CSession>* readList = m_acceptor.getReadSessionList();
@@ -92,7 +92,7 @@ void AccountSvr::updateSessionList()
 
 }
 
-void AccountSvr::removeDeadSession()
+void DBSvr::removeDeadSession()
 {
     if (m_activeSessionList.size() > 0)
     {
@@ -136,7 +136,7 @@ void AccountSvr::removeDeadSession()
     }
 }
 
-void AccountSvr::handleActiveSession()
+void DBSvr::handleActiveSession()
 {
     if (m_activeSessionList.size() > 0)
     {
@@ -156,7 +156,7 @@ void AccountSvr::handleActiveSession()
     }
 }
 
-void AccountSvr::update()
+void DBSvr::update()
 {
     while (true)
     {

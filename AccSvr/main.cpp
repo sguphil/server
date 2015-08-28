@@ -19,12 +19,12 @@ extern void printItem(TestAccess *accessObj);
 
 int main()
 {
-    //using namespace zsummer::log4z;
-    //ILog4zManager::getRef().start();
-    //ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
+    using namespace zsummer::log4z;
+    ILog4zManager::getRef().start();
+    ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
     signal(SIGPIPE, SIG_IGN);
     AccountSvr* accountSvr = AccountSvr::GetInstance();
-    cout << "Hello world! ServerID is:" << accountSvr->getServerID() << endl;
+    LOGI("Hello world! ServerID is:" << accountSvr->getServerID());
     g_ClientNetWorkObjectFactory.init(10000, 50);
 
     g_AccHandlerMgr.addAllHandle();
@@ -62,7 +62,7 @@ int main()
     accountSvr->update();
     while (false)
     {
-        cout << "flash main thread" << endl;
+        LOGI("flash main thread");
         //conn.connect("127.0.0.1", 9997, eClient);
         sleep(1);
     }

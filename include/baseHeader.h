@@ -32,10 +32,6 @@
 //
 #include "./log4z.h"
 
-using namespace zsummer::log4z;
-ILog4zManager::getRef().start();
-ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
-
 enum SESSION_TYPE
 {
     eClient = 1,

@@ -44,7 +44,7 @@ public:
                         isRecvEvent = true;
                         if (oplen >= 0) // normal 
                         {
-                            #if 1
+                            #if 0
                             if (oplen > 0 )
                             {
                                 if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s

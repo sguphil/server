@@ -108,7 +108,7 @@ void TestClient::removeDeadSession()
                 session->delEpollEvent(m_epollSendfd);
                 session->clear();
                 m_activeSessionList.erase(iter++);
-                cout << "remove session===========" << endl;
+                cout << "remove session===========" << session->getSessionId() << endl;
                 if (session->getType() == eClient)
                 {
                     m_acceptor.sessionReUse(session);
@@ -196,7 +196,7 @@ void TestClient::handleActiveSession()
                 {
                     m_nSendTimes = 1;
                     msghead.sysId = 1;
-                    msghead.msgType = 3; //4;
+                    msghead.msgType = 4;
                     test_package::testMsg tmsg;
                     tmsg.set_sendtime(acct_time::getCurTimeMs());
                     char *sendStr = (char*)"hello ulserver";
@@ -230,8 +230,9 @@ void TestClient::update()
 {
     while (true)
     {
-        while (acct_time::getCurTimeMs() >= m_nNextTick)
+        if (acct_time::getCurTimeMs() >= m_nNextTick)
         {
+            m_nNextTick = acct_time::getCurTimeMs() + 10;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
@@ -239,7 +240,7 @@ void TestClient::update()
             //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
         //cout << "out logic loop:" << acct_time::getCurTimeMs() << endl;
-        acct_time::sleepMs(1000); // sleep 1ms per loop
+        //acct_time::sleepMs(10); // sleep 1ms per loop
     }
     
 }

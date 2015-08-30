@@ -17,7 +17,7 @@ DBSvr::DBSvr()
     m_ServerID = m_Config.m_accConfig.serverid;
     m_nIoThreadNum = m_Config.m_accConfig.recvThread;
     LOGI("=====e======m_nIoThreadNum:" <<  m_nIoThreadNum);
-    m_svrType = DBSvr;
+    m_svrType = eDBSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
 

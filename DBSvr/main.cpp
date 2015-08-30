@@ -1,5 +1,5 @@
 #include <iostream>
-#include "AccountSvr.h"
+#include "DBSvr.h"
 #include "../Test/include/TestAccess.h"
 #include "../Factory/BaseFactory.h"
 #include "../Logic/Player.h"
@@ -23,43 +23,23 @@ int main()
     ILog4zManager::getRef().start();
     ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
     signal(SIGPIPE, SIG_IGN);
-    AccountSvr* accountSvr = AccountSvr::GetInstance();
-    LOGI("Hello world! ServerID is:" << accountSvr->getServerID());
-    g_ClientNetWorkObjectFactory.init(10000, 50);
-
+    DBSvr* dbsvr = DBSvr::GetInstance();
+    LOGI("Hello world! ServerID is:" << dbsvr->getServerID());
+    g_ClientNetWorkObjectFactory.init(10, 10);
     g_AccHandlerMgr.addAllHandle();
-    //TestAccess acsObj;
-    //printItem(&acsObj);
-    //cout << acsObj << endl;
+
     test_package::testMsg tmsg;
     tmsg.set_sendtime(123);
     tmsg.set_msg("protobuf hello world!!");
-    
     int32 buflen = tmsg.ByteSize();
-    
     char buf[buflen];
     tmsg.SerializeToArray(buf, buflen);
-
     test_package::testMsg after;
     after.ParseFromArray(buf, buflen);
-
-    
     LOGI("after:" << after.sendtime() << "  msg:" << after.msg());
     
-    //CBaseFactory<CPlayer> playerFactory;
-    //playerFactory.init(10, 10);
-    //CPlayer *player = playerFactory.allocate();
-    //cout << "actor type is:" << player->getActorType() << endl;
-
-    //Acceptor acc(eClient);
-    //acc.init();
-    //acc.startListen("127.0.0.1", 9997);
-    //acc.start();
-    accountSvr->start(); //listen start
-    //Connector conn;
-    //conn.start();
-    
-    accountSvr->update();
+    dbsvr->start(); //listen start
+    dbsvr->update();
     while (false)
     {
         LOGI("flash main thread");

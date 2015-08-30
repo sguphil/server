@@ -4,10 +4,10 @@
 
 enum eSERVERTYPE
 {
-    ACCSvr = 1,
-    GWSvr = 2,
-    GSvr = 3,
-    DBSvr = 4,
+    eACCSvr = 1,
+    eGWSvr = 2,
+    eGSvr = 3,
+    eDBSvr = 4,
 };
 
 class CServerBase

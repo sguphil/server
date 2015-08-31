@@ -6,6 +6,7 @@ void CAccSvrConfig::parseXml()
     bool bLoadRet = doc.LoadFile();
     if (!bLoadRet)
     {
+        perror("load cfg file error!");
         printf("load config file Error:%s\n", m_strFileName.c_str());
         exit(1);
     }

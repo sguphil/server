@@ -49,16 +49,19 @@ void AccountSvr::start()
     sendThread->start();
     
     m_connector.start();
-    
+    /*
     for (uint32 i = 0; i < m_Config.m_dbConfigVec.size(); i++)
     {
         m_connector.connect(m_Config.m_dbConfigVec[i].ip, m_Config.m_dbConfigVec[i].port, eDBServer);
     }
-    
+    */
+    /*
     for (uint32 i = 0; i < m_Config.m_logicConfigVec.size(); i++)
     {
         m_connector.connect(m_Config.m_logicConfigVec[i].ip, m_Config.m_logicConfigVec[i].port, eGameServer);
     }
+    */
+    printf("======= m_Config.m_logicConfigVec.size():%d\n",  m_Config.m_logicConfigVec.size());
     
 }
 

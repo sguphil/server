@@ -122,13 +122,14 @@ void* Connector::threadRoutine(void *args)
             assert(false);
         }
 
-        //cout << "connect thread=======" << endl;
+        cout << "connect thread=======" << endl;
         pthread_mutex_lock(&m_mutex);
         while(!m_waitList.empty())
         {
             CSession *pSession = m_waitList.front();
             m_waitList.pop_front();
             Int32 connResult = ::connect(pSession->getSocket(), (struct sockaddr*)(&(pSession->getSockAddr())), sizeof(struct sockaddr_in));
+
             if(connResult<0)
             {
                 printf("connect error\n");

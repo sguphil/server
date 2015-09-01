@@ -23,6 +23,7 @@ int main()
     ILog4zManager::getRef().start();
     ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
     signal(SIGPIPE, SIG_IGN);
+
     AccountSvr* accountSvr = AccountSvr::GetInstance();
     LOGI("Hello world! ServerID is:" << accountSvr->getServerID());
     g_ClientNetWorkObjectFactory.init(10000, 50);
@@ -60,6 +61,7 @@ int main()
     //conn.start();
     
     accountSvr->update();
+
     while (false)
     {
         LOGI("flash main thread");

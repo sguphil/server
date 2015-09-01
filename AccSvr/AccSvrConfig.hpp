@@ -34,10 +34,10 @@ public:
     void parseXml();
 	
 public:
-    TAccLocalConfig m_accConfig;
-    TDbsvrConfig m_dbConfig;
-    TLogicConfig m_logicConfig;
-    TMysqlConfig m_mysqlConfig;
+    std::vector<TAccLocalConfig> m_accConfigVec;
+    std::vector<TDbsvrConfig> m_dbConfigVec;
+    std::vector<TLogicConfig> m_logicConfigVec;
+    std::vector<TMysqlConfig> m_mysqlConfigVec;
 };
 
 #endif

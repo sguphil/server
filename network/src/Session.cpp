@@ -117,14 +117,8 @@ void CSession::processPacket()
             {
                 while (m_recvBuff.getRDQueuePtr()->fetchFullPkg(m_pkgGet) > 0)
                 {
-                    //printf("===========readQueuelen:%d\n", m_recvBuff.getTempQueLen());
                     assert(m_recvBuff.getTempQueLen() == 0);
                     handlePackage(this, &m_pkgGet.m_pkgHeader, &m_pkgGet.m_msgHeader, m_pkgGet.m_msgbuf, m_pkgGet.m_nMsglen);
-                    /*if (handlePkgCount++ > 30) // handle 30 packages each loop
-                    {
-                        isbreak = true;
-                        break;
-                    }*/
                 }
                 if (!isbreak)
                 {
@@ -140,14 +134,8 @@ void CSession::processPacket()
         {
             while (m_recvBuff.getRDQueuePtr()->fetchFullPkg(m_pkgGet) > 0)
             {
-                //printf("===========readQueuelen:%d\n", m_recvBuff.getTempQueLen());
                 assert(m_recvBuff.getTempQueLen() == 0);
                 handlePackage(this, &m_pkgGet.m_pkgHeader, &m_pkgGet.m_msgHeader, m_pkgGet.m_msgbuf, m_pkgGet.m_nMsglen);
-                /*if (handlePkgCount++ > 30) // handle 30 packages each loop
-                {
-                    isbreak = true;
-                    break;
-                }*/
             }
             if (!isbreak)
             {
@@ -221,6 +209,8 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
             cout << "strictclient got msg" << endl;
             break;
         }
+    case 7: //Account server
+        break;
     default:
         break;
     }

@@ -54,8 +54,8 @@ void AccountSvr::start()
     {
         m_connector.connect(m_Config.m_dbConfigVec[i].ip, m_Config.m_dbConfigVec[i].port, eDBServer);
     }
-    
-    for (uint32 i = 0; i < m_Config.m_logicConfigVec.size(); i++)
+    int32 size = m_Config.m_logicConfigVec.size();
+    for (int32 i = 0; i < size; i++)
     {
         m_connector.connect(m_Config.m_logicConfigVec[i].ip, m_Config.m_logicConfigVec[i].port, eGameServer);
     }
@@ -100,6 +100,28 @@ void AccountSvr::updateSessionList()
             //add to epoll event loop
             addFdToRecvEpoll(newSession);
             addFdToSendEpoll(newSession);
+
+            //send first package to register session
+            MsgHeader msghead;
+            int32 sendlen = 0;
+            PkgHeader header;
+            struct c_s_registersession reg;
+            struct c_s_refecttest testStr;
+                
+            if (newSession->getStatus() != registered)
+            {
+                msghead.sysId = 1;
+                msghead.msgType = 1;
+                reg.sessionType = int16(eAccountSvr);
+                sendlen = sizeof(msghead) + sizeof(reg);
+                header.length = sendlen;
+                int32 totallen = sendlen +sizeof(header);
+                char buf[totallen];
+                encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
+                newSession->send(buf, totallen);
+                //cout << "ready to send msg:" << totallen << endl;
+                //newSession->setStatus(registered);
+            }
         }
     }
 

@@ -106,7 +106,7 @@ void AccountSvr::updateSessionList()
             int32 sendlen = 0;
             PkgHeader header;
             struct c_s_registersession reg;
-            struct c_s_refecttest testStr;
+            //struct c_s_refecttest testStr;
                 
             if (newSession->getStatus() != registered)
             {

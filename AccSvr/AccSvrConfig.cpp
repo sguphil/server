@@ -112,11 +112,7 @@ void CAccSvrConfig::parseXml()
         child = item->FirstChild("port");
         const char *port = child->ToElement()->GetText();
         m_logicConfig.port = atoi(port);
-        cout << "config size1:" << sizeof(m_logicConfig) << endl;
         m_logicConfigVec.push_back(m_logicConfig);
-        cout << "config size2:" << m_logicConfigVec.size() << endl;
-        int size = m_logicConfigVec.size();
-        int size2 = size;
     }
     
     //dbSvr config 

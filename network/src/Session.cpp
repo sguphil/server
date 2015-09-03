@@ -1,6 +1,10 @@
 #include "../include/Session.h"
 #include "../../Factory/BaseFactory.h"
 #include "../../session/ClientSession.h"
+#include "../../session/AccsvrSession.h"
+#include "../../session/DBSession.h"
+#include "../../session/LogicSession.h"
+#include "../../session/StrictClient.h"
 
 #define REUSE_NETWORKOBJ 1
 extern CBaseFactory<ClientSession> g_ClientNetWorkObjectFactory;
@@ -189,27 +193,42 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
             char buf[totalsize];
             encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
             send(buf, totalsize);// send back the same struct
-
+            setType((SESSION_TYPE)1);
             //cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
             break;
         }
     case 2: // gateway
+        setType((SESSION_TYPE)2);
         break;
     case 3: // other account svr
+        setType((SESSION_TYPE)3);
         break;
-    case 4: // gameserver
+    case 4: // gameserver/logicServer
+        setType((SESSION_TYPE)4);
         break;
     case 5: // dbserver
+        netobj = new DBSession;
+        assert(NULL != netobj);
+        bindNetWorkObj(netobj);
+        setType((SESSION_TYPE)5);
+        cout << "strictclient got msg" << endl;
         break;
     case 6: // strict client for test
         {
             netobj = new StrictClient;
             assert(NULL != netobj);
             bindNetWorkObj(netobj);
-            cout << "strictclient got msg" << endl;
+            cout << "got strictclient msg" << endl;
+            setType((SESSION_TYPE)6);
             break;
         }
+
     case 7: //Account server
+        netobj = new DBSession;
+        assert(NULL != netobj);
+        bindNetWorkObj(netobj);
+        setType((SESSION_TYPE)7);
+        cout << "got accsvr msg" << endl;
         break;
     default:
         break;

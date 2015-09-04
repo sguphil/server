@@ -96,7 +96,10 @@ void AccountSvr::updateSessionList()
             CSession *newSession = *iter;
             newSession->setStatus(active);
             m_activeSessionList.push_back(newSession);
-            m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession*>(newSession->getType(), newSession));
+            if (!checkRecord(newSession))
+            {
+                m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(newSession->getType(), newSession));
+            }
             //add to epoll event loop
             addFdToRecvEpoll(newSession);
             addFdToSendEpoll(newSession);
@@ -187,6 +190,14 @@ void AccountSvr::handleActiveSession()
                 m_nHandleCount = 0;
             }
             m_nHandleCount++;
+            SESSION_TYPE type = session->getType();
+            if (eGateWay == type || eOtherSvr==type || eGameServer==type || eAccountSvr==type)//record server cluster
+            {
+                if (registered == session->getStatus() && !checkRecord(session))
+                {
+                    m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(session->getType(), session));
+                }
+            }
         }
     }
 }

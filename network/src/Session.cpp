@@ -194,6 +194,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
             encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
             send(buf, totalsize);// send back the same struct
             setType((SESSION_TYPE)1);
+            setStatus(registered);
             //cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
             break;
         }
@@ -204,13 +205,19 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
         setType((SESSION_TYPE)3);
         break;
     case 4: // gameserver/logicServer
+        netobj = new LogicSession;
+        assert(NULL != netobj);
+        bindNetWorkObj(netobj);
         setType((SESSION_TYPE)4);
+        setStatus(registered);
+        cout << "got LogicSvr msg" << endl;
         break;
     case 5: // dbserver
         netobj = new DBSession;
         assert(NULL != netobj);
         bindNetWorkObj(netobj);
         setType((SESSION_TYPE)5);
+        setStatus(registered);
         cout << "strictclient got msg" << endl;
         break;
     case 6: // strict client for test
@@ -220,6 +227,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
             bindNetWorkObj(netobj);
             cout << "got strictclient msg" << endl;
             setType((SESSION_TYPE)6);
+            setStatus(registered);
             break;
         }
 
@@ -228,6 +236,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
         assert(NULL != netobj);
         bindNetWorkObj(netobj);
         setType((SESSION_TYPE)7);
+        setStatus(registered);
         cout << "got accsvr msg" << endl;
         break;
     default:

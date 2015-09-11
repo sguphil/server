@@ -1,4 +1,4 @@
-#include "../include/CHandlerFunc.hpp"
+#include "CHandlerFunc.hpp"
 
 int32 CHandlerFunc::testfunc(CSession *session, char *pMsg, int32 msglen)
 {

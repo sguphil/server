@@ -11,7 +11,7 @@
 class Acceptor : public CBaseThread
 {
     public:
-        Acceptor(SESSION_TYPE type=eClient);
+        Acceptor(SESSION_TYPE type=eUndefineSessionType);
         virtual ~Acceptor();
         void init(int maxAcc = 30);
         void init(void *configStruct); //预留根据配置文件初始化接收器
@@ -63,6 +63,16 @@ class Acceptor : public CBaseThread
         {
             return m_pWriteList;
         }
+        
+        inline void setSvrType(eSERVERTYPE type)
+        {
+            m_svrType = type;
+        }
+
+        inline eSERVERTYPE getSvrType()
+        {
+            return m_svrType;
+        }
 private:
         Int32 m_nMaxAcc;
         char m_listenIp[32];
@@ -79,6 +89,7 @@ private:
         CommonList<CSession> *m_pReadList; // use double list to avoid mostly mutex competition
         CommonList<CSession> *m_pWriteList; 
         CBaseFactory<CSession> m_SessionFactory;
+        eSERVERTYPE m_svrType;
 };
 
 #endif // __ACCEPTOR_H

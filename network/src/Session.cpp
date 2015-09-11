@@ -183,7 +183,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
             //netobj = new ClientSession;
             assert(netobj != NULL);
             bindNetWorkObj(netobj);
-            ret.sessionType = 6; // modify the typeof client
+            ret.sessionType = (uint16)this->getType(); // modify the typeof client
             msglen = sizeof(msghead) + sizeof(ret);
 
             header.length = msglen;

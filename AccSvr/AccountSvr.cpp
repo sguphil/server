@@ -35,6 +35,7 @@ AccountSvr::~AccountSvr()
 
 void AccountSvr::start()
 {
+    m_acceptor.setSvrType(m_svrType);
     m_acceptor.init(m_Config.m_accConfigVec[0].maxclient);
     m_acceptor.startListen(m_Config.m_accConfigVec[0].ip, m_Config.m_accConfigVec[0].port);
     m_acceptor.start();
@@ -191,11 +192,14 @@ void AccountSvr::handleActiveSession()
             }
             m_nHandleCount++;
             SESSION_TYPE type = session->getType();
-            if (eGateWay == type || eOtherSvr==type || eGameServer==type || eAccountSvr==type)//record server cluster
+            if (type != eUndefineSessionType)
             {
-                if (registered == session->getStatus() && !checkRecord(session))
+                if (eGateWay == type || eOtherSvr == type || eGameServer == type || eAccountSvr == type) //record server cluster
                 {
-                    m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(session->getType(), session));
+                    if (registered == session->getStatus() && !checkRecord(session))
+                    {
+                        m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(session->getType(), session));
+                    }
                 }
             }
         }

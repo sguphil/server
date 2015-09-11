@@ -43,6 +43,7 @@ enum SESSION_TYPE
     eDBServer = 5,
     eStrictClient = 6,
     eAccountSvr = 7,
+    eUndefineSessionType = 8,
 };
 
 using namespace std;

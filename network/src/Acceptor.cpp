@@ -106,6 +106,7 @@ void* Acceptor::threadRoutine(void *args)
                 if (NULL != session)
                 {
                     session->setSocket(clientSock);
+                    session->setSvrType(this->m_svrType);
                     addSession2List(session);
                     printf("alloc session\n");
                 }

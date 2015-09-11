@@ -8,7 +8,7 @@
 #include "../network/include/Connector.h"
 #include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
-#include "./include/SessionHandler.hpp"
+#include "./include/DBSessionHandler.hpp"
 #include "../include/ServerInclude.hpp"
 #include "../include/log4z.h"
 
@@ -26,7 +26,7 @@ int main()
     DBSvr* dbsvr = DBSvr::GetInstance();
     LOGI("Hello world! ServerID is:" << dbsvr->getServerID());
     g_ClientNetWorkObjectFactory.init(10, 10);
-    g_AccHandlerMgr.addAllHandle();
+    g_DBHandlerMgr.addAllHandle();
 
     test_package::testMsg tmsg;
     tmsg.set_sendtime(123);

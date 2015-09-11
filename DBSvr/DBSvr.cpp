@@ -35,6 +35,7 @@ DBSvr::~DBSvr()
 
 void DBSvr::start()
 {
+    m_acceptor.setSvrType(m_svrType);
     m_acceptor.init(m_Config.m_accConfig.maxclient);
     m_acceptor.startListen(m_Config.m_accConfig.ip, m_Config.m_accConfig.port);
     m_acceptor.start();
@@ -167,11 +168,14 @@ void DBSvr::handleActiveSession()
             m_nHandleCount++;
 
             SESSION_TYPE type = session->getType();
-            if (eGateWay == type || eOtherSvr==type || eGameServer==type || eAccountSvr==type)//record server cluster
+            if (type != eUndefineSessionType)
             {
-                if (registered == session->getStatus() && !checkRecord(session))
+                if (eGateWay == type || eOtherSvr == type || eGameServer == type || eAccountSvr == type) //record server cluster
                 {
-                    m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(session->getType(), session));
+                    if (registered == session->getStatus() && !checkRecord(session))
+                    {
+                        m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(session->getType(), session));
+                    }
                 }
             }
         }

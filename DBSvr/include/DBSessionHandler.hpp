@@ -1,8 +1,8 @@
-#ifndef __SESSIONHANDLER_H__
-#define __SESSIONHANDLER_H__
+#ifndef __DBSESSIONHANDLER_H__
+#define __DBSESSIONHANDLER_H__
 #include "../../include/PackageHandler.hpp"
 
-class CAccHandlerMgr : public CPackageMgr<accFuncStruct>
+class CDBHandlerMgr : public CPackageMgr<accFuncStruct>
 {
 
 public:

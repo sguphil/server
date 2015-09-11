@@ -178,6 +178,17 @@ public:
         m_sendBuff.setBuffSwapTick(sendSwapTick);
         #endif
     }
+
+    inline void setSvrType(eSERVERTYPE type)
+    {
+        m_svrType = type;
+    }
+    
+    inline eSERVERTYPE getSvrType()
+    {
+        return m_svrType;
+    }
+
 private:
     Int32 m_socket;
     char m_szIp[32];
@@ -203,5 +214,6 @@ private:
     char *m_LeftPkgBuf;
     CpackageFetch m_pkgGet;
     PkgHeader m_header;
+    eSERVERTYPE m_svrType;
 };
 #endif // __SESSION_H__

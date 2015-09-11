@@ -1,9 +1,9 @@
 #ifndef __CHANDLERFUNC_H__
 #define __CHANDLERFUNC_H__
 
-#include "../../include/baseHeader.h"
-#include "../../network/include/Session.h"
-#include "../../protocol/testMsg.pb.h" // add all related protocol header here
+#include "../include/baseHeader.h"
+#include "../network/include/Session.h"
+#include "../protocol/testMsg.pb.h" // add all related protocol header here
 
 class CHandlerFunc
 {

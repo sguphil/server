@@ -4,8 +4,9 @@
 #include "packHeader.hpp"
 #include "../network/include/Session.h"
 #include "../network/include/NetWorkObject.h"
-#include "../AccSvr/include/CHandlerFunc.hpp"
-
+#include "../Handler/CHandlerFunc.hpp"
+//#include "ServerInclude.hpp"
+/*
 enum sysid
 {
     SYS_SESSION_REGISTER = 1,
@@ -16,6 +17,43 @@ enum msgid
 {
     C_S_SISSION_REGISTER = 1,
 };
+*/
+
+enum eServerMessageClass //server message type
+{
+    eRegister_Message = 1,
+    eServerMessage_Client = 2,
+    eServerMessage_AccSvr = 3,
+    eServerMessage_GateWay = 4,
+    eServerMessage_Logic = 5,
+    eServerMessage_DBServer = 6,
+};
+
+enum eServerMessage_Client_MsgType  // msg from client
+{
+    C_S_SISSION_REGISTER = 1,
+};
+
+enum eServerMessage_AccSvr_MsgType // msg from accSvr 
+{
+
+};
+
+enum eServerMessage_GateWay_MsgType // msg from gateway
+{
+
+};
+
+enum eServerMessage_Logic_MsgType // msg from logic svr
+{
+
+};
+
+enum eServerMessage_DBServer_MsgType // msg from dbserver
+{
+
+};
+
 
 void handlePackage(CSession *pSession, PkgHeader *header, char *msgbuf, int32 msgsize);
 void handlePackage(CSession *pSession, PkgHeader *header, MsgHeader *msgHead, char *msgbuf, int32 msgsize);

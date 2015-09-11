@@ -12,13 +12,19 @@ class CAccSvrConfig : public CConfigBase
 public:
     CAccSvrConfig()
     {
-
+        m_accConfigVec.clear();
+        m_dbConfigVec.clear();
+        m_logicConfigVec.clear();
+        m_mysqlConfigVec.clear();
     }
 
     CAccSvrConfig(string fileName)
     {
         m_strFileName = fileName;
-        
+        m_accConfigVec.clear();
+        m_dbConfigVec.clear();
+        m_logicConfigVec.clear();
+        m_mysqlConfigVec.clear();
     }
     ~CAccSvrConfig()
     {

@@ -35,6 +35,7 @@ DBSvr::~DBSvr()
 
 void DBSvr::start()
 {
+    m_acceptor.setSvrType(m_svrType);
     m_acceptor.init(m_Config.m_accConfig.maxclient);
     m_acceptor.startListen(m_Config.m_accConfig.ip, m_Config.m_accConfig.port);
     m_acceptor.start();
@@ -83,10 +84,35 @@ void DBSvr::updateSessionList()
             CSession *newSession = *iter;
             newSession->setStatus(active);
             m_activeSessionList.push_back(newSession);
-            m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession*>(newSession->getType(), newSession));
+            if (!checkRecord(newSession))
+            {
+                m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(newSession->getType(), newSession));
+            }
             //add to epoll event loop
             addFdToRecvEpoll(newSession);
             addFdToSendEpoll(newSession);
+
+            //send first package to register session
+            MsgHeader msghead;
+            int32 sendlen = 0;
+            PkgHeader header;
+            struct c_s_registersession reg;
+            //struct c_s_refecttest testStr;
+                
+            if (newSession->getStatus() != registered)
+            {
+                msghead.sysId = 1;
+                msghead.msgType = 1;
+                reg.sessionType = int16(eDBServer);
+                sendlen = sizeof(msghead) + sizeof(reg);
+                header.length = sendlen;
+                int32 totallen = sendlen +sizeof(header);
+                char buf[totallen];
+                encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
+                newSession->send(buf, totallen);
+                //cout << "ready to send msg:" << totallen << endl;
+                //newSession->setStatus(registered);
+            }
         }
     }
 
@@ -113,19 +139,7 @@ void DBSvr::removeDeadSession()
                 }
                 else
                 {
-                    typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
-                    typedef std::pair<mapiter, mapiter> rangeBeginEnd;
-                    rangeBeginEnd range = m_ServerSessionMap.equal_range(session->getType());
-                    for (mapiter be = range.first; be != range.second; be++)
-                    {
-                        if (be->second->getSessionId() == session->getSessionId())
-                        {
-                            m_ServerSessionMap.erase(be);
-                            //put in connector errrolist, wait for reconnect...
-                            m_connector.addToErrorList(session);
-                            break;
-                        }
-                    }
+                    delClusterSession(session);
                 }
             }
             else
@@ -152,6 +166,18 @@ void DBSvr::handleActiveSession()
                 m_nHandleCount = 0;
             }
             m_nHandleCount++;
+
+            SESSION_TYPE type = session->getType();
+            if (type != eUndefineSessionType)
+            {
+                if (eGateWay == type || eOtherSvr == type || eGameServer == type || eAccountSvr == type) //record server cluster
+                {
+                    if (registered == session->getStatus() && !checkRecord(session))
+                    {
+                        m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(session->getType(), session));
+                    }
+                }
+            }
         }
     }
 }

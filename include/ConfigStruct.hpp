@@ -1,7 +1,7 @@
 #ifndef __CONFIGSTRUCT_H__
 #define __CONFIGSTRUCT_H__
 #include "baseHeader.h"
-
+#pragma pack(1)
 typedef struct acclocalconfig
 {
     int32 serverid;

@@ -28,6 +28,8 @@
 #include <vector>
 #include <set>
 #include <sstream>
+//#include <cstdint>
+
 
 //
 #include "./log4z.h"
@@ -40,6 +42,8 @@ enum SESSION_TYPE
     eGameServer = 4,
     eDBServer = 5,
     eStrictClient = 6,
+    eAccountSvr = 7,
+    eUndefineSessionType = 8,
 };
 
 using namespace std;
@@ -49,8 +53,10 @@ typedef long long int64;
 typedef int Int32;
 typedef int int32;
 typedef char Byte;
-typedef char Int8;
-typedef char int8;
+typedef unsigned char uint8;
+typedef signed char int8;
+//typedef uint8_t uint8;
+//typedef int8_t int8;
 typedef unsigned long long uInt64;
 typedef unsigned long long uint64;
 typedef  long long Int64;

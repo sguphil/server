@@ -9,7 +9,7 @@ TestClient::TestClient()
     m_nSendTimes = 0;
     m_ServerID = 1;
     m_nIoThreadNum = 1;
-    m_svrType = ACCSvr;
+    m_svrType = eACCSvr;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
     m_bAlreadySend = false;
@@ -33,7 +33,7 @@ void TestClient::start()
     m_connector.start();
     for (int i = 0; i < m_ConnCount; i++)
     {
-        m_connector.connect("127.0.0.1", 9997, eStrictClient);
+        m_connector.connect("127.0.0.1", 9997, eAccountSvr);
         acct_time::sleepMs(2);
     }
 
@@ -140,7 +140,7 @@ void TestClient::handleActiveSession()
 
             SESSION_TYPE sessionType = session->getType();
 
-            if (sessionType == eStrictClient && m_nSendTimes < 2)
+            if (sessionType == eAccountSvr && m_nSendTimes < 200)
             {
                 //m_nSendTimes++; // test ---send times
                 MsgHeader msghead;

@@ -89,6 +89,38 @@ public:
         m_nSessionSwapTick = tick;
     }
 
+    inline bool checkRecord(CSession *session)
+    {
+        typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
+        typedef std::pair<mapiter, mapiter> rangeBeginEnd;
+        rangeBeginEnd range = m_ServerSessionMap.equal_range(session->getType());
+        for (mapiter be = range.first; be != range.second; be++)
+        {
+            if (be->second == session)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    inline void delClusterSession(CSession *session)
+    {
+        typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
+        typedef std::pair<mapiter, mapiter> rangeBeginEnd;
+        rangeBeginEnd range = m_ServerSessionMap.equal_range(session->getType());
+        for (mapiter be = range.first; be != range.second; be++)
+        {
+            if (be->second->getSessionId() == session->getSessionId())
+            {
+                m_ServerSessionMap.erase(be);
+                //put in connector errrolist, wait for reconnect...
+                m_connector.addToErrorList(session);
+                break;
+            }
+        }
+    }
+
 private:
     Acceptor m_acceptor;
     Connector m_connector;

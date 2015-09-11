@@ -9,7 +9,7 @@ void handlePackage(CSession *pSession, PkgHeader *header, char *msgbuf, int32 ms
     NetWorkObject *networkObj = pSession->getNetWorkObject();
     if (NULL == networkObj)
     {
-        if (sysid == SYS_SESSION_REGISTER && msgtype == C_S_SISSION_REGISTER)
+        if (sysid == eRegister_Message && msgtype == C_S_SISSION_REGISTER)
         {
             pSession->defaultMsgHandle(sysid, msgtype, msgbuf, msgsize);
             return;
@@ -27,7 +27,7 @@ void handlePackage(CSession *pSession, PkgHeader *header, MsgHeader *msgHead, ch
     NetWorkObject *networkObj = pSession->getNetWorkObject();
     if (NULL == networkObj)
     {
-        if (msgHead->sysId == SYS_SESSION_REGISTER && msgHead->msgType == C_S_SISSION_REGISTER)
+        if (msgHead->sysId == eRegister_Message && msgHead->msgType == C_S_SISSION_REGISTER)
         {
             pSession->defaultMsgHandle(msgHead, msgbuf, msgsize);
             return;

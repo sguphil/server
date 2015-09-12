@@ -36,5 +36,9 @@ typedef struct mysqlconfig
     char ip[32];
     int32 port;
     int32 instNum;
+    int32 instaccNum;
+    char dbuserName[32];
+    char dbpasswd[32];
+    char dbname[32];
 }TMysqlConfig;
 #endif

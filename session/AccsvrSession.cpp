@@ -87,13 +87,13 @@ int32 AccsvrSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
 
 int32 AccsvrSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int32 buffsize)
 {
-    int16 sysid = msghead->sysId;
-    int16 msgtype = msghead->msgType;
-    if (sysid == 1 and msgtype == 2)
+    uint16 sysid = msghead->sysId;
+    uint16 msgtype = msghead->msgType;
+    if (sysid == (uint16)eServerMessage_Client && msgtype == (uint16)CLI_ACCS_TESTBINPKG)
     {
         testRefectSvr(msghead, msgbuf, buffsize);
     }
-    else if (sysid == 1 and msgtype ==3 )
+    else if (sysid == (uint16)eServerMessage_Client && msgtype == (uint16)CLI_ACCS_TESTPROBUFPKG)
     {
         testProtobuf(msghead, msgbuf, buffsize);
     }

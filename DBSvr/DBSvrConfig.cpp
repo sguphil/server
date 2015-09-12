@@ -79,7 +79,23 @@ void CDBSvrConfig::parseXml()
 
         child = item->FirstChild("instNum");
         const char *instNum = child->ToElement()->GetText();
-        m_mysqlConfig.instNum = atoi(instNum);     
+        m_mysqlConfig.instNum = atoi(instNum);    
+        
+        child = item->FirstChild("instaccNum");
+        const char *instaccNum = child->ToElement()->GetText();
+        m_mysqlConfig.instaccNum = atoi(instaccNum); 
+
+        child = item->FirstChild("dbuserName");
+        const char *dbuserName = child->ToElement()->GetText();
+        strncpy(m_mysqlConfig.dbuserName, dbuserName, 32);
+        
+        child = item->FirstChild("dbpasswd");
+        const char *dbpasswd = child->ToElement()->GetText();
+        strncpy(m_mysqlConfig.dbpasswd, dbpasswd, 32);
+        
+        child = item->FirstChild("dbname");
+        const char *dbname = child->ToElement()->GetText();
+        strncpy(m_mysqlConfig.dbname, dbname, 32);
     }
     
     {

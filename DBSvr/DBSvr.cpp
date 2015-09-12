@@ -35,10 +35,14 @@ DBSvr::~DBSvr()
 
 void DBSvr::start()
 {
+    //for acceptor
     m_acceptor.setSvrType(m_svrType);
     m_acceptor.init(m_Config.m_accConfig.maxclient);
     m_acceptor.startListen(m_Config.m_accConfig.ip, m_Config.m_accConfig.port);
     m_acceptor.start();
+
+    //for dbinstance factory
+    m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, m_Config.m_mysqlConfig.ip, m_Config.m_mysqlConfig.port, m_Config.m_mysqlConfig.dbuserName, m_Config.m_mysqlConfig.dbpasswd, m_Config.m_mysqlConfig.dbname);
 
     for (int i = 0; i < m_nIoThreadNum;i++)
     {

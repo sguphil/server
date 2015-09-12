@@ -121,6 +121,19 @@ public:
         }
     }
 
+    CSession* getBestServerSession(SESSION_TYPE type)
+    {
+        typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
+        typedef std::pair<mapiter, mapiter> rangeBeginEnd;
+        rangeBeginEnd range = m_ServerSessionMap.equal_range(type);
+        for (mapiter be = range.first; be != range.second; be++)
+        {
+            return be->second;
+        }
+
+        return NULL;
+    }
+
 private:
     Acceptor m_acceptor;
     Connector m_connector;

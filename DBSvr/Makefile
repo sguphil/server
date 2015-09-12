@@ -1,8 +1,8 @@
 CC = g++
 #1.设定所有源文件搜索目录顺序
-vpath % .:../include:../Factory:../network/include:../Thread:../session:../Logic:../Test/include:../protocol:./include:../Handler
+vpath % .:../include:../Factory:../network/include:../Thread:../session:../Logic:../Test/include:../protocol:./include:../Handler:../database:../AccSvr/include
 
-SOURCE = $(wildcard *.cpp ../Factory/*.cpp ../Thread/*.cpp ../network/src/*.cpp ../session/*.cpp ../Logic/*.cpp ../Test/src/*.cpp ../src/*.cpp ./src/*.cpp ../Handler/*.cpp)
+SOURCE = $(wildcard *.cpp ../Factory/*.cpp ../Thread/*.cpp ../network/src/*.cpp ../session/*.cpp ../Logic/*.cpp ../Test/src/*.cpp ../src/*.cpp ./src/*.cpp ../Handler/*.cpp ../database/*.cpp ../AccSvr/src/*.cpp)
 
 PROBUFSRC = $(wildcard ../protocol/*.cc)
 

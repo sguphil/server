@@ -18,6 +18,10 @@
         <ip>127.0.0.1</ip>  
 	<port>3306</port>
 	<instNum>10</instNum>
+        <instaccNum>1</instaccNum>
+        <dbuserName>root</dbuserName>
+        <dbpasswd>root</dbpasswd>
+        <dbname>test</dbname>
     </mysql>
 
     <dbSvr>  

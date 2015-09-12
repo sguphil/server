@@ -33,6 +33,8 @@
 
 //
 #include "./log4z.h"
+//#include "../database/CQuery.hpp"
+//#include "../database/CResult.hpp"
 
 enum SESSION_TYPE
 {

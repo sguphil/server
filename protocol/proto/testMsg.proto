@@ -6,3 +6,25 @@ required int32 sendtime = 1;
 required string msg = 2;
 }
 
+//eServerMessage_Client -- CLI_ACCS_CHECKLOGINUSER
+message client_2_acc_checkuser{
+optional string name = 1;
+optional string passwd = 2;
+}
+
+//eServerMessage_AccSvr -- ACCS_CLI_CHECKLOGINUSER_RET
+message acc_2_client_checkuser{
+optional string name = 1;
+optional string passwd = 2;
+}
+
+//eServerMessage_AccSvr -- ACCS_DBS_CHECKLOGINUSER
+message acc_2_dbs_checkuser{
+optional string name = 1;
+optional string passwd = 2;
+}
+//eServerMessage_DBServer -- DBS_ACCS_CHECKLOGINUSER_RET
+message dbs_2_acc_checkuser{
+required int32 retcode = 1;
+}
+

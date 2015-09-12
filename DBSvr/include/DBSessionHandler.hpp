@@ -1,17 +1,21 @@
 #ifndef __DBSESSIONHANDLER_H__
 #define __DBSESSIONHANDLER_H__
 #include "../../include/PackageHandler.hpp"
+#include "CDBSHandlerFunc.hpp"
 
 class CDBHandlerMgr : public CPackageMgr<accFuncStruct>
 {
 
 public:
+    //register all functions in this interface if needed
     void addAllHandle()
     {
-        registerFunc(1, 4, &CHandlerFunc::testfunc);
+        registerFunc(eServerMessage_AccSvr, ACCS_DBS_CHECKLOGINUSER, &CDBSHandlerFunc::checkuser);
+        registerFunc(eServerMessage_AccSvr, ACCS_DBS_TEST, &CDBSHandlerFunc::testfunc);
 
     }
 
+public:
     accFuncStruct *findFuncStruct(int32 key)
     {
         if (m_functionMap.empty())

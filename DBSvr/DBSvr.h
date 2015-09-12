@@ -10,6 +10,7 @@
 #include "../include/CSendThread.hpp"
 #include "../include/acctTimeTool.hpp"
 #include "DBSvrConfig.hpp"
+#include "../database/CDBInstFactory.hpp"
 
 extern int32 MAXPKGLEN;
 extern int32 SESSIONBUFLEN;
@@ -119,6 +120,12 @@ public:
             }
         }
     }
+
+    CDBInstFactory* getDBInstFactory()
+    {
+        return &m_dbInstFactory;
+    }
+
 private:
     Acceptor m_acceptor;
     Connector m_connector;
@@ -139,6 +146,7 @@ private:
     int32 m_nSessionSwapTick;
     std::multimap<SESSION_TYPE, CSession *> m_ServerSessionMap; //need to update session in loop
     CDBSvrConfig m_Config;
+    CDBInstFactory m_dbInstFactory;
 };
 
 

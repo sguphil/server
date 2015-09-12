@@ -1,6 +1,7 @@
 #ifndef __SESSIONHANDLER_H__
 #define __SESSIONHANDLER_H__
 #include "../../include/PackageHandler.hpp"
+#include "./CACCSHandlerFunc.hpp"
 
 class CAccHandlerMgr : public CPackageMgr<accFuncStruct>
 {
@@ -8,7 +9,7 @@ class CAccHandlerMgr : public CPackageMgr<accFuncStruct>
 public:
     void addAllHandle()
     {
-        registerFunc(1, 4, &CHandlerFunc::testfunc);
+        registerFunc(1, 4, &CACCSHandlerFunc::testfunc);
 
     }
 

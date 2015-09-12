@@ -34,6 +34,10 @@ void protobuf_AssignDesc_testMsg_2eproto();
 void protobuf_ShutdownFile_testMsg_2eproto();
 
 class testMsg;
+class client_2_acc_checkuser;
+class acc_2_client_checkuser;
+class acc_2_dbs_checkuser;
+class dbs_2_acc_checkuser;
 
 // ===================================================================
 
@@ -128,6 +132,382 @@ class testMsg : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static testMsg* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class client_2_acc_checkuser : public ::google::protobuf::Message {
+ public:
+  client_2_acc_checkuser();
+  virtual ~client_2_acc_checkuser();
+
+  client_2_acc_checkuser(const client_2_acc_checkuser& from);
+
+  inline client_2_acc_checkuser& operator=(const client_2_acc_checkuser& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const client_2_acc_checkuser& default_instance();
+
+  void Swap(client_2_acc_checkuser* other);
+
+  // implements Message ----------------------------------------------
+
+  client_2_acc_checkuser* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const client_2_acc_checkuser& from);
+  void MergeFrom(const client_2_acc_checkuser& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional string passwd = 2;
+  inline bool has_passwd() const;
+  inline void clear_passwd();
+  static const int kPasswdFieldNumber = 2;
+  inline const ::std::string& passwd() const;
+  inline void set_passwd(const ::std::string& value);
+  inline void set_passwd(const char* value);
+  inline void set_passwd(const char* value, size_t size);
+  inline ::std::string* mutable_passwd();
+  inline ::std::string* release_passwd();
+  inline void set_allocated_passwd(::std::string* passwd);
+
+  // @@protoc_insertion_point(class_scope:test_package.client_2_acc_checkuser)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_passwd();
+  inline void clear_has_passwd();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* name_;
+  ::std::string* passwd_;
+  friend void  protobuf_AddDesc_testMsg_2eproto();
+  friend void protobuf_AssignDesc_testMsg_2eproto();
+  friend void protobuf_ShutdownFile_testMsg_2eproto();
+
+  void InitAsDefaultInstance();
+  static client_2_acc_checkuser* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class acc_2_client_checkuser : public ::google::protobuf::Message {
+ public:
+  acc_2_client_checkuser();
+  virtual ~acc_2_client_checkuser();
+
+  acc_2_client_checkuser(const acc_2_client_checkuser& from);
+
+  inline acc_2_client_checkuser& operator=(const acc_2_client_checkuser& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const acc_2_client_checkuser& default_instance();
+
+  void Swap(acc_2_client_checkuser* other);
+
+  // implements Message ----------------------------------------------
+
+  acc_2_client_checkuser* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const acc_2_client_checkuser& from);
+  void MergeFrom(const acc_2_client_checkuser& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional string passwd = 2;
+  inline bool has_passwd() const;
+  inline void clear_passwd();
+  static const int kPasswdFieldNumber = 2;
+  inline const ::std::string& passwd() const;
+  inline void set_passwd(const ::std::string& value);
+  inline void set_passwd(const char* value);
+  inline void set_passwd(const char* value, size_t size);
+  inline ::std::string* mutable_passwd();
+  inline ::std::string* release_passwd();
+  inline void set_allocated_passwd(::std::string* passwd);
+
+  // @@protoc_insertion_point(class_scope:test_package.acc_2_client_checkuser)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_passwd();
+  inline void clear_has_passwd();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* name_;
+  ::std::string* passwd_;
+  friend void  protobuf_AddDesc_testMsg_2eproto();
+  friend void protobuf_AssignDesc_testMsg_2eproto();
+  friend void protobuf_ShutdownFile_testMsg_2eproto();
+
+  void InitAsDefaultInstance();
+  static acc_2_client_checkuser* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class acc_2_dbs_checkuser : public ::google::protobuf::Message {
+ public:
+  acc_2_dbs_checkuser();
+  virtual ~acc_2_dbs_checkuser();
+
+  acc_2_dbs_checkuser(const acc_2_dbs_checkuser& from);
+
+  inline acc_2_dbs_checkuser& operator=(const acc_2_dbs_checkuser& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const acc_2_dbs_checkuser& default_instance();
+
+  void Swap(acc_2_dbs_checkuser* other);
+
+  // implements Message ----------------------------------------------
+
+  acc_2_dbs_checkuser* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const acc_2_dbs_checkuser& from);
+  void MergeFrom(const acc_2_dbs_checkuser& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional string passwd = 2;
+  inline bool has_passwd() const;
+  inline void clear_passwd();
+  static const int kPasswdFieldNumber = 2;
+  inline const ::std::string& passwd() const;
+  inline void set_passwd(const ::std::string& value);
+  inline void set_passwd(const char* value);
+  inline void set_passwd(const char* value, size_t size);
+  inline ::std::string* mutable_passwd();
+  inline ::std::string* release_passwd();
+  inline void set_allocated_passwd(::std::string* passwd);
+
+  // @@protoc_insertion_point(class_scope:test_package.acc_2_dbs_checkuser)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_passwd();
+  inline void clear_has_passwd();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* name_;
+  ::std::string* passwd_;
+  friend void  protobuf_AddDesc_testMsg_2eproto();
+  friend void protobuf_AssignDesc_testMsg_2eproto();
+  friend void protobuf_ShutdownFile_testMsg_2eproto();
+
+  void InitAsDefaultInstance();
+  static acc_2_dbs_checkuser* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class dbs_2_acc_checkuser : public ::google::protobuf::Message {
+ public:
+  dbs_2_acc_checkuser();
+  virtual ~dbs_2_acc_checkuser();
+
+  dbs_2_acc_checkuser(const dbs_2_acc_checkuser& from);
+
+  inline dbs_2_acc_checkuser& operator=(const dbs_2_acc_checkuser& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const dbs_2_acc_checkuser& default_instance();
+
+  void Swap(dbs_2_acc_checkuser* other);
+
+  // implements Message ----------------------------------------------
+
+  dbs_2_acc_checkuser* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const dbs_2_acc_checkuser& from);
+  void MergeFrom(const dbs_2_acc_checkuser& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 retcode = 1;
+  inline bool has_retcode() const;
+  inline void clear_retcode();
+  static const int kRetcodeFieldNumber = 1;
+  inline ::google::protobuf::int32 retcode() const;
+  inline void set_retcode(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:test_package.dbs_2_acc_checkuser)
+ private:
+  inline void set_has_retcode();
+  inline void clear_has_retcode();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::int32 retcode_;
+  friend void  protobuf_AddDesc_testMsg_2eproto();
+  friend void protobuf_AssignDesc_testMsg_2eproto();
+  friend void protobuf_ShutdownFile_testMsg_2eproto();
+
+  void InitAsDefaultInstance();
+  static dbs_2_acc_checkuser* default_instance_;
 };
 // ===================================================================
 
@@ -234,6 +614,502 @@ inline void testMsg::set_allocated_msg(::std::string* msg) {
     msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:test_package.testMsg.msg)
+}
+
+// -------------------------------------------------------------------
+
+// client_2_acc_checkuser
+
+// optional string name = 1;
+inline bool client_2_acc_checkuser::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void client_2_acc_checkuser::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void client_2_acc_checkuser::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void client_2_acc_checkuser::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& client_2_acc_checkuser::name() const {
+  // @@protoc_insertion_point(field_get:test_package.client_2_acc_checkuser.name)
+  return *name_;
+}
+inline void client_2_acc_checkuser::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:test_package.client_2_acc_checkuser.name)
+}
+inline void client_2_acc_checkuser::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:test_package.client_2_acc_checkuser.name)
+}
+inline void client_2_acc_checkuser::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:test_package.client_2_acc_checkuser.name)
+}
+inline ::std::string* client_2_acc_checkuser::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:test_package.client_2_acc_checkuser.name)
+  return name_;
+}
+inline ::std::string* client_2_acc_checkuser::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void client_2_acc_checkuser::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:test_package.client_2_acc_checkuser.name)
+}
+
+// optional string passwd = 2;
+inline bool client_2_acc_checkuser::has_passwd() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void client_2_acc_checkuser::set_has_passwd() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void client_2_acc_checkuser::clear_has_passwd() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void client_2_acc_checkuser::clear_passwd() {
+  if (passwd_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_->clear();
+  }
+  clear_has_passwd();
+}
+inline const ::std::string& client_2_acc_checkuser::passwd() const {
+  // @@protoc_insertion_point(field_get:test_package.client_2_acc_checkuser.passwd)
+  return *passwd_;
+}
+inline void client_2_acc_checkuser::set_passwd(const ::std::string& value) {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  passwd_->assign(value);
+  // @@protoc_insertion_point(field_set:test_package.client_2_acc_checkuser.passwd)
+}
+inline void client_2_acc_checkuser::set_passwd(const char* value) {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  passwd_->assign(value);
+  // @@protoc_insertion_point(field_set_char:test_package.client_2_acc_checkuser.passwd)
+}
+inline void client_2_acc_checkuser::set_passwd(const char* value, size_t size) {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  passwd_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:test_package.client_2_acc_checkuser.passwd)
+}
+inline ::std::string* client_2_acc_checkuser::mutable_passwd() {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:test_package.client_2_acc_checkuser.passwd)
+  return passwd_;
+}
+inline ::std::string* client_2_acc_checkuser::release_passwd() {
+  clear_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = passwd_;
+    passwd_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void client_2_acc_checkuser::set_allocated_passwd(::std::string* passwd) {
+  if (passwd_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete passwd_;
+  }
+  if (passwd) {
+    set_has_passwd();
+    passwd_ = passwd;
+  } else {
+    clear_has_passwd();
+    passwd_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:test_package.client_2_acc_checkuser.passwd)
+}
+
+// -------------------------------------------------------------------
+
+// acc_2_client_checkuser
+
+// optional string name = 1;
+inline bool acc_2_client_checkuser::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void acc_2_client_checkuser::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void acc_2_client_checkuser::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void acc_2_client_checkuser::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& acc_2_client_checkuser::name() const {
+  // @@protoc_insertion_point(field_get:test_package.acc_2_client_checkuser.name)
+  return *name_;
+}
+inline void acc_2_client_checkuser::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:test_package.acc_2_client_checkuser.name)
+}
+inline void acc_2_client_checkuser::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:test_package.acc_2_client_checkuser.name)
+}
+inline void acc_2_client_checkuser::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:test_package.acc_2_client_checkuser.name)
+}
+inline ::std::string* acc_2_client_checkuser::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:test_package.acc_2_client_checkuser.name)
+  return name_;
+}
+inline ::std::string* acc_2_client_checkuser::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void acc_2_client_checkuser::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:test_package.acc_2_client_checkuser.name)
+}
+
+// optional string passwd = 2;
+inline bool acc_2_client_checkuser::has_passwd() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void acc_2_client_checkuser::set_has_passwd() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void acc_2_client_checkuser::clear_has_passwd() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void acc_2_client_checkuser::clear_passwd() {
+  if (passwd_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_->clear();
+  }
+  clear_has_passwd();
+}
+inline const ::std::string& acc_2_client_checkuser::passwd() const {
+  // @@protoc_insertion_point(field_get:test_package.acc_2_client_checkuser.passwd)
+  return *passwd_;
+}
+inline void acc_2_client_checkuser::set_passwd(const ::std::string& value) {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  passwd_->assign(value);
+  // @@protoc_insertion_point(field_set:test_package.acc_2_client_checkuser.passwd)
+}
+inline void acc_2_client_checkuser::set_passwd(const char* value) {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  passwd_->assign(value);
+  // @@protoc_insertion_point(field_set_char:test_package.acc_2_client_checkuser.passwd)
+}
+inline void acc_2_client_checkuser::set_passwd(const char* value, size_t size) {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  passwd_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:test_package.acc_2_client_checkuser.passwd)
+}
+inline ::std::string* acc_2_client_checkuser::mutable_passwd() {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:test_package.acc_2_client_checkuser.passwd)
+  return passwd_;
+}
+inline ::std::string* acc_2_client_checkuser::release_passwd() {
+  clear_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = passwd_;
+    passwd_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void acc_2_client_checkuser::set_allocated_passwd(::std::string* passwd) {
+  if (passwd_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete passwd_;
+  }
+  if (passwd) {
+    set_has_passwd();
+    passwd_ = passwd;
+  } else {
+    clear_has_passwd();
+    passwd_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:test_package.acc_2_client_checkuser.passwd)
+}
+
+// -------------------------------------------------------------------
+
+// acc_2_dbs_checkuser
+
+// optional string name = 1;
+inline bool acc_2_dbs_checkuser::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void acc_2_dbs_checkuser::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void acc_2_dbs_checkuser::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void acc_2_dbs_checkuser::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& acc_2_dbs_checkuser::name() const {
+  // @@protoc_insertion_point(field_get:test_package.acc_2_dbs_checkuser.name)
+  return *name_;
+}
+inline void acc_2_dbs_checkuser::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:test_package.acc_2_dbs_checkuser.name)
+}
+inline void acc_2_dbs_checkuser::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:test_package.acc_2_dbs_checkuser.name)
+}
+inline void acc_2_dbs_checkuser::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:test_package.acc_2_dbs_checkuser.name)
+}
+inline ::std::string* acc_2_dbs_checkuser::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:test_package.acc_2_dbs_checkuser.name)
+  return name_;
+}
+inline ::std::string* acc_2_dbs_checkuser::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void acc_2_dbs_checkuser::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:test_package.acc_2_dbs_checkuser.name)
+}
+
+// optional string passwd = 2;
+inline bool acc_2_dbs_checkuser::has_passwd() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void acc_2_dbs_checkuser::set_has_passwd() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void acc_2_dbs_checkuser::clear_has_passwd() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void acc_2_dbs_checkuser::clear_passwd() {
+  if (passwd_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_->clear();
+  }
+  clear_has_passwd();
+}
+inline const ::std::string& acc_2_dbs_checkuser::passwd() const {
+  // @@protoc_insertion_point(field_get:test_package.acc_2_dbs_checkuser.passwd)
+  return *passwd_;
+}
+inline void acc_2_dbs_checkuser::set_passwd(const ::std::string& value) {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  passwd_->assign(value);
+  // @@protoc_insertion_point(field_set:test_package.acc_2_dbs_checkuser.passwd)
+}
+inline void acc_2_dbs_checkuser::set_passwd(const char* value) {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  passwd_->assign(value);
+  // @@protoc_insertion_point(field_set_char:test_package.acc_2_dbs_checkuser.passwd)
+}
+inline void acc_2_dbs_checkuser::set_passwd(const char* value, size_t size) {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  passwd_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:test_package.acc_2_dbs_checkuser.passwd)
+}
+inline ::std::string* acc_2_dbs_checkuser::mutable_passwd() {
+  set_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    passwd_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:test_package.acc_2_dbs_checkuser.passwd)
+  return passwd_;
+}
+inline ::std::string* acc_2_dbs_checkuser::release_passwd() {
+  clear_has_passwd();
+  if (passwd_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = passwd_;
+    passwd_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void acc_2_dbs_checkuser::set_allocated_passwd(::std::string* passwd) {
+  if (passwd_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete passwd_;
+  }
+  if (passwd) {
+    set_has_passwd();
+    passwd_ = passwd;
+  } else {
+    clear_has_passwd();
+    passwd_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:test_package.acc_2_dbs_checkuser.passwd)
+}
+
+// -------------------------------------------------------------------
+
+// dbs_2_acc_checkuser
+
+// required int32 retcode = 1;
+inline bool dbs_2_acc_checkuser::has_retcode() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void dbs_2_acc_checkuser::set_has_retcode() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void dbs_2_acc_checkuser::clear_has_retcode() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void dbs_2_acc_checkuser::clear_retcode() {
+  retcode_ = 0;
+  clear_has_retcode();
+}
+inline ::google::protobuf::int32 dbs_2_acc_checkuser::retcode() const {
+  // @@protoc_insertion_point(field_get:test_package.dbs_2_acc_checkuser.retcode)
+  return retcode_;
+}
+inline void dbs_2_acc_checkuser::set_retcode(::google::protobuf::int32 value) {
+  set_has_retcode();
+  retcode_ = value;
+  // @@protoc_insertion_point(field_set:test_package.dbs_2_acc_checkuser.retcode)
 }
 
 

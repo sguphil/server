@@ -151,8 +151,8 @@ void TestClient::handleActiveSession()
                 
                 if (session->getStatus() != registered)
                 {
-                    msghead.sysId = 1;
-                    msghead.msgType = 1;
+                    msghead.sysId = (uint16)eRegister_Message;
+                    msghead.msgType = (uint16)C_S_SISSION_REGISTER;
                     reg.sessionType = 1;
                     sendlen = sizeof(msghead) + sizeof(reg);
                     header.length = sendlen;
@@ -166,8 +166,8 @@ void TestClient::handleActiveSession()
                 else if (m_nSendTimes++ == 0) //BIN DATA protocol test
                 {
                     m_bAlreadySend = true;
-                    msghead.sysId = 1;
-                    msghead.msgType = 2;
+                    msghead.sysId = (uint16)eServerMessage_Client;
+                    msghead.msgType = (uint16)CLI_ACCS_TESTBINPKG;
                     char *sendStr = (char*)"hello ulserver";
                     testStr.strlen = (int16)strlen(sendStr);
                     testStr.buf = sendStr;
@@ -195,8 +195,8 @@ void TestClient::handleActiveSession()
                 else //2 protobuf test
                 {
                     m_nSendTimes = 1;
-                    msghead.sysId = 1;
-                    msghead.msgType = 4;
+                    msghead.sysId = (uint16)eServerMessage_Client;
+                    msghead.msgType = (uint16)CLI_ACCS_TESTPROBUFPKG;
                     test_package::testMsg tmsg;
                     tmsg.set_sendtime(acct_time::getCurTimeMs());
                     char *sendStr = (char*)"hello ulserver";

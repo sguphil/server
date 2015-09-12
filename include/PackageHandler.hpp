@@ -106,16 +106,9 @@ class CPackageMgr
     //typedef std::map<int32, FUNCTYPE *> FuncMap;
 public:
     virtual ~CPackageMgr() {}
-    virtual void addAllHandle()
-    {
-    }
-    virtual void registerFunc(int16 sysid, int16 msgid, FUNCTYPE *funcStruct)
-    {
-    }
-    virtual FUNCTYPE* findFuncStruct(int32 key)
-    {
-        return NULL;
-    }
+    virtual void addAllHandle() = 0;
+    virtual void registerFunc(int16 sysid, int16 msgid, FUNCTYPE *funcStruct) = 0;
+    virtual FUNCTYPE* findFuncStruct(int32 key) = 0;
     std::map<int32, FUNCTYPE *> m_functionMap;
 };
 

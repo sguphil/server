@@ -169,11 +169,11 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
     struct c_s_registersession *msg = (struct c_s_registersession*)(msgbuf);
     int16 sessionType = msg->sessionType;
     NetWorkObject *netobj = NULL;
-    struct c_s_registersession ret;
-    MsgHeader msghead = *msgHead;
-    int32 msglen = 0;
-    PkgHeader header;
-    int32 totalsize = 0;
+    //struct c_s_registersession ret;
+    //MsgHeader msghead = *msgHead;
+    //int32 msglen = 0;
+    //PkgHeader header;
+    //int32 totalsize = 0;
     //char *buf = NULL;
     switch (sessionType)
     {
@@ -183,16 +183,6 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
             //netobj = new ClientSession;
             assert(netobj != NULL);
             bindNetWorkObj(netobj);
-            ret.sessionType = (uint16)this->getType(); // modify the typeof client
-            msglen = sizeof(msghead) + sizeof(ret);
-
-            header.length = msglen;
-            header.reserved = 0;
-
-            totalsize = msglen + sizeof(header);
-            char buf[totalsize];
-            encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
-            send(buf, totalsize);// send back the same struct
             setType((SESSION_TYPE)1);
             setStatus(registered);
             //cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
@@ -244,6 +234,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
     }
 }
 
+//do not use this interface now!!!
 void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 msgsize) // first package to register
 {
     struct c_s_registersession *msg = (struct c_s_registersession*)(msgbuf + sizeof(MsgHeader));

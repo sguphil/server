@@ -1,7 +1,7 @@
 #include "DBSession.h"
 #include "../DBSvr/include/DBSessionHandler.hpp"
 
-extern CDBHandlerMgr g_DBHandlerMgr;
+extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 
 DBSession::DBSession()
 {
@@ -100,7 +100,7 @@ int32 DBSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int
     else
     {
         int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
-        accFuncStruct *funcStruct = g_DBHandlerMgr.findFuncStruct(key);
+        accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);
         if (NULL == funcStruct)
         {
             printf("find no func by sysid and msgtype\n");

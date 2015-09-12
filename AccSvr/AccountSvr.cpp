@@ -96,6 +96,36 @@ void AccountSvr::updateSessionList()
         {
             CSession *newSession = *iter;
             newSession->setStatus(active);
+            NetWorkObject *netobj = NULL;
+            int32 sessionT = newSession->getType();
+            switch (sessionT)
+            {
+            case 1:
+
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                netobj = new LogicSession;
+                assert(NULL != netobj);
+                newSession->bindNetWorkObj(netobj);
+                break;
+            case 5:
+                netobj = new DBSession;
+                assert(NULL != netobj);
+                newSession->bindNetWorkObj(netobj);
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+            default:
+                break;
+            }
             m_activeSessionList.push_back(newSession);
             if (!checkRecord(newSession))
             {
@@ -114,8 +144,8 @@ void AccountSvr::updateSessionList()
                 
             if (newSession->getStatus() != registered)
             {
-                msghead.sysId = 1;
-                msghead.msgType = 1;
+                msghead.sysId = (uint16)eRegister_Message;
+                msghead.msgType = (uint16)C_S_SISSION_REGISTER;
                 reg.sessionType = int16(eAccountSvr);
                 sendlen = sizeof(msghead) + sizeof(reg);
                 header.length = sendlen;

@@ -1,7 +1,7 @@
 #include "AccsvrSession.h"
 #include "../AccSvr/include/SessionHandler.hpp"
 
-extern CAccHandlerMgr g_AccHandlerMgr;
+extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 
 AccsvrSession::AccsvrSession()
 {
@@ -101,7 +101,7 @@ int32 AccsvrSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     {
         
         int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
-        accFuncStruct *funcStruct = g_AccHandlerMgr.findFuncStruct(key);
+        accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);
         if (NULL == funcStruct)
         {
             printf("find no func by sysid and msgtype\n");

@@ -42,7 +42,7 @@ void DBSvr::start()
     m_acceptor.start();
 
     //for dbinstance factory
-    m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, m_Config.m_mysqlConfig.ip, m_Config.m_mysqlConfig.port, m_Config.m_mysqlConfig.dbuserName, m_Config.m_mysqlConfig.dbpasswd, m_Config.m_mysqlConfig.dbname);
+    m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, std::string(m_Config.m_mysqlConfig.ip), m_Config.m_mysqlConfig.port, std::string(m_Config.m_mysqlConfig.dbuserName), std::string(m_Config.m_mysqlConfig.dbpasswd), std::string(m_Config.m_mysqlConfig.dbname));
 
     for (int i = 0; i < m_nIoThreadNum;i++)
     {

@@ -38,7 +38,7 @@ void CQuery::setSqlConn(CSqlConn *sqlconn)
 
 CQuery::~CQuery()
 {
-    m_sqlconn->getFactory()->reuse(m_sqlconn);  
+    //m_sqlconn->getFactory()->reuse(m_sqlconn);  
     m_sqlconn = NULL;
 }
 

@@ -1,6 +1,7 @@
 #include "CSqlConn.hpp"
 #include "CQuery.hpp"
 #include "CResult.hpp"
+using std::string;
 
 CSqlConn::CSqlConn(int32 port, string ip, string user, string passwd, string dbname)
 {
@@ -23,7 +24,12 @@ CSqlConn::~CSqlConn()
 
 void CSqlConn::connect(int32 port, string ip, string user, string passwd, string dbname)
 {
-    if (NULL == mysql_real_connect(m_mysql, ip.c_str(), user.c_str(), passwd.c_str(),dbname.c_str(),port, NULL, false))
+    cout << "====33===dbinit:" << port << ip.c_str() << user << passwd << dbname << endl;
+    const char *argip = ip.c_str();
+    const char *arguser = user.c_str();
+    const char *argpasswd = passwd.c_str();
+    const char *argdbname = dbname.c_str();
+    if (NULL == mysql_real_connect(m_mysql, argip, arguser, argpasswd,argdbname,port, NULL, false))
     {
         perror("mysql_real_connect error");
     }

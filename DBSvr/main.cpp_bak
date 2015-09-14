@@ -1,8 +1,8 @@
 #include "../include/baseHeader.h"
-#include "CSqlConn.hpp"
-#include "CResult.hpp"
-#include "CQuery.hpp"
-#include "CDBInstFactory.hpp"
+#include "../database/CSqlConn.hpp"
+#include "../database/CResult.hpp"
+#include "../database/CQuery.hpp"
+#include "../database/CDBInstFactory.hpp"
 
 int main()
 {

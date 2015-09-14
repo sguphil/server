@@ -9,7 +9,9 @@ class CAccHandlerMgr : public CPackageMgr<accFuncStruct>
 public:
     void addAllHandle()
     {
-        registerFunc(1, 4, &CACCSHandlerFunc::testfunc);
+        registerFunc(eServerMessage_Client, CLI_ACCS_TESTBINPKG, &CACCSHandlerFunc::testfunc);
+        registerFunc(eServerMessage_Client, CLI_ACCS_TESTPROBUFPKG, &CACCSHandlerFunc::testfunc);
+        registerFunc(eServerMessage_Client, CLI_ACCS_CHECKLOGINUSER, &CACCSHandlerFunc::checkuser);
 
     }
 

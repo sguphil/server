@@ -5,7 +5,7 @@ int32 CACCSHandlerFunc::testfunc(CSession *session, char *pMsg, int32 msglen)
     test_package::testMsg recvmsg;
     recvmsg.ParseFromArray(pMsg, msglen);
     LOGFMTI("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
-    return session->getNetWorkObject()->processSend(1, 4, pMsg, msglen);
+    return session->getNetWorkObject()->processSend(eServerMessage_AccSvr, ACCS_DBS_TEST, pMsg, msglen);
 }
 
 int32 CACCSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
@@ -25,5 +25,5 @@ int32 CACCSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
         LOGFMTI("CACCSHandlerFunc::checkuser====find no dbsession\n");
         return -1;
     }
-    return session->getNetWorkObject()->processSend(1, 4, pmsg, sendlen);
+    return dbsession->processSend(eServerMessage_AccSvr, ACCS_DBS_CHECKLOGINUSER, pmsg, sendlen);
 }

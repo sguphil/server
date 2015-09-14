@@ -1,8 +1,8 @@
 CC = g++
 #1.设定所有源文件搜索目录顺序
-vpath % .:../include:../Factory:../network/include:../Thread:../session:../Logic:../Test/include:../protocol:../AccSvr/include:../Handler
+vpath % .:../include:../Factory:../network/include:../Thread:../session:../Logic:../Test/include:../protocol:../AccSvr/include
 
-SOURCE = $(wildcard *.cpp ../Factory/*.cpp ../Thread/*.cpp ../network/src/*.cpp ../session/*.cpp ../Logic/*.cpp ../Test/src/*.cpp ../src/*.cpp ../AccSvr/src/*.cpp ../Handler/*.cpp)
+SOURCE = $(wildcard *.cpp ../Factory/*.cpp ../Thread/*.cpp ../network/src/*.cpp ../session/*.cpp ../Logic/*.cpp ../Test/src/*.cpp ../src/*.cpp )
 
 PROBUFSRC = $(wildcard ../protocol/*.cc)
 
@@ -12,7 +12,7 @@ PROBUFOBJS += $(patsubst %cpp, %o, $(SOURCE))
 OBJS = $(PROBUFOBJS)
 
 #3.编译选项
-CCFLAGS = -Wall -c -g -fPIC -O2
+CCFLAGS = -Wall -c -g -fPIC #-O2
 
 #4.链接选项及搜索目录
 LIB_PATH = /usr/lib

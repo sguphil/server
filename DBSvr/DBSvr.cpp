@@ -30,7 +30,13 @@ DBSvr::DBSvr()
 
 DBSvr::~DBSvr()
 {
-
+    /*
+    if (NULL != m_dbInstFactory)
+    {
+        delete m_dbInstFactory;
+        m_dbInstFactory = NULL;
+    }
+    */
 }
 
 void DBSvr::start()
@@ -43,9 +49,11 @@ void DBSvr::start()
 
     //for dbinstance factory
     //m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, std::string(m_Config.m_mysqlConfig.ip,strlen(m_Config.m_mysqlConfig.ip)), m_Config.m_mysqlConfig.port, std::string(m_Config.m_mysqlConfig.dbuserName,strlen(m_Config.m_mysqlConfig.dbuserName)), std::string(m_Config.m_mysqlConfig.dbpasswd,strlen(m_Config.m_mysqlConfig.dbpasswd)), std::string(m_Config.m_mysqlConfig.dbname,strlen(m_Config.m_mysqlConfig.dbname)));
+    //
+    //m_dbInstFactory = new CDBInstFactory;
     //m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, m_Config.m_mysqlConfig.ip, m_Config.m_mysqlConfig.port, m_Config.m_mysqlConfig.dbuserName, m_Config.m_mysqlConfig.dbpasswd, m_Config.m_mysqlConfig.dbname);
-    //m_dbInstFactory.init(1, 5, "127.0.0.1", 3306, "root", "root", "test");
-    CSqlConn sqlconn(3306, "127.0.0.1", "root", "root", "test");
+    m_dbInstFactory.init(5, 5, "127.0.0.1", 3306, "root", "root", "test");
+
     for (int i = 0; i < m_nIoThreadNum;i++)
     {
         CIoThread *newThread = new CIoThread(this);
@@ -194,7 +202,7 @@ void DBSvr::update()
     {
         while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
+            m_nNextTick = acct_time::getCurTimeMs() + 200; //m_nInterval;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();

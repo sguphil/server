@@ -2,6 +2,7 @@
 #define __BASEFACTORY_H__
 #include "../include/baseHeader.h"
 #include "../Logic/Player.h"
+#include "../network/include/CommonList.h"
 //#include "../DBSvr/CSqlConn.hpp"
 
 template<typename T>
@@ -68,7 +69,8 @@ protected:
     {
     }
 protected:
-    list<T*> m_ItemList;
+    //list<T*> m_ItemList;
+    CommonList<T> m_ItemList;
     Int32 m_nTotalItem;
     Int32 m_nItemLess;
     Int32 m_nAccNum;

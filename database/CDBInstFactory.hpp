@@ -28,7 +28,12 @@ private:
         {
             for (int i=0; i<num; i++)
             {
-                CSqlConn *addPlayer = new CSqlConn(port, ip, user, passwd, dbname);
+                CSqlConn *addPlayer = new CSqlConn(port, ip, user, passwd, dbname);// new CSqlConn(3306, "127.0.0.1", "root", "root", "test");
+                if (NULL == addPlayer)
+                {
+                    printf("====new CSqlConn error!!!!\n");
+                }
+                //CSqlConn *addPlayer = new CSqlConn(port, ip, user, passwd, dbname);
                 addPlayer->setFactory(this);
                 m_ItemList.push_back(addPlayer);
                 m_nItemLess++;

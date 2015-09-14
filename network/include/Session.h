@@ -107,6 +107,26 @@ public:
         return m_ptrServer;
     }
 
+    int32 processSend(uint16 sysid, uint16 msgid, char *msg, int32 msgsize)
+    {
+        MsgHeader msgHead;// = {sysid, msgid};
+        msgHead.sysId = sysid;
+        msgHead.msgType = msgid;
+
+        PkgHeader head;// = {msglen, 0};
+        uint16 msglen = sizeof(msgHead) + msgsize;
+        uint16 pkglen = msglen + sizeof(head);
+        head.length = msglen;
+
+        char buf[pkglen];
+        //encodepkg(buf, &head, &msgHead, msg, msgsize);
+        int32 headsize = sizeof(head) + sizeof(msgHead);
+        memcpy(buf, (char *)&head, sizeof(head));
+        memcpy(buf + sizeof(head), (char*)&msgHead, sizeof(msgHead));
+        memcpy(buf + headsize, msg, msgsize);
+        return send(buf, (int32)pkglen);
+    }
+
     int32 send(char *buff, int32 buffsize);  // logic module call to write msg to buffqueue return:-1 error -2 again >=0 success send length
 
     int32 sendToSocket(); //network layer call to send msg with socket

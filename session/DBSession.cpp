@@ -103,7 +103,7 @@ int32 DBSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int
         accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);
         if (NULL == funcStruct)
         {
-            printf("find no func by sysid and msgtype\n");
+            printf("find no func by sysid:%d and msgtype:%d\n", sysid, msgtype);
         }
         else
         {

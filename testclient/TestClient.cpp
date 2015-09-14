@@ -192,9 +192,10 @@ void TestClient::handleActiveSession()
                     }
                     
                 }
-                else //2 protobuf test
+                else if (m_nSendTimes++ == 2)//2 protobuf test
                 {
-                    m_nSendTimes = 1;
+                    //m_nSendTimes = 1;
+                    m_nSendTimes = 3;
                     msghead.sysId = (uint16)eServerMessage_Client;
                     msghead.msgType = (uint16)CLI_ACCS_TESTPROBUFPKG;
                     test_package::testMsg tmsg;
@@ -219,6 +220,34 @@ void TestClient::handleActiveSession()
                     else
                     {
                         cout << "3ready to send msg:" << sendlen << endl;
+                    }
+                }
+                else //if (m_nSendTimes == 3)//2 dbServer test
+                {
+                    //m_nSendTimes = 1;
+                    msghead.sysId = (uint16)eServerMessage_Client;
+                    msghead.msgType = (uint16)CLI_ACCS_CHECKLOGINUSER;
+                    test_package::client_2_acc_checkuser tmsg;
+                    tmsg.set_name("10");
+                    tmsg.set_passwd("11");
+                    int32 bytelen = tmsg.ByteSize();
+                    int32 msglen = sizeof(msghead) + bytelen;
+                    sendlen = msglen + sizeof(header);
+                    char protomsg[bytelen];
+                    tmsg.SerializeToArray(protomsg, bytelen);
+
+                    header.length = msglen;
+                    char buf[sendlen];
+                    encodepkg(buf, &header, &msghead, (char *)protomsg, (int16)bytelen);
+                    if (session->send(buf, sendlen) < 0)
+                    {
+                        cout << "4send buff is full!!!! stop!!!" << endl;
+                        //session->setStatus(waitdel);
+                        acct_time::sleepMs(10);
+                    }
+                    else
+                    {
+                        cout << "4ready to send msg:" << sendlen << endl;
                     }
                 }
             }

@@ -166,8 +166,10 @@ void CSession::processPacket()
 }
 void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize) // first package to register
 {
-    struct c_s_registersession *msg = (struct c_s_registersession*)(msgbuf);
-    int16 sessionType = msg->sessionType;
+    //struct c_s_registersession *msg = (struct c_s_registersession*)(msgbuf);
+    struct c_s_registersession msgstruct;
+    memcpy(&msgstruct, msgbuf, msgsize);
+    int16 sessionType = msgstruct.sessionType;
     NetWorkObject *netobj = NULL;
     //struct c_s_registersession ret;
     //MsgHeader msghead = *msgHead;

@@ -22,7 +22,7 @@ public:
 
     inline MYSQL* getMysql()
     {
-        return m_mysql;
+        return m_pMysql;
     }
 
     inline bool getIsConnected()
@@ -49,7 +49,8 @@ public:
     }
 
 private:
-    MYSQL *m_mysql;
+    MYSQL *m_pMysql;
+    MYSQL m_mysql;
     bool m_isConnected;
     CDBInstFactory *m_ptrInstFactory;
 };

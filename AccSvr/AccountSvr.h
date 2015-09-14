@@ -131,11 +131,17 @@ public:
     CSession* getBestServerSession(SESSION_TYPE type)
     {
         typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
-        typedef std::pair<mapiter, mapiter> rangeBeginEnd;
+        /*typedef std::pair<mapiter, mapiter> rangeBeginEnd;
         rangeBeginEnd range = m_ServerSessionMap.equal_range(type);
         for (mapiter be = range.first; be != range.second; be++)
+        */
+        //for(mapiter it = m_ServerSessionMap.lower_bound(type); it != m_ServerSessionMap.upper_bound(type); it++) 
+        for(mapiter it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); it++)  
         {
-            return be->second;
+            if (it->first == type)
+            {
+                return it->second;
+            }
         }
 
         return NULL;

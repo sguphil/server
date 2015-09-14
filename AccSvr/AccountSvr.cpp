@@ -151,8 +151,10 @@ void AccountSvr::updateSessionList()
                 header.length = sendlen;
                 int32 totallen = sendlen +sizeof(header);
                 char buf[totallen];
-                encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
-                newSession->send(buf, totallen);
+                //encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
+                //newSession->send(buf, totallen);
+                //memcpy(buf, (char *)&reg, sizeof(reg));
+                newSession->processSend((uint16)eRegister_Message, (uint16)C_S_SISSION_REGISTER, (char*)&reg, sizeof(reg));
                 //cout << "ready to send msg:" << totallen << endl;
                 //newSession->setStatus(registered);
             }
@@ -242,7 +244,7 @@ void AccountSvr::update()
     {
         while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
+            m_nNextTick = acct_time::getCurTimeMs() + 200; //m_nInterval;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();

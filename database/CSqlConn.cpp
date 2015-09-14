@@ -5,31 +5,30 @@ using std::string;
 
 CSqlConn::CSqlConn(int32 port, string ip, string user, string passwd, string dbname)
 {
-    m_mysql = mysql_init(m_mysql);
-    if (NULL != m_mysql)
+    m_pMysql = mysql_init(NULL);
+    if (NULL != m_pMysql)
     {
         connect(port, ip, user, passwd, dbname);
     }
     else
     {
         perror("mysql connect error");
-        //assert(NULL != m_mysql);
+        //assert(NULL != m_pMysql);
     }
 }
 
 CSqlConn::~CSqlConn()
 {
-    mysql_close(m_mysql);
+    mysql_close(m_pMysql);
 }
 
 void CSqlConn::connect(int32 port, string ip, string user, string passwd, string dbname)
 {
-    cout << "====33===dbinit:" << port << ip.c_str() << user << passwd << dbname << endl;
     const char *argip = ip.c_str();
     const char *arguser = user.c_str();
     const char *argpasswd = passwd.c_str();
     const char *argdbname = dbname.c_str();
-    if (NULL == mysql_real_connect(m_mysql, argip, arguser, argpasswd,argdbname,port, NULL, false))
+    if (NULL == mysql_real_connect(m_pMysql, argip, arguser, argpasswd,argdbname,port, NULL, 0))
     {
         perror("mysql_real_connect error");
     }
@@ -38,9 +37,9 @@ void CSqlConn::connect(int32 port, string ip, string user, string passwd, string
 bool CSqlConn::exequery(CQuery *queryobj, CResult * result)
 {
     string qstr = queryobj->getQueryStr();
-    mysql_real_query(m_mysql, qstr.c_str(), queryobj->getQlen());
+    mysql_real_query(m_pMysql, qstr.c_str(), queryobj->getQlen());
     MYSQL_RES *ptrRes = result->getRes();
-    ptrRes = mysql_store_result(m_mysql);
+    ptrRes = mysql_store_result(m_pMysql);
     if (NULL == ptrRes)
     {
         return false;
@@ -56,10 +55,10 @@ bool CSqlConn::exequery(CQuery *queryobj, CResult * result)
 
 int CSqlConn::exeUpdate(CQuery *queryobj)
 {
-    if (0 != mysql_real_query(m_mysql, queryobj->getQueryStr().c_str(), queryobj->getQlen()))
+    if (0 != mysql_real_query(m_pMysql, queryobj->getQueryStr().c_str(), queryobj->getQlen()))
     {
         perror("mysql_real_query exeUpdate error");
         return -1;
     }
-    return (int32)mysql_affected_rows(m_mysql);
+    return (int32)mysql_affected_rows(m_pMysql);
 }

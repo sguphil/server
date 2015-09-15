@@ -7,7 +7,6 @@
 #include "../../Factory/BaseFactory.h"
 #include "../../Thread/Mutex.h"
 
-
 class Connector: public CBaseThread
 {
 public:
@@ -40,6 +39,5 @@ private:
     CMutex m_connErrListLock;
     pthread_cond_t m_waitCond;
     pthread_mutex_t m_mutex;
-    
 };
 #endif // __CONNECTOR_H__

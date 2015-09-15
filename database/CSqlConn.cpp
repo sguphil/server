@@ -38,18 +38,24 @@ bool CSqlConn::exequery(CQuery *queryobj, CResult * result)
 {
     string qstr = queryobj->getQueryStr();
     mysql_real_query(m_pMysql, qstr.c_str(), queryobj->getQlen());
-    MYSQL_RES *ptrRes = result->getRes();
-    ptrRes = mysql_store_result(m_pMysql);
-    if (NULL == ptrRes)
+    if (result->storeResult(m_pMysql) < 0)
     {
         return false;
     }
-    result->setRes(ptrRes);
-    int32 col = mysql_num_fields(ptrRes);
+    /*MYSQL_RES **ptrRes = result->getppRes();
+    *ptrRes = mysql_store_result(m_pMysql);
+    if (NULL == *ptrRes)
+    {
+        return false;
+    }
+    //result->setRes(*ptrRes); 
+    int32 col = mysql_num_fields(result->getRes());
     result->setCol(col);
 
-    int32 row = mysql_num_rows(ptrRes);
-    result->setRow(row);
+    int32 row = mysql_num_rows(result->getRes());
+    result->setRow(row); 
+    */
+    
     return true;
 }
 

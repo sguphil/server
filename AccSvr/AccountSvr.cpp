@@ -135,28 +135,12 @@ void AccountSvr::updateSessionList()
             addFdToRecvEpoll(newSession);
             addFdToSendEpoll(newSession);
 
-            //send first package to register session
-            MsgHeader msghead;
-            int32 sendlen = 0;
-            PkgHeader header;
-            struct c_s_registersession reg;
-            //struct c_s_refecttest testStr;
-                
             if (newSession->getStatus() != registered)
             {
-                msghead.sysId = (uint16)eRegister_Message;
-                msghead.msgType = (uint16)C_S_SISSION_REGISTER;
+                //send first package to register session
+                struct c_s_registersession reg;
                 reg.sessionType = int16(eAccountSvr);
-                sendlen = sizeof(msghead) + sizeof(reg);
-                header.length = sendlen;
-                int32 totallen = sendlen +sizeof(header);
-                char buf[totallen];
-                //encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
-                //newSession->send(buf, totallen);
-                //memcpy(buf, (char *)&reg, sizeof(reg));
                 newSession->processSend((uint16)eRegister_Message, (uint16)C_S_SISSION_REGISTER, (char*)&reg, sizeof(reg));
-                //cout << "ready to send msg:" << totallen << endl;
-                //newSession->setStatus(registered);
             }
         }
     }
@@ -244,14 +228,11 @@ void AccountSvr::update()
     {
         while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            m_nNextTick = acct_time::getCurTimeMs() + 200; //m_nInterval;
+            m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            // 30 ms per logic handle
-            //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
-        //cout << "======out of frame!!!" << endl;
         acct_time::sleepMs(10); // sleep 1ms per loop
     }
 }

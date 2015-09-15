@@ -42,7 +42,7 @@ public:
                     {
                         oplen = session->recv();
                         isRecvEvent = true;
-                        if (oplen >= 0) // normal 
+                        if (oplen > 0) // normal 
                         {
                             #if 0
                             if (oplen > 0 )
@@ -63,12 +63,11 @@ public:
                             {
                                 session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
                             }
-                            
-                            //if (0 == oplen)
-                            //{
-                              //  acct_time::sleepMs(300);
-                            //}
                         }
+                        else if (0 == oplen)
+                        {
+                            acct_time::sleepMs(200);
+                        } 
                         else // socket error wait to free session
                         {
                             session->delEpollEvent(svr->getIoEpollfd());
@@ -80,14 +79,16 @@ public:
             }
             else if (0 == evCount) //epoll timeout
             {
-                //acct_time::sleepMs(100);
+                acct_time::sleepMs(100);
                 // handle timeout??
+                //printf("CIoThread epoll timeout!!! epoll_wait return:%d\n", evCount);
             }
             else // ret < 0 error or interrupt
             {
                 if (evCount == -1 && errno == EINTR)
                 {
                     //acct_time::sleepMs(200);
+                    printf("CIoThread epoll timeout!!! epoll_wait return:%d\n", evCount);
                     continue;
                 }
                 //acct_time::sleepMs(300);

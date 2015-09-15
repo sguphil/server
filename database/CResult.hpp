@@ -2,6 +2,7 @@
 #define __CRESULT_H__
 #include "../include/baseHeader.h"
 #include "mysql/mysql.h"
+#pragma pack(1)
 
 class CResult
 {
@@ -35,6 +36,21 @@ public:
         return &arg;
     }
 */
+    int32 storeResult(MYSQL *conn)
+    {
+        m_res = mysql_store_result(conn);
+        if (NULL == m_res)
+        {
+            return -1;
+        }
+
+        m_nCol = mysql_num_fields(m_res);
+        m_nRow = mysql_num_rows(m_res);
+
+        return 0;
+    }
+    
+
     char* getString(int field)
     {
         if (field < m_nCol)
@@ -118,6 +134,11 @@ public:
     inline MYSQL_RES* getRes()
     {
         return m_res;
+    }
+
+    inline MYSQL_RES** getppRes()
+    {
+        return &m_res;
     }
 
     inline void setRes(MYSQL_RES *res)

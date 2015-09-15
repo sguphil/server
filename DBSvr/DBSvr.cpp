@@ -48,11 +48,13 @@ void DBSvr::start()
     m_acceptor.start();
 
     //for dbinstance factory
-    //m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, std::string(m_Config.m_mysqlConfig.ip,strlen(m_Config.m_mysqlConfig.ip)), m_Config.m_mysqlConfig.port, std::string(m_Config.m_mysqlConfig.dbuserName,strlen(m_Config.m_mysqlConfig.dbuserName)), std::string(m_Config.m_mysqlConfig.dbpasswd,strlen(m_Config.m_mysqlConfig.dbpasswd)), std::string(m_Config.m_mysqlConfig.dbname,strlen(m_Config.m_mysqlConfig.dbname)));
-    //
-    //m_dbInstFactory = new CDBInstFactory;
-    //m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, m_Config.m_mysqlConfig.ip, m_Config.m_mysqlConfig.port, m_Config.m_mysqlConfig.dbuserName, m_Config.m_mysqlConfig.dbpasswd, m_Config.m_mysqlConfig.dbname);
-    m_dbInstFactory.init(5, 5, "127.0.0.1", 3306, "root", "root", "test");
+    m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, m_Config.m_mysqlConfig.ip, m_Config.m_mysqlConfig.port, m_Config.m_mysqlConfig.dbuserName, m_Config.m_mysqlConfig.dbpasswd, m_Config.m_mysqlConfig.dbname);
+    //m_dbInstFactory.init(5, 5, "127.0.0.1", 3306, "root", "root", "test");
+
+    DBSvr* dbsvr = DBSvr::GetInstance();
+    CDBInstFactory *dbf = dbsvr->getDBInstFactory();
+    //CSqlConn *sqlInst1 = dbf->allocate();
+    
 
     for (int i = 0; i < m_nIoThreadNum;i++)
     {
@@ -202,14 +204,11 @@ void DBSvr::update()
     {
         while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            m_nNextTick = acct_time::getCurTimeMs() + 200; //m_nInterval;
+            m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            // 30 ms per logic handle
-            //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
-        //cout << "======out of frame!!!" << endl;
         acct_time::sleepMs(10); // sleep 1ms per loop
     }
 }

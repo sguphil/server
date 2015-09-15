@@ -136,11 +136,15 @@ public:
         for (mapiter be = range.first; be != range.second; be++)
         */
         //for(mapiter it = m_ServerSessionMap.lower_bound(type); it != m_ServerSessionMap.upper_bound(type); it++) 
-        for(mapiter it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); it++)  
+        int32 size = m_ServerSessionMap.size();
+        if (size > 0)
         {
-            if (it->first == type)
+            for (mapiter it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); it++)
             {
-                return it->second;
+                if (it->first == type)
+                {
+                    return it->second;
+                }
             }
         }
 

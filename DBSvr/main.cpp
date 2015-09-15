@@ -20,8 +20,8 @@ extern void printItem(TestAccess *accessObj);
 int main()
 {
     using namespace zsummer::log4z;
-    //ILog4zManager::getRef().start();
-    //ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
+    ILog4zManager::getRef().start();
+    ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
     g_HandlerMgr = new CDBHandlerMgr;
     signal(SIGPIPE, SIG_IGN);
     DBSvr* dbsvr = DBSvr::GetInstance();

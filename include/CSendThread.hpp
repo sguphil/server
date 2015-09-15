@@ -43,7 +43,7 @@ public:
                         oplen = session->sendToSocket();
                         //isRecvEvent = false;
                         
-                        if (oplen >= 0) // normal 
+                        if (oplen > 0) // normal 
                         {
                             #if 0
                             if (oplen > 0)
@@ -60,10 +60,6 @@ public:
                             }
                             #endif
                             //session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);//single thread do not need epolloneshoot
-                            //if (0 == oplen)
-                            //{
-                              //  usleep(10000);
-                            //}
                         }
                         else if (oplen == -1)// socket error wait to free session
                         {
@@ -72,6 +68,7 @@ public:
                         }
                         else // EAGAIN
                         {
+                            //printf("CSendThread send oplen 0!!! epoll_wait return:%d\n", evCount);
                             acct_time::sleepMs(100);
                         }
                     }
@@ -80,13 +77,16 @@ public:
             }
             else if (0 == evCount) //epoll timeout
             {
+                acct_time::sleepMs(100);
                 // handle timeout??
+                //printf("CSendThread epoll timeout!!! epoll_wait return:%d\n", evCount);
             }
             else // ret < 0 error or interrupt
             {
                 if (evCount == -1 && errno == EINTR)
                 {
                     acct_time::sleepMs(200);
+                    printf("CSendThread epoll EINTR!!! epoll_wait return:%d\n", evCount);
                     continue;
                 }
                 acct_time::sleepMs(300);

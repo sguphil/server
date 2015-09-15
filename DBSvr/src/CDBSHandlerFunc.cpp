@@ -14,15 +14,21 @@ int32 CDBSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
     test_package::acc_2_dbs_checkuser recvmsg;
     
     recvmsg.ParseFromArray(pMsg, msglen);
-    //DBSvr* dbsvr = DBSvr::GetInstance();
-    //CDBInstFactory *dbf = dbsvr->getDBInstFactory();
-    CSqlConn *sqlInst = new CSqlConn(3306, "127.0.0.1", "root", "root", "test");
+    DBSvr* dbsvr = DBSvr::GetInstance();
+    CDBInstFactory *dbf = dbsvr->getDBInstFactory();
+    CSqlConn *sqlInst = dbf->allocate();
+    if (NULL == sqlInst)
+    {
+        printf("error get sql instance!!!\n");
+        assert(NULL != sqlInst);
+    }
     std::string sql = "select a, b from tbl where a ='";
     sql.append(recvmsg.name());
-    sql.append("', and b = '");
+    sql.append("' and b = '");
     sql.append(recvmsg.passwd());
     sql.append("'");
     CQuery query(sqlInst, sql, sql.length());
+    printf("query sql is:%s\n", sql.c_str());
     CResult res;
     int32 retcode = 1;
     if (query.exequery(&res))
@@ -44,6 +50,6 @@ int32 CDBSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
     int32 sendlen = sendmsg.ByteSize();
     char pmsg[sendlen];
     sendmsg.SerializeToArray(pmsg, sendlen);
-    //dbf->reuse(sqlInst);
+    dbf->reuse(sqlInst);
     return session->processSend((uint16)eServerMessage_DBServer, (uint16)DBS_ACCS_CHECKLOGINUSER_RET, pmsg, sendlen);
 }

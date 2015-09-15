@@ -14,6 +14,8 @@
 
 #define ULIMITSVR 1
 
+class CSession;
+
 using namespace std;
 extern void printItem(TestAccess *accessObj);
 

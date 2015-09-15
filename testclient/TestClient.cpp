@@ -261,7 +261,7 @@ void TestClient::update()
     {
         if (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            m_nNextTick = acct_time::getCurTimeMs() + 10;
+            m_nNextTick = acct_time::getCurTimeMs() + 100;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
@@ -269,7 +269,7 @@ void TestClient::update()
             //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
         //cout << "out logic loop:" << acct_time::getCurTimeMs() << endl;
-        //acct_time::sleepMs(10); // sleep 1ms per loop
+        acct_time::sleepMs(10); // sleep 1ms per loop
     }
     
 }

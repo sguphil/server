@@ -7,6 +7,7 @@
 #include "../DBSvr.h"
 #include "../../database/CQuery.hpp"
 #include "../../database/CResult.hpp"
+#include "../../database/CSqlConn.hpp"
 
 class CDBSHandlerFunc
 {

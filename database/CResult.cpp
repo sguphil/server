@@ -1,6 +1,6 @@
 #include "CResult.hpp"
 
-CResult::CResult()
+CResult::CResult():m_res(NULL)
 {
     
 }

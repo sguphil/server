@@ -12,6 +12,7 @@ public:
         registerFunc(eServerMessage_Client, CLI_ACCS_TESTBINPKG, &CACCSHandlerFunc::testfunc);
         registerFunc(eServerMessage_Client, CLI_ACCS_TESTPROBUFPKG, &CACCSHandlerFunc::testfunc);
         registerFunc(eServerMessage_Client, CLI_ACCS_CHECKLOGINUSER, &CACCSHandlerFunc::checkuser);
+        registerFunc(eServerMessage_DBServer, DBS_ACCS_CHECKLOGINUSER_RET, &CACCSHandlerFunc::dbcheckuserret);
 
     }
 

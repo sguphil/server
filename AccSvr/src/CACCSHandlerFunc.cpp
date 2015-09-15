@@ -27,3 +27,11 @@ int32 CACCSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
     }
     return dbsession->processSend(eServerMessage_AccSvr, ACCS_DBS_CHECKLOGINUSER, pmsg, sendlen);
 }
+
+int32 CACCSHandlerFunc::dbcheckuserret(CSession *session, char *pMsg, int32 msglen)
+{
+    test_package::dbs_2_acc_checkuser recvmsg;
+    test_package::acc_2_client_checkuser sendmsg;
+    recvmsg.ParseFromArray(pMsg, msglen);
+    LOGFMTI("CACCSHandlerFunc::dbcheckuserret====recvmsg retcode:%d\n", recvmsg.retcode());
+}

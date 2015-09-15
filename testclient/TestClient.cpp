@@ -140,7 +140,7 @@ void TestClient::handleActiveSession()
 
             SESSION_TYPE sessionType = session->getType();
 
-            if (sessionType == eAccountSvr && m_nSendTimes < 200)
+            if (sessionType == eAccountSvr )//&& m_nSendTimes < 200)
             {
                 //m_nSendTimes++; // test ---send times
                 MsgHeader msghead;
@@ -261,7 +261,7 @@ void TestClient::update()
     {
         if (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            m_nNextTick = acct_time::getCurTimeMs() + 100;
+            m_nNextTick = acct_time::getCurTimeMs() + 10;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();

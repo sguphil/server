@@ -1,5 +1,6 @@
 #ifndef ACCOUNTSVR_H
 #define ACCOUNTSVR_H
+#include "../include/baseHeader.h"
 #include "../include/Singleton.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/CommonList.h"

@@ -1,5 +1,6 @@
 #ifndef __DBSVR_H__
 #define __DBSVR_H__
+#include "../include/baseHeader.h"
 #include "../include/Singleton.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/CommonList.h"

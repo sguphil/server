@@ -19,14 +19,15 @@ extern void printItem(TestAccess *accessObj);
 
 int main()
 {
-    using namespace zsummer::log4z;
-    ILog4zManager::getRef().start();
-    ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
-    g_HandlerMgr = new CDBHandlerMgr;
+    //using namespace zsummer::log4z;
+    //ILog4zManager::getRef().start();
+    //ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
+    
     signal(SIGPIPE, SIG_IGN);
     DBSvr* dbsvr = DBSvr::GetInstance();
     LOGI("Hello world! ServerID is:" << dbsvr->getServerID());
     g_ClientNetWorkObjectFactory.init(10, 10);
+    g_HandlerMgr = new CDBHandlerMgr;
     g_HandlerMgr->addAllHandle();
 
     test_package::testMsg tmsg;

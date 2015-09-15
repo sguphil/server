@@ -10,6 +10,10 @@ if [ $arg == "all" ]; then
 	cd ../testclient
 	make clean
 	make
+	echo "============start make dbserver=============="
+	cd ../DBSvr
+	make clean
+	make
 elif [ $arg = "clean" ]; then
 	cd $pwd
 	cd AccSvr

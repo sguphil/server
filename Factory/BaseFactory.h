@@ -12,14 +12,12 @@ public:
     CBaseFactory() { m_nAccNum = 1;} // defualt increase one item
     virtual ~CBaseFactory() 
     {
-        /*
-        list<T *>::iterator it = m_ItemList.begin();
+        typename CommonList<T>::iterator it = m_ItemList.begin();
         while (it != m_ItemList.end())
         {
             delete *it;
             it++;
         }
-        */
     }
     virtual void init(Int32 ItemNum, Int32 accNum)
     {

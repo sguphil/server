@@ -16,7 +16,11 @@ public:
     }
 
 public:
-    accFuncStruct *findFuncStruct(int32 key)
+    ~CDBHandlerMgr()
+    {
+    }
+
+    accFuncStruct* findFuncStruct(int32 key)
     {
         if (m_functionMap.empty())
         {

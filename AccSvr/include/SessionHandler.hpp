@@ -15,8 +15,13 @@ public:
         registerFunc(eServerMessage_DBServer, DBS_ACCS_CHECKLOGINUSER_RET, &CACCSHandlerFunc::dbcheckuserret);
 
     }
+public:
+    ~CAccHandlerMgr()
+    {
+        
+    }
 
-    accFuncStruct *findFuncStruct(int32 key)
+    accFuncStruct* findFuncStruct(int32 key)
     {
         if (m_functionMap.empty())
         {

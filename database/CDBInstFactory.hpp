@@ -8,13 +8,14 @@ class CDBInstFactory:public CBaseFactory<CSqlConn>
 {
 public:
     ~CDBInstFactory()
-    {
-        list<CSqlConn *>::iterator it = m_ItemList.begin();
+    {/*
+        CommonList<CSqlConn>::iterator it = m_ItemList.begin();
         while (it != m_ItemList.end())
         {
             delete *it;
             it++;
         }
+        */
     }
     void init(Int32 ItemNum, Int32 accNum, string ip, int32 port, string user, string passwd, string dbname)
     {

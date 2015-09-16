@@ -200,15 +200,34 @@ void DBSvr::handleActiveSession()
 
 void DBSvr::update()
 {
-    while (true)
-    {
-        while (acct_time::getCurTimeMs() >= m_nNextTick)
+    int i = 0;
+    int test = 0;
+
+    if( test )
+        while (i++ < 100) //(true)
         {
-            m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
-            updateSessionList(); // handle new Session
-            handleActiveSession();
-            removeDeadSession();
+            printf("===================i:%d\n", i);
+            //while (acct_time::getCurTimeMs() >= m_nNextTick)
+            {
+                //m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
+                updateSessionList(); // handle new Session
+                handleActiveSession();
+                removeDeadSession();
+            }
+            acct_time::sleepMs(500); // sleep 1ms per loop
         }
-        acct_time::sleepMs(10); // sleep 1ms per loop
-    }
+    else
+        while (true)
+        {
+            printf("===================i:%d\n", i);
+            while (acct_time::getCurTimeMs() >= m_nNextTick)
+            {
+                m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
+                updateSessionList(); // handle new Session
+                handleActiveSession();
+                removeDeadSession();
+            }
+            acct_time::sleepMs(500); // sleep 1ms per loop
+        }
+
 }

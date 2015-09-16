@@ -50,7 +50,6 @@ public:
 
 private:
     MYSQL *m_pMysql;
-    MYSQL m_mysql;
     bool m_isConnected;
     CDBInstFactory *m_ptrInstFactory;
 };

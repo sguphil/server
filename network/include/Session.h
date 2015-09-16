@@ -41,10 +41,11 @@ public:
         #if REUSE_NETWORKOBJ
         g_ClientNetWorkObjectFactory.reuse(m_pBindNetWorkObj);
         #else
-        delete m_pBindNetWorkObj;
+        
         close(m_socket); // close socket fd
         if (NULL != m_pBindNetWorkObj)
         {
+            delete m_pBindNetWorkObj;
             m_pBindNetWorkObj = NULL;
         }
         #endif

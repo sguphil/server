@@ -9,7 +9,7 @@
 #define REUSE_NETWORKOBJ 1
 extern CBaseFactory<ClientSession> g_ClientNetWorkObjectFactory;
 
-CSession::CSession()
+CSession::CSession():m_pBindNetWorkObj(NULL)
 {
     m_socket = -1;
     m_boActive = false;
@@ -29,6 +29,11 @@ CSession::CSession()
 CSession::~CSession()
 {
     delete[] m_LeftPkgBuf;
+    if (NULL != m_pBindNetWorkObj)
+    {
+        delete m_pBindNetWorkObj;
+        m_pBindNetWorkObj =  NULL;
+    }
 }
 int32 CSession::send(char *buff, int32 buffsize)
 {

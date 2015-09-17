@@ -12,7 +12,7 @@ public:
     CBaseFactory() { m_nAccNum = 1;} // defualt increase one item
     virtual ~CBaseFactory() 
     {
-        typename CommonList<T>::iterator it = m_ItemList.begin();
+        typename std::list<T*>::iterator it = m_ItemList.begin();
         while (it != m_ItemList.end())
         {
             delete *it;
@@ -67,8 +67,8 @@ protected:
     {
     }
 protected:
-    //list<T*> m_ItemList;
-    CommonList<T> m_ItemList;
+    std::list<T*> m_ItemList;
+    //CommonList<T> m_ItemList;
     Int32 m_nTotalItem;
     Int32 m_nItemLess;
     Int32 m_nAccNum;

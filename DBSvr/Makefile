@@ -12,7 +12,7 @@ PROBUFOBJS += $(patsubst %cpp, %o, $(SOURCE))
 OBJS = $(PROBUFOBJS)
 
 #3.编译选项
-CCFLAGS = -Wall -c -g #-rdynamic #-fPIC #-O2
+CCFLAGS = -Wall -c -g -m64 #-rdynamic #-fPIC #-O2
 
 #4.链接选项及搜索目录
 LIB_PATH = /usr/lib

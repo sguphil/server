@@ -42,7 +42,7 @@ int32 CDBSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
             break;
         }
     }
-    //LOGFMTI("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
+    LOGFMTI("check printing log==sendtime:====server recv:\n");
 
     test_package::dbs_2_acc_checkuser sendmsg;
     sendmsg.set_retcode(retcode);

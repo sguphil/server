@@ -90,14 +90,15 @@ public:
     {
         m_nSessionSwapTick = tick;
     }
+
     inline bool checkRecord(CSession *session)
     {
         typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
-        typedef std::pair<mapiter, mapiter> rangeBeginEnd;
-        rangeBeginEnd range = m_ServerSessionMap.equal_range(session->getType());
-        for (mapiter be = range.first; be != range.second; be++)
+        //typedef std::pair<mapiter, mapiter> rangeBeginEnd;
+        //rangeBeginEnd range = m_ServerSessionMap.equal_range(session->getType());
+        for (mapiter it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); it++)
         {
-            if (be->second == session)
+            if (it->second == session)
             {
                 return true;
             }
@@ -108,23 +109,30 @@ public:
     inline void delClusterSession(CSession *session)
     {
         typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
-        typedef std::pair<mapiter, mapiter> rangeBeginEnd;
-        rangeBeginEnd range = m_ServerSessionMap.equal_range(session->getType());
-        for (mapiter be = range.first; be != range.second; be++)
+        //typedef std::pair<mapiter, mapiter> rangeBeginEnd;
+        //rangeBeginEnd range = m_ServerSessionMap.equal_range(session->getType());
+        for (mapiter it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); )
         {
-            if (be->second->getSessionId() == session->getSessionId())
+            if (it->second->getSessionId() == session->getSessionId())
             {
-                m_ServerSessionMap.erase(be);
+                m_ServerSessionMap.erase(it++);
                 //put in connector errrolist, wait for reconnect...
                 m_connector.addToErrorList(session);
                 break;
+            }
+            else
+            {
+                 it++;
             }
         }
     }
 
     CDBInstFactory* getDBInstFactory()
     {
-        return &m_dbInstFactory;
+        CDBInstFactory *ret = NULL;
+        ret = &m_dbInstFactory;
+        long a = (long)&m_dbInstFactory;
+        return ret;
     }
 
 private:

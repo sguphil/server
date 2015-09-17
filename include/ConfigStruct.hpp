@@ -1,7 +1,7 @@
 #ifndef __CONFIGSTRUCT_H__
 #define __CONFIGSTRUCT_H__
 #include "baseHeader.h"
-#pragma pack(1)
+//#pragma pack(1)
 typedef struct acclocalconfig
 {
     int32 serverid;
@@ -33,7 +33,7 @@ typedef struct dbsvrConfig
 
 typedef struct logicConfig
 {
-    int8 serverid;
+    int32 serverid;
     char ip[32];
     int32 port;
     logicConfig()
@@ -44,7 +44,7 @@ typedef struct logicConfig
 
 typedef struct mysqlconfig
 {
-    int8 serverid;
+    int32 serverid;
     char ip[32];
     int32 port;
     int32 instNum;

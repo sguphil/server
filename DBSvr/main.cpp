@@ -19,9 +19,9 @@ extern void printItem(TestAccess *accessObj);
 
 int main()
 {
-    //using namespace zsummer::log4z;
-    //ILog4zManager::getRef().start();
-    //ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
+    using namespace zsummer::log4z;
+    ILog4zManager::getRef().start();
+    ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
     
     signal(SIGPIPE, SIG_IGN);
     DBSvr* dbsvr = DBSvr::GetInstance();

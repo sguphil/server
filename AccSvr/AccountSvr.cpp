@@ -26,6 +26,7 @@ AccountSvr::AccountSvr()
         printf("AccountSvr create epollfd error!!!");
         assert(false);
     }
+
 }
 
 AccountSvr::~AccountSvr()
@@ -39,6 +40,8 @@ void AccountSvr::start()
     m_acceptor.init(m_Config.m_accConfigVec[0].maxclient);
     m_acceptor.startListen(m_Config.m_accConfigVec[0].ip, m_Config.m_accConfigVec[0].port);
     m_acceptor.start();
+
+    getBestServerSession(eDBServer);
 
     for (int i = 0; i < m_nIoThreadNum;i++)
     {
@@ -168,18 +171,9 @@ void AccountSvr::removeDeadSession()
                 }
                 else
                 {
-                    typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
-                    typedef std::pair<mapiter, mapiter> rangeBeginEnd;
-                    rangeBeginEnd range = m_ServerSessionMap.equal_range(session->getType());
-                    for (mapiter be = range.first; be != range.second; be++)
+                    if (checkRecord(session))
                     {
-                        if (be->second->getSessionId() == session->getSessionId())
-                        {
-                            m_ServerSessionMap.erase(be);
-                            //put in connector errrolist, wait for reconnect...
-                            m_connector.addToErrorList(session);
-                            break;
-                        }
+                        delClusterSession(session);
                     }
                 }
             }

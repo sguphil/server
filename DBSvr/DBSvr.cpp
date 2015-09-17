@@ -26,6 +26,7 @@ DBSvr::DBSvr()
         printf("DBSvr create epollfd error!!!");
         assert(false);
     }
+    m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, m_Config.m_mysqlConfig.ip, m_Config.m_mysqlConfig.port, m_Config.m_mysqlConfig.dbuserName, m_Config.m_mysqlConfig.dbpasswd, m_Config.m_mysqlConfig.dbname);
 }
 
 DBSvr::~DBSvr()
@@ -48,12 +49,13 @@ void DBSvr::start()
     m_acceptor.start();
 
     //for dbinstance factory
-    m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, m_Config.m_mysqlConfig.ip, m_Config.m_mysqlConfig.port, m_Config.m_mysqlConfig.dbuserName, m_Config.m_mysqlConfig.dbpasswd, m_Config.m_mysqlConfig.dbname);
+    
     //m_dbInstFactory.init(5, 5, "127.0.0.1", 3306, "root", "root", "test");
 
-    DBSvr* dbsvr = DBSvr::GetInstance();
-    CDBInstFactory *dbf = dbsvr->getDBInstFactory();
+    //DBSvr* dbsvr = DBSvr::GetInstance();
+    //CDBInstFactory *dbf = dbsvr->getDBInstFactory();
     //CSqlConn *sqlInst1 = dbf->allocate();
+    getDBInstFactory();
     
 
     for (int i = 0; i < m_nIoThreadNum;i++)

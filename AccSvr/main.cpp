@@ -28,7 +28,7 @@ int main()
     g_HandlerMgr = new CAccHandlerMgr;
     g_HandlerMgr->addAllHandle();
 
-    AccountSvr* accountSvr = AccountSvr::GetInstance();
+    AccountSvr *accountSvr = AccountSvr::GetInstance();
     LOGI("Hello world! ServerID is:" << accountSvr->getServerID());
     g_ClientNetWorkObjectFactory.init(10000, 50);
     

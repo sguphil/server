@@ -28,6 +28,16 @@ class AccountSvr: public CServerBase, public base::Singleton<AccountSvr>
 public:
     AccountSvr();
     virtual ~AccountSvr();
+    /*
+    static AccountSvr* GetInstance()
+    {
+        if (NULL == m_Instance)
+        {
+            m_Instance = new AccountSvr;
+        }
+        return m_Instance;
+    }
+    */
     void start();
     void updateSessionList();
     void removeDeadSession();
@@ -177,9 +187,9 @@ private:
     int32 m_nHandleCount;
     int32 m_nStatisticTick;
     int32 m_nSessionSwapTick;
-    std::multimap<SESSION_TYPE, CSession *> m_ServerSessionMap; //need to update session in loop
     CAccSvrConfig m_Config;
+    std::multimap<SESSION_TYPE, CSession *> m_ServerSessionMap; //need to update session in loop
+    //static AccountSvr *m_Instance;
 };
-
 
 #endif // ACCOUNTSVR_H

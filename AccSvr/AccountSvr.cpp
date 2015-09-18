@@ -1,5 +1,7 @@
 #include "AccountSvr.h"
 
+//AccountSvr* AccountSvr::m_Instance = NULL;
+
 AccountSvr::AccountSvr()
 {
     m_Config.init("./config/accountSvr.xml");

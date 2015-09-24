@@ -7,22 +7,22 @@ Now, the server provided a client-server test. <br>
 The test include three parts: the account-server, test-client, db-server, about the db-server, we only support mysql now. <br>
 
 Runing the test server and client you can follow the steps,as usual you don't need to modify the configurations of the test-servers. <br>
-1.clone the server source code <br>
-2.install mysql and  create database <br>
+######1.clone the server source code <br>
+######2.install mysql and  create database <br>
     after installed the database, create a database and modify the config file DBSvr.xml(directory "server/DBSvr/config"), set the tip dbname to your database name. <br>
     run testsql.sql(directory "server/database") to create a test table; <br>
-3.install protocol buf <br>
-4.compile the db-server <br>
+######3.install protocol buf <br>
+######4.compile the db-server <br>
     cd DBSvr <br>
     make clean <br>
     make <br>
     ./dbsvr <br>
-5.compile the Account-server <br>
+######5.compile the Account-server <br>
     cd AccSvr <br>
     make clean <br>
     make <br>
     ./accsvr <br>
-6.compile the test-client <br>
+######6.compile the test-client <br>
     cd testclient <br>
     make clean <br>
     make <br>
@@ -34,7 +34,7 @@ send a test package to account-server, when account-server recieve the package, 
 In the following days, i will bring protobuf and redis to the server as the package 
 serialization/deserialization method,and the cache. <br>
 
-简要说明：
+#简要说明：
 		本服务器提供了一个轻量级网络服务器框架，里面提供了服务器中常用的工具及一些接口的封装，使用这个服务目的在于更容易的搭建起一个可用的高性能的网络服务器，目前这个服务器还需要很多地方需要完善，在服务器性能方面仍然有很大的提升空间，并且服务器只提供linux环境的支持。 <br>
 		本服务器目前提供了一个简单的测试例子，这个例子是以当前手游服务器常用框架为背景，这个测试提供了一个测试客户端，账号服务器，数据库服务器；例子演示了客户端不断的发账号和密码到账号服务器，账号服务器转包到数据库服务器进行账号密码验证并把结果返回。 <br>
 		这个服务器中易用之处在于，你可以把账号服务器改造成你想要实现的服务器，在其中加入业务逻辑。由于这个服务器采用了命令式的交互方式，所以你只需要定义好协议字然后注册对应的处理函数即可。 <br>

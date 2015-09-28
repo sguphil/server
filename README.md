@@ -1,6 +1,6 @@
 # server
 This server is used to build a mmorpg game server or other high performance server,it provides many tools to make you easily to build a light weight network server. <br>
-The server is only support linux platform. <br>
+The server is only support linux platform only. <br>
 
 #How To run the Test?
 Now, the server provided a client-server test. <br>
@@ -37,7 +37,7 @@ serialization/deserialization method,and the cache. <br>
 #简要说明：
 		本服务器提供了一个轻量级网络服务器框架，里面提供了服务器中常用的工具及一些接口的封装，使用这个服务目的
 	在于更容易的搭建起一个可用的高性能的网络服务器，目前这个服务器还需要很多地方需要完善，在服务器性能方面仍然有很
-	大的提升空间，并且服务器只提供linux环境的支持。 
+	大的提升空间，由于服务器网络层使用的epoll，线程使用的是linux下的pthread库，并未做多平台的支持，所以只提供linux环境的支持。 
 		本服务器目前提供了一个简单的测试例子，这个例子是以当前手游服务器常用框架为背景，这个测试提供了一个测试
 	客户端，账号服务器，数据库服务器；例子演示了客户端不断的发账号和密码到账号服务器，账号服务器转包到数据库服务器
 	进行账号密码验证并把结果返回。 

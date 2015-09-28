@@ -1,6 +1,6 @@
 # server
 This server is used to build a mmorpg game server or other high performance server,it provides many tools to make you easily to build a light weight network server. <br>
-The server is only support linux platform only. <br>
+The server support linux platform only. <br>
 
 #How To run the Test?
 Now, the server provided a client-server test. <br>

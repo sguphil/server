@@ -1,7 +1,7 @@
 #!/bin/sh
 arg=$1
 pwd=`pwd`
-if [ $arg == "all" ]; then 
+if [ $arg = "all" ]; then 
 	echo "============start make AccSvr ==============="
 	cd AccSvr
 	make clean

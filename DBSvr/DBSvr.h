@@ -129,10 +129,7 @@ public:
 
     CDBInstFactory* getDBInstFactory()
     {
-        CDBInstFactory *ret = NULL;
-        ret = &m_dbInstFactory;
-        long a = (long)&m_dbInstFactory;
-        return ret;
+        return &m_dbInstFactory;
     }
 
 private:

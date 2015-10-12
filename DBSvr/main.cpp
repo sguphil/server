@@ -11,6 +11,10 @@
 #include "./include/DBSessionHandler.hpp"
 #include "../include/ServerInclude.hpp"
 #include "../include/log4z.h"
+#include "../include/rapidjson/document.h"
+#include "../include/rapidjson/reader.h"
+#include "../include/rapidjson/writer.h"
+#include "../include/rapidjson/stringbuffer.h"
 
 #define ULIMITSVR 1
 
@@ -47,7 +51,15 @@ int main()
         LOGI("flash main thread");
         //conn.connect("127.0.0.1", 9997, eClient);
         sleep(1);
+        //=====test= rapidjson=======
+        const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
+        Document d;
+        d.Parse(json);
+        Value &s = d["stars"];
+        
     }
     delete g_HandlerMgr;
     return 0;
 }
+
+

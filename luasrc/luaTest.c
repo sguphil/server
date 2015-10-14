@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-extern "C"{
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
- }
+
 static void checktoptype(lua_State *L)
 {
     if(lua_isnumber(L, -1))
@@ -26,6 +25,7 @@ static void checktoptype(lua_State *L)
  
 static int l_print(lua_State *L)
 {
+    printf("call from lua");
     int ress[100];
     int i = 1;
     int n = 0;
@@ -56,20 +56,24 @@ static const struct luaL_Reg l_lib[] = {
     {"luaprint", l_print},
     {NULL, NULL}
 };
- 
-int luaopen_llib(lua_State* L)
+
+
+int luaopen_tllib(lua_State *L)
 {
     //luaL_openlib(L, "llib", l_lib, 0);//??????????????????
     //luaL_register(L, "llib", l_lib);
-    lua_getglobal(L, "llib");
-    if (lua_isnil(L, -1)) 
-    {
-        lua_pop(L, 1);
-        lua_newtable(L);
-    }
+    
+    //lua_getglobal(L, "llib");
+    //if (lua_isnil(L, -1))
+    //{
+        //lua_pop(L, 1);
+        //lua_newtable(L);
+    //}
 
-    luaL_setfuncs(L, l_lib, 0);
-    lua_setglobal(L, "llib");
+    //luaL_setfuncs(L, l_lib, 0);
+    //lua_setglobal(L, "llib");
+
+    luaL_newlib (L, l_lib);
     return 1;
 }
 

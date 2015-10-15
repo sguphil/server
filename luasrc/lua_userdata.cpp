@@ -46,9 +46,19 @@ static const struct luaL_Reg udata[] =
     { NULL, NULL }
 };
 
+#if 0
 int luaopen_udata(lua_State *l)
 {
     luaL_newlib(l, udata);
     return 1;
 }
+#else
+int luaopen_udata(lua_State *l)
+{
+    for (struct luaL_Reg* reg = const_cast<struct luaL_Reg*>(udata); reg->name; reg++)
+    {
+        lua_register(l, reg->name, reg->func);
+    }
+}
+#endif
 }

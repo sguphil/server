@@ -1,10 +1,9 @@
 
 
 --function test()
-    local udata = require "udata"
-    s = udata.new()
-    print("geta:" .. udata.geta(s))
-    print("getb:" .. udata.getb(s))
+    s = new()
+    print("geta:" .. geta(s))
+    print("getb:" .. getb(s))
    
     print("function========")
 --end

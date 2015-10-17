@@ -65,7 +65,7 @@ void DBSvr::start()
     }
 
     CSendThread *sendThread = new CSendThread(this);
-    sendThread->start();
+    //sendThread->start();
 }
 
 void DBSvr::updateSessionList()
@@ -80,7 +80,7 @@ void DBSvr::updateSessionList()
         m_activeSessionList.push_back(newSession);
         //add to epoll event loop
         addFdToRecvEpoll(newSession);
-        addFdToSendEpoll(newSession);
+        //addFdToSendEpoll(newSession);
     }
 
     readList->clear();
@@ -108,7 +108,7 @@ void DBSvr::updateSessionList()
             }
             //add to epoll event loop
             addFdToRecvEpoll(newSession);
-            addFdToSendEpoll(newSession);
+            //addFdToSendEpoll(newSession);
 
             //send first package to register session
             MsgHeader msghead;
@@ -208,7 +208,7 @@ void DBSvr::update()
     if( test )
         while (i++ < 100) //(true)
         {
-            printf("===================i:%d\n", i);
+            //printf("===================i:%d\n", i);
             //while (acct_time::getCurTimeMs() >= m_nNextTick)
             {
                 //m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
@@ -221,7 +221,7 @@ void DBSvr::update()
     else
         while (true)
         {
-            printf("===================i:%d\n", i);
+            //printf("===================i:%d\n", i);
             while (acct_time::getCurTimeMs() >= m_nNextTick)
             {
                 m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
@@ -229,7 +229,7 @@ void DBSvr::update()
                 handleActiveSession();
                 removeDeadSession();
             }
-            acct_time::sleepMs(500); // sleep 1ms per loop
+            acct_time::sleepMs(1); // sleep 1ms per loop
         }
 
 }

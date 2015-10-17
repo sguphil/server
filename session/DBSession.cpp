@@ -107,6 +107,17 @@ int32 DBSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int
         }
         else
         {
+         #if 1
+
+            if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
+            {
+                m_nNextTick = acct_time::getCurTimeMs() + 1000;
+                cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
+                m_llpkgCount = 0;
+            }
+            
+            m_llpkgCount++;
+         #endif
             funcStruct->handler(this->getSession(), msgbuf, buffsize);
         }
         

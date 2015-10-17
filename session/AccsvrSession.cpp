@@ -50,7 +50,7 @@ int32 AccsvrSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsi
     #if 0
     printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
     #endif
-
+    #if 1
     if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
     {
         m_nNextTick = acct_time::getCurTimeMs() + 1000;
@@ -59,6 +59,8 @@ int32 AccsvrSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsi
     }
 
     m_llpkgCount++;
+    #endif
+
     return processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
 }
 

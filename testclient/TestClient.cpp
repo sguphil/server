@@ -47,7 +47,7 @@ void TestClient::start()
     for (int i = 0; i < 1;i++)
     {
         CSendThread *sendThread = new CSendThread(this);
-        sendThread->start();
+        //sendThread->start();
     }
 
 }
@@ -64,7 +64,7 @@ void TestClient::updateSessionList()
         m_activeSessionList.push_back(newSession);
         //add to epoll event loop
         addFdToRecvEpoll(newSession);
-        addFdToSendEpoll(newSession);
+        //addFdToSendEpoll(newSession);
     }
 
     readList->clear();
@@ -88,7 +88,7 @@ void TestClient::updateSessionList()
             m_activeSessionList.push_back(newSession);
             //add to epoll event loop
             addFdToRecvEpoll(newSession);
-            addFdToSendEpoll(newSession);
+            //addFdToSendEpoll(newSession);
         }
     }
 
@@ -261,7 +261,7 @@ void TestClient::update()
     {
         if (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            m_nNextTick = acct_time::getCurTimeMs() + 10;
+            m_nNextTick = acct_time::getCurTimeMs() + 1;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
@@ -269,7 +269,7 @@ void TestClient::update()
             //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
         //cout << "out logic loop:" << acct_time::getCurTimeMs() << endl;
-        acct_time::sleepMs(10); // sleep 1ms per loop
+        acct_time::sleepMs(1); // sleep 1ms per loop
     }
     
 }

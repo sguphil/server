@@ -34,6 +34,6 @@ int32 CACCSHandlerFunc::dbcheckuserret(CSession *session, char *pMsg, int32 msgl
     test_package::dbs_2_acc_checkuser recvmsg;
     test_package::acc_2_client_checkuser sendmsg;
     recvmsg.ParseFromArray(pMsg, msglen);
-    LOGFMTI("CACCSHandlerFunc::dbcheckuserret====recvmsg retcode:%d\n", recvmsg.retcode());
+    //LOGFMTI("CACCSHandlerFunc::dbcheckuserret====recvmsg retcode:%d\n", recvmsg.retcode());
     return 0;
 }

@@ -71,7 +71,7 @@ int32 CSession::modEpollEvent(int32 epollfd, bool isRecv, bool addEvent)
     
     if (isRecv)
     {
-        chkEvent.events = EPOLLIN | EPOLLONESHOT;
+        chkEvent.events = EPOLLOUT | EPOLLIN | EPOLLONESHOT; //now add all epollin and out
     }
     else
     {

@@ -66,10 +66,10 @@ public:
     int32 addFdToRecvEpoll(CSession* session)
     {
         struct epoll_event ev;
-        ev.events = EPOLLIN | EPOLLONESHOT; // default EPOLLIN event
+        ev.events = EPOLLIN | EPOLLONESHOT | EPOLLOUT; // default EPOLLIN event
         if (m_nIoThreadNum == 1)
         {
-            ev.events = EPOLLIN;
+            ev.events = EPOLLIN | EPOLLOUT;
         }
         ev.data.ptr = session;
         return epoll_ctl(m_epollfd, EPOLL_CTL_ADD, session->getSocket(), &ev);

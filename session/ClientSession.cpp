@@ -99,6 +99,16 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     }
     else
     {
+        #if 1
+        if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
+        {
+            m_nNextTick = acct_time::getCurTimeMs() + 1000;
+            cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
+            m_llpkgCount = 0;
+        }
+        
+        m_llpkgCount++;
+        #endif
         
         int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
         accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);

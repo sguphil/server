@@ -52,7 +52,7 @@ void AccountSvr::start()
     }
 
     CSendThread *sendThread = new CSendThread(this);
-    sendThread->start();
+    //sendThread->start();
     
     m_connector.start();
     
@@ -79,8 +79,8 @@ void AccountSvr::updateSessionList()
         newSession->setStatus(active);
         m_activeSessionList.push_back(newSession);
         //add to epoll event loop
-        addFdToRecvEpoll(newSession);
-        addFdToSendEpoll(newSession);
+        addFdToRecvEpoll(newSession); //pollin and pollout
+        //addFdToSendEpoll(newSession);
     }
 
     readList->clear();
@@ -138,7 +138,7 @@ void AccountSvr::updateSessionList()
             }
             //add to epoll event loop
             addFdToRecvEpoll(newSession);
-            addFdToSendEpoll(newSession);
+            //addFdToSendEpoll(newSession);
 
             if (newSession->getStatus() != registered)
             {

@@ -1,5 +1,6 @@
 #ifndef __CLUAREGFUNCCONF_H__
 #define __CLUAREGFUNCCONF_H__
+#include "Test.hpp"
 
 namespace RegFuncConfig
 {
@@ -27,8 +28,11 @@ namespace FuncHookConf
 
 class Test_LuaHook
 {
-    static testa(Lua_State *l, Test *a)
+    static int testa(Lua_State *l, Test *a)
     {
+        a->testa();
+        lua_pushinteger(l, a->getNum());
+        return 1;
     }
 };
 

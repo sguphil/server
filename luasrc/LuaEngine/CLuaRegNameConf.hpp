@@ -1,17 +1,14 @@
 #ifndef __CLUAREGNAMECONF_H__
 #define __CLUAREGNAMECONF_H__
+#include "Test.hpp"
 
 namespace RegNameConf
 {
 
-template<typename T> const char* getType()
-{
-    return "unknow type";
-}
+template<typename T> const char* getType();
 
-template<> const char* getType<Test>()
-{
-    return "Test";
+template<> const char* getType<Test>();
+
 }
 
 #endif

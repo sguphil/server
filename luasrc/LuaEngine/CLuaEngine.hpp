@@ -1,12 +1,15 @@
 #ifndef __CLUAENGINE_H__
 #define __CLUAENGINE_H__
-
+#include <iostream>
 extern "C"
 {
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
 }
+#include "Test.hpp"
+
+#include "CLuaScriptRegister.hpp"
 
 
 class CLuaEngine
@@ -20,17 +23,49 @@ public:
 
     void init();
     void registerAll();
-    int runFile(string fileName);
+    int runFile(std::string fileName);
+    
+    template<typename T>
+    int runFunc(T *obj, std::string funcName)
+    {
+        lua_getglobal(l, funcName.c_str());
+        if (lua_isnil(l, -1))
+        {
+            luaL_error(l, "can not find func by name\n");
+            return 0;
+        }
+        pushTest<T>(obj);
+        lua_pushnumber(l, 100);
+        if (0 != lua_pcall(l, 2, 1, 0))
+        {
+            luaL_error(l, "call %s error\n", funcName.c_str());
+        }
+        return 0;
+    }
 
     template<typename T>
-    int runFunc(T *obj, string funcName)
+    int pushTest(T *obj, lua_State *vm = NULL)
     {
-
+        if (NULL == obj)
+        {
+            luaL_error(l, "pushTest error!!!\n");
+            return 0;
+        }
+        if (NULL == vm)
+        {
+            CLuaScriptRegister<Test>::pushobj(l, obj);
+        }
+        else
+        {
+            CLuaScriptRegister<Test>::pushobj(vm, obj);
+        }
+        return 1;
     }
+    
 private:
-    CLuaEngine() : m_isInit(false){ }
+    CLuaEngine();
     bool m_isInit;
-    Lua_State *l;
+    lua_State *l;
     
 };
 

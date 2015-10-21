@@ -1,41 +1,33 @@
 #ifndef __CLUAREGFUNCCONF_H__
 #define __CLUAREGFUNCCONF_H__
+
+extern "C"
+{
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+
 #include "Test.hpp"
+namespace FuncHookConf
+{
+
+class Test_LuaHook;
+
+}
+
 
 namespace RegFuncConfig
 {
     template<typename T>
         struct RegType{
-        char *name;
-        int (*pfunc)(LuaState *l, T *obj);
+        const char *name;
+        int (*pfunc)(lua_State *l, T *obj);
     };
 
-    RegType<Test> *getFuncMap()
-    {
-        return TestFuncMap;
-    }
-
-    RegType<Test> TestFuncMap =
-    {
-        {"testa",  &FuncHookConf::Test_LuaHook::testa};
-        {NULL, NULL};
-    }
-
+    RegType<Test>* getTestFuncMap();
 }
 
-namespace FuncHookConf
-{
 
-class Test_LuaHook
-{
-    static int testa(Lua_State *l, Test *a)
-    {
-        a->testa();
-        lua_pushinteger(l, a->getNum());
-        return 1;
-    }
-};
-
-}
 
 #endif

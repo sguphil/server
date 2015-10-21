@@ -1,0 +1,1 @@
+#include "CLuaScriptRegister.hpp"

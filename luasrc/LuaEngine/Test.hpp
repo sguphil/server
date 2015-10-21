@@ -6,14 +6,10 @@
 class Test
 {
 public:
-    Test();
-    int testa()
-    {
-        printf("into the testa");
-        m_testNum = 100;
-    }
-    
-    int getNum()
+    Test() { }
+    int testa();
+ 
+    inline int getNum()
     {
         return m_testNum;
     }

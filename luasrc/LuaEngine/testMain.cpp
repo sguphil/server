@@ -7,7 +7,12 @@ int main()
 {
     CLuaEngine *g_engine = CLuaEngine::getInstance();
     g_engine->init();
-    Test a;
-    g_engine->runFunc<Test>(&a, "runTest");
+    Test t;
+    g_engine->runFunc<Test>(&t, "runTest");
+    int a = 10;
+    int b = 20;
+    //a = a ^ b; b = a ^ b; a = a ^ b;
+    a = a ^ a;
+    printf("\na=%d b=%d\n", -1>>1, b);
     return 0;
 }

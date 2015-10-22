@@ -11,7 +11,6 @@ extern "C"
 
 #include "CLuaScriptRegister.hpp"
 
-
 class CLuaEngine
 {
 public:
@@ -24,7 +23,12 @@ public:
     void init();
     void registerAll();
     int runFile(std::string fileName);
-    
+
+    inline lua_State* getLuaState()
+    {
+        return l;
+    }
+
     template<typename T>
     int runFunc(T *obj, std::string funcName)
     {
@@ -35,7 +39,6 @@ public:
             return 0;
         }
         pushTest<T>(obj);
-        lua_pushnumber(l, 100);
         if (0 != lua_pcall(l, 2, 1, 0))
         {
             luaL_error(l, "call %s error\n", funcName.c_str());

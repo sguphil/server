@@ -13,6 +13,8 @@ public:
     {
         return m_testNum;
     }
+
+    int testb(int num);
 private:
     int m_testNum;
 };

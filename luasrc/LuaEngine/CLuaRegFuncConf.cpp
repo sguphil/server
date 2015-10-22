@@ -14,6 +14,14 @@ static int testa(lua_State *l, Test *a)
     lua_pushinteger(l, a->getNum());
     return 1;
 }
+
+static int luatestb(lua_State *l, Test *a)
+{
+    int num = lua_tonumber(l, -1);
+    int ret = a->testb(num);
+    lua_pushinteger(l, ret);
+    return 1;
+}
 // ... ...
 __DEF_CLASS_LUAHOOK_END(Test) //END DEFINITION OF CLASS Test
 
@@ -28,6 +36,7 @@ namespace RegFuncConfig
 {
 __DEF_REGTYPE_ARRAY_BEGIN(Test)
 DEF_REGTYPE_ARRAY_ITEM(Test, testa, testa)
+DEF_REGTYPE_ARRAY_ITEM(Test, testb, luatestb)
 // ... ...
 __DEF_REGTYPE_ARRAY_END(Test)
 

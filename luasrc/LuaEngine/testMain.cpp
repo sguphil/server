@@ -2,6 +2,14 @@
 #include "Test.hpp"
 #include <stdio.h>
 #include <iostream>
+/*
+extern "C"
+{
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+*/
 
 int main()
 {
@@ -9,6 +17,8 @@ int main()
     g_engine->init();
     Test t;
     g_engine->runFunc<Test>(&t, "runTest");
+    g_engine->runFunc<Test>(&t, "runTestb");
+
     int a = 10;
     int b = 20;
     //a = a ^ b; b = a ^ b; a = a ^ b;

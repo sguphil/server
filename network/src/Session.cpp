@@ -13,8 +13,11 @@ CSession::CSession():m_pBindNetWorkObj(NULL)
 {
     m_socket = -1;
     m_boActive = false;
+#if 0 
     m_recvBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
     m_sendBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
+#endif
+
     m_pBindNetWorkObj = NULL;
     m_nSessionId = 0;
     m_LeftPkgBuf = new char[MAXPKGLEN];
@@ -35,20 +38,18 @@ CSession::~CSession()
         m_pBindNetWorkObj =  NULL;
     }
 }
+
+#if 0
 int32 CSession::send(char *buff, int32 buffsize)
 {
     return m_sendBuff.putMsg(buff, buffsize);
 }
+#endif 
+
 
 int32 CSession::recv()
 {
-    /*
-    int32 writelen = m_recvBuff.getBuffQueuePtr()->getWriteableLen();
-    if (writelen <= 0)
-    {
-        return 0;
-    }
-    */
+    #if 0
     #ifdef USE_DOUBLE_QUEUE
     m_recvBuff.lockSwap();
     int recvlen = m_recvBuff.getWRQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
@@ -62,6 +63,44 @@ int32 CSession::recv()
     int recvlen = m_recvBuff.getBuffQueuePtr()->recvFromSocket(m_socket); //::recv(m_socket, m_recvBuff.getBuffQueuePtr()->getWritePtr(), writelen, 0);
     return recvlen;
     #endif
+    #endif
+
+    int32 recvlen = 0;
+    int leftLen = 0;
+    while (true)
+    {
+        m_RecvBufManager.pushPkgToList(recvlen);
+        ICPkgBuf *curpkg = m_RecvBufManager.getCurPkg();
+
+        int leftpkgSize = curpkg->getLeftPkgSize();
+        if (0 == leftpkgSize) //header not complete
+        {
+            leftLen = curpkg->getHeadSize() - curpkg->getbufLen();
+        }
+        else
+        {
+            leftLen = leftpkgSize;
+        }
+
+        recvlen = ::recv(m_socket, (void *)(curpkg->getPkgWritePos()), leftLen, 0);
+        if (0 == recvlen)
+        {
+            printf("socket!!!!!!!!recv return 0!!!!!!!!\n");
+            return -1;
+        }
+        else if (recvlen < 0)
+        {
+            if (errno == EWOULDBLOCK || errno == EAGAIN)
+            {
+                printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
+                return 0;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+    }
 }
 
 int32 CSession::modEpollEvent(int32 epollfd, bool isRecv, bool addEvent)
@@ -95,6 +134,7 @@ int32 CSession::delEpollEvent(int32 epollfd)
 
 int32 CSession::sendToSocket()
 {
+    #if 0 
     #ifdef USE_DOUBLE_QUEUE
     int32 sendLen = m_sendBuff.getRDQueuePtr()->sendToSocket(m_socket);
     if (m_sendBuff.getRDQueuePtr()->getReadableLen() == 0)
@@ -104,12 +144,45 @@ int32 CSession::sendToSocket()
     #else
     int32 sendLen = m_sendBuff.getBuffQueuePtr()->sendToSocket(m_socket);
     #endif
+    #endif
+    //send directly
+    ICPkgBuf *pkgbuf = NULL;
+    int32 sendlen = 0;
+    while (true)
+    {
+        m_SendBufManager.sendNReusePkg(sendlen);
+        if (NULL == (pkgbuf = m_SendBufManager.getSendPkg()))
+        {
+            break;
+        }
 
-    return sendLen;
+        int needsend = pkgbuf->getPkgSize() - pkgbuf->getSendLen();
+        sendlen = ::send(m_socket, (void*)(pkgbuf->getPkgReadPos()), needsend, 0);
+
+        if (0 == sendlen)
+        {
+            printf("socket!!!!!!!!send return 0!!!!!!!!\n");
+            return -1;
+        }
+        else if (sendlen < 0)
+        {
+            if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
+            {
+                printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
+                return 0;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+    }
+    return 0;
 }
 
 void CSession::processPacket()
 {
+#if 0 
     #ifdef USE_DOUBLE_QUEUE
     bool isbreak = false;
     int handlePkgCount = 0;
@@ -168,6 +241,16 @@ void CSession::processPacket()
         }
     }
     #endif
+#endif
+    ICPkgBuf *pkg = m_RecvBufManager.next();
+    while (pkg)
+    {
+        char *bufbegin = pkg->getPkgReadPos();
+        assert(bufbegin != NULL);
+        handlePackage(this, (PkgHeader *)bufbegin, (MsgHeader *)(bufbegin + sizeof(PkgHeader)), (bufbegin + sizeof(PkgHeader) + sizeof(MsgHeader)), ((PkgHeader *)bufbegin)->length - sizeof(PkgHeader) - sizeof(MsgHeader));
+        m_RecvBufManager.sendNReusePkg(((PkgHeader *)bufbegin)->length);
+        pkg = m_RecvBufManager.next();
+    }
 }
 void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize) // first package to register
 {
@@ -268,11 +351,11 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
             header.length = msglen;
             header.reserved = 0;
 
-            totalsize = msglen + sizeof(header);
-            char buf[totalsize];
-            encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
-            send(buf, totalsize);// send back the same struct
-
+            //totalsize = msglen + sizeof(header);
+            //char buf[totalsize];
+            //encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
+            //send(buf, totalsize);// send back the same struct
+            processSend(1, 1, (char *)&ret, (int16)sizeof(ret));
             cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
             break;
         }

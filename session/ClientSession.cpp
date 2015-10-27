@@ -127,14 +127,14 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
 
 int32 ClientSession::processSend(uint16 sysid, uint16 msgid, char *msg, int32 msgsize)
 {
-    MsgHeader msgHead = {sysid, msgid};
+    //MsgHeader msgHead = {sysid, msgid};
     //c_s_refecttest *ret = (c_s_refecttest*)msgbuf;
     //int32 strlen = ret->strlen;
-    uint16 msglen = sizeof(msgHead) + msgsize;
-    uint16 pkglen = sizeof(msgHead) + msgsize + sizeof(PkgHeader);
-    PkgHeader header = {msglen, 0};
-    char buf[pkglen];
-    encodepkg(buf, &header, &msgHead, msg, msgsize);
-    return getSession()->send(buf, (int32)pkglen);
+    //uint16 msglen = sizeof(msgHead) + msgsize;
+    //uint16 pkglen = sizeof(msgHead) + msgsize + sizeof(PkgHeader);
+    //PkgHeader header = {msglen, 0};
+    //char buf[pkglen];
+    //encodepkg(buf, &header, &msgHead, msg, msgsize);
+    return getSession()->processSend(sysid, msgid, (char *)&msg, msgsize);//send(buf, (int32)pkglen);
 }
 

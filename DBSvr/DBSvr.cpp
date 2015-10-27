@@ -111,23 +111,24 @@ void DBSvr::updateSessionList()
             //addFdToSendEpoll(newSession);
 
             //send first package to register session
-            MsgHeader msghead;
-            int32 sendlen = 0;
-            PkgHeader header;
+            //MsgHeader msghead;
+            //int32 sendlen = 0;
+            //PkgHeader header;
             struct c_s_registersession reg;
             //struct c_s_refecttest testStr;
                 
             if (newSession->getStatus() != registered)
             {
-                msghead.sysId = 1;
-                msghead.msgType = 1;
+                //msghead.sysId = 1;
+                //msghead.msgType = 1;
                 reg.sessionType = int16(eDBServer);
-                sendlen = sizeof(msghead) + sizeof(reg);
-                header.length = sendlen;
-                int32 totallen = sendlen +sizeof(header);
-                char buf[totallen];
-                encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
-                newSession->send(buf, totallen);
+                //sendlen = sizeof(msghead) + sizeof(reg);
+                //header.length = sendlen;
+                //int32 totallen = sendlen +sizeof(header);
+                //char buf[totallen];
+                //encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
+                //newSession->send(buf, totallen);
+                newSession->processSend(1, 1, (char *)&reg, (int16)sizeof(reg));
                 //cout << "ready to send msg:" << totallen << endl;
                 //newSession->setStatus(registered);
             }

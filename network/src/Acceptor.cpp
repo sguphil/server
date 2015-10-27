@@ -101,7 +101,7 @@ void* Acceptor::threadRoutine(void *args)
             {
                 CSession *session = m_SessionFactory.allocate();
                 session->setType(m_eAcceptType);
-                session->setRecvNSendBuffSwapTick(41, 0); //recvqueue 41fps make a swap iobuff
+                //session->setRecvNSendBuffSwapTick(41, 0); //recvqueue 41fps make a swap iobuff
 
                 if (NULL != session)
                 {

@@ -6,7 +6,7 @@
         <ip>127.0.0.1</ip>  
 	<port>9997</port>
 	<maxclient>3000</maxclient>
-	<recvThread>2</recvThread>  
+	<recvThread>1</recvThread>  
 	<sendThread>1</sendThread>
 	<sessionbuflen>102400</sessionbuflen>
 	<maxpkglen>8192</maxpkglen>

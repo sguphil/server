@@ -155,11 +155,12 @@ void TestClient::handleActiveSession()
                     msghead.msgType = (uint16)C_S_SISSION_REGISTER;
                     reg.sessionType = 1;
                     sendlen = sizeof(msghead) + sizeof(reg);
-                    header.length = sendlen;
+                    //header.length = sendlen;
                     int32 totallen = sendlen +sizeof(header);
-                    char buf[totallen];
-                    encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
-                    session->send(buf, totallen);
+                    //char buf[totallen];
+                    //encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
+                    //session->send(buf, totallen);
+                    session->processSend((uint16)eRegister_Message, (uint16)C_S_SISSION_REGISTER, (char *)&reg, (int16)sizeof(reg));
                     cout << "ready to send msg:" << totallen << endl;
                     session->setStatus(registered);
                 }
@@ -176,11 +177,12 @@ void TestClient::handleActiveSession()
                     header.length = msglen;
                     char buf[sendlen];
                     //encodepkg(buf, &header, &msghead, (char *)&testStr, (int16)sizeof(testStr.strlen)+testStr.strlen);
-                    memcpy(buf, (char *)&header, sizeof(header));
-                    memcpy(buf+sizeof(header), (char *)&msghead, sizeof(msghead));
-                    memcpy(buf+sizeof(header)+sizeof(msghead), (char *)&(testStr.strlen), sizeof(testStr.strlen));
-                    memcpy(buf+sizeof(header)+sizeof(msghead)+sizeof(testStr.strlen), (char *)sendStr, testStr.strlen);
-                    if (session->send(buf, sendlen) < 0)
+                    //memcpy(buf, (char *)&header, sizeof(header));
+                    //memcpy(buf+sizeof(header), (char *)&msghead, sizeof(msghead));
+                    memcpy(buf, (char *)&(testStr.strlen), sizeof(testStr.strlen));
+                    memcpy(buf+sizeof(testStr.strlen), (char *)sendStr, testStr.strlen);
+                    //if (session->send(buf, sendlen) < 0)
+                    if (session->processSend((uint16)eServerMessage_Client, (uint16)CLI_ACCS_TESTBINPKG, buf, sizeof(testStr.strlen)+testStr.strlen) < 0 )
                     {
                         cout << "send buff is full!!!! stop!!!" << endl;
                         //session->setStatus(waitdel);
@@ -210,8 +212,9 @@ void TestClient::handleActiveSession()
 
                     header.length = msglen;
                     char buf[sendlen];
-                    encodepkg(buf, &header, &msghead, (char *)protomsg, (int16)bytelen);
-                    if (session->send(buf, sendlen) < 0)
+                    //encodepkg(buf, &header, &msghead, (char *)protomsg, (int16)bytelen);
+                    //if (session->send(buf, sendlen) < 0)
+                    if (session->processSend((uint16)eServerMessage_Client, (uint16)CLI_ACCS_TESTPROBUFPKG, (char *)protomsg, (int16)bytelen) < 0)
                     {
                         cout << "3send buff is full!!!! stop!!!" << endl;
                         //session->setStatus(waitdel);
@@ -238,8 +241,9 @@ void TestClient::handleActiveSession()
 
                     header.length = msglen;
                     char buf[sendlen];
-                    encodepkg(buf, &header, &msghead, (char *)protomsg, (int16)bytelen);
-                    if (session->send(buf, sendlen) < 0)
+                    //encodepkg(buf, &header, &msghead, (char *)protomsg, (int16)bytelen);
+                    //if (session->send(buf, sendlen) < 0)
+                    if (session->processSend((uint16)eServerMessage_Client, (uint16)CLI_ACCS_CHECKLOGINUSER, (char *)protomsg, (int16)bytelen) < 0)
                     {
                         cout << "4send buff is full!!!! stop!!!" << endl;
                         //session->setStatus(waitdel);

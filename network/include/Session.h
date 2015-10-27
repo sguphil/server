@@ -14,6 +14,10 @@
 #include "../../include/CPackageFetch.hpp"
 //#include "../../include/queue.hpp"
 
+#include "../../common/CPkgBuf.hpp"
+#include "../../common/CPkgBufFactory.hpp"
+#include "../../common/CPkgBufManager.hpp"
+
 extern int32 MAXPKGLEN;
 extern int32 SESSIONBUFLEN;
 
@@ -30,6 +34,7 @@ public:
     ~CSession();
     inline void clear() // call when reuse
     {
+#if 0 
         #ifdef USE_DOUBLE_QUEUE
         m_recvBuff.clear();
         m_sendBuff.clear();
@@ -37,11 +42,10 @@ public:
         m_recvBuff.getBuffQueuePtr()->clear();
         m_sendBuff.getBuffQueuePtr()->clear();
         #endif
-
+#endif
         #if REUSE_NETWORKOBJ
         g_ClientNetWorkObjectFactory.reuse(m_pBindNetWorkObj);
-        #else
-        
+        #else        
         close(m_socket); // close socket fd
         if (NULL != m_pBindNetWorkObj)
         {
@@ -110,6 +114,7 @@ public:
 
     int32 processSend(uint16 sysid, uint16 msgid, char *msg, int32 msgsize)
     {
+        #if 0
         MsgHeader msgHead;// = {sysid, msgid};
         msgHead.sysId = sysid;
         msgHead.msgType = msgid;
@@ -126,9 +131,24 @@ public:
         memcpy(buf + sizeof(head), (char*)&msgHead, sizeof(msgHead));
         memcpy(buf + headsize, msg, msgsize);
         return send(buf, (int32)pkglen);
+        #endif
+        ICPkgBuf *sendpkg =  m_SendBufManager.getCurPkg();
+        assert(sendpkg != NULL);
+        char *bufbegin = sendpkg->getPkgWritePos();
+        PkgHeader *pPkgHead = (PkgHeader *)bufbegin;
+        MsgHeader *pMsghead = (MsgHeader *)(bufbegin + sizeof(PkgHeader));
+        char *msgbuf = bufbegin + sizeof(PkgHeader) + sizeof(MsgHeader);
+        
+        pPkgHead->length = sizeof(PkgHeader) + sizeof(MsgHeader) + msgsize;
+        pMsghead->sysId = sysid;
+        pMsghead->msgType = msgid;
+        memcpy(msgbuf, msg, msgsize);
+        m_SendBufManager.pushPkgToList(pPkgHead->length);
+        sendToSocket(); //send directly
+        return  pPkgHead->length;
     }
 
-    int32 send(char *buff, int32 buffsize);  // logic module call to write msg to buffqueue return:-1 error -2 again >=0 success send length
+    //int32 send(char *buff, int32 buffsize);  // logic module call to write msg to buffqueue return:-1 error -2 again >=0 success send length
 
     int32 sendToSocket(); //network layer call to send msg with socket
     int32 recv();  // network layer call to recv msg with socket
@@ -180,6 +200,7 @@ public:
         return &m_recvBuff;
     }
 */
+#if 0 
     #ifdef USE_DOUBLE_QUEUE
     inline CIoBuff* getRecvBuffPtr()
     {
@@ -192,6 +213,7 @@ public:
     } 
     #endif
 
+
     inline void setRecvNSendBuffSwapTick(int32 recvSwapTick, int32 sendSwapTick)
     {
         #ifdef USE_DOUBLE_QUEUE
@@ -199,6 +221,7 @@ public:
         m_sendBuff.setBuffSwapTick(sendSwapTick);
         #endif
     }
+#endif
 
     inline void setSvrType(eSERVERTYPE type)
     {
@@ -218,6 +241,7 @@ private:
     SESSION_TYPE m_eSessionType;
     struct sockaddr_in m_sockAddr;
     NetWorkObject *m_pBindNetWorkObj;
+    #if 0 
     #ifdef USE_DOUBLE_QUEUE
     CIoBuff m_recvBuff;
     CIoBuff m_sendBuff;
@@ -225,6 +249,9 @@ private:
     CRecvBuf m_recvBuff;
     CSendBuf m_sendBuff;
     #endif
+    #endif
+    CPkgbufManager m_RecvBufManager;
+    CPkgbufManager m_SendBufManager;
     /*
     clwCore::CTwoQueues m_RecvTwoQueue;
     clwCore::CTwoQueues m_SendTwoQueue;
@@ -236,5 +263,6 @@ private:
     CpackageFetch m_pkgGet;
     PkgHeader m_header;
     eSERVERTYPE m_svrType;
+
 };
 #endif // __SESSION_H__

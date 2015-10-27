@@ -30,7 +30,6 @@ public:
         bool isRecvEvent = false;
         while (true)
         {
-            //cout << "CIoThread infinity loop epollfd:"<< svr->getIoEpollfd() << endl;
             int32 evCount = epoll_wait(svr->getIoEpollfd(),epEvent, 10, -1);//100ms wait timeout infinite wait just one event to one sockfd
             if (evCount > 0)
             {
@@ -43,7 +42,7 @@ public:
                     {
                         oplen = session->recv();
                         
-                        if (oplen > 0) // normal 
+                        if (oplen >= 0) // normal 
                         {
                             #if 0
                             if (oplen > 0 )
@@ -66,10 +65,10 @@ public:
                             }
                             */
                         }
-                        else if (0 == oplen)
-                        {
-                            acct_time::sleepMs(200);
-                        } 
+                       // else if (0 == oplen)
+                        //{
+                        //    acct_time::sleepMs(200);
+                        //} 
                         else // socket error wait to free session
                         {
                             isRecvEvent = false;
@@ -77,7 +76,7 @@ public:
                             session->setStatus(waitdel);
                         }
                     }
-
+#if 0
                     if (epEvent[i].events & EPOLLOUT) // send msg to client
                     {
                         oplen = session->sendToSocket();
@@ -119,7 +118,7 @@ public:
                             acct_time::sleepMs(100);
                         }
                     }
-
+#endif
                     if (isRecvEvent)
                     {
                         if (svr->getIoThreadNum() > 1)

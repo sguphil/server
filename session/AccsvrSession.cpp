@@ -119,6 +119,7 @@ int32 AccsvrSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
 
 int32 AccsvrSession::processSend(uint16 sysid, uint16 msgid, char *msg, int32 msgsize)
 {
+    #if 0
     MsgHeader msgHead = {sysid, msgid};
     //c_s_refecttest *ret = (c_s_refecttest*)msgbuf;
     //int32 strlen = ret->strlen;
@@ -127,6 +128,7 @@ int32 AccsvrSession::processSend(uint16 sysid, uint16 msgid, char *msg, int32 ms
     PkgHeader header = {msglen, 0};
     char buf[pkglen];
     encodepkg(buf, &header, &msgHead, msg, msgsize);
-    return getSession()->send(buf, (int32)pkglen);
+    #endif
+    return getSession()->processSend(sysid, msgid, (char *)&msg, msgsize);//getSession()->send(buf, (int32)pkglen);
 }
 

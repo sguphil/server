@@ -151,7 +151,8 @@ int32 CSession::sendToSocket()
     while (true)
     {
         m_SendBufManager.sendNReusePkg(sendlen);
-        if (NULL == (pkgbuf = m_SendBufManager.getSendPkg()))
+        pkgbuf = m_SendBufManager.getSendPkg();
+        if (NULL == pkgbuf)
         {
             break;
         }

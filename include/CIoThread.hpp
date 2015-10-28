@@ -118,7 +118,7 @@ public:
                             acct_time::sleepMs(100);
                         }
                     }
-#endif
+
                     if (isRecvEvent)
                     {
                         if (svr->getIoThreadNum() > 1)
@@ -126,6 +126,7 @@ public:
                             session->modEpollEvent(svr->getIoEpollfd(), true);
                         }
                     }
+#endif
                 }
             }
             else if (0 == evCount) //epoll timeout

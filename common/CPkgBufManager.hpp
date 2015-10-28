@@ -1,0 +1,42 @@
+#ifndef __CPKGBUFMANAGER_H__
+#define __CPKGBUFMANAGER_H__
+
+#include "../include/baseHeader.h"
+#include "CPkgBuf.hpp"
+#include "CPkgBufFactory.hpp"
+#include "../network/include/CommonList.h"
+
+class CPkgbufManager
+{
+public:
+    CPkgbufManager();
+    /*
+    CPkgbufManager* getInstance()
+    {
+        static CPkgbufManager instance;
+        return &instance;
+    }
+    */
+    ~CPkgbufManager();
+    ICPkgBuf* next();
+
+    inline void setCurPkg(ICPkgBuf *pkg)
+    {
+        m_CurPkg = pkg;
+    }
+
+    ICPkgBuf* getCurPkg();
+
+    void pushPkgToList(int32 size);
+
+    void readNReusePkg(int32 size);
+    
+    ICPkgBuf* getReadPkg();
+
+private:
+    ICPkgBuf *m_CurPkg; //for recv
+    ICPkgBuf *m_ReadPkg;//for read/send
+    CommonList<ICPkgBuf> m_PkgList;
+};
+
+#endif

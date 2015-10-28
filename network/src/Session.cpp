@@ -150,14 +150,14 @@ int32 CSession::sendToSocket()
     int32 sendlen = 0;
     while (true)
     {
-        m_SendBufManager.sendNReusePkg(sendlen);
-        pkgbuf = m_SendBufManager.getSendPkg();
+        m_SendBufManager.readNReusePkg(sendlen);
+        pkgbuf = m_SendBufManager.getReadPkg();
         if (NULL == pkgbuf)
         {
             break;
         }
 
-        int needsend = pkgbuf->getPkgSize() - pkgbuf->getSendLen();
+        int needsend = pkgbuf->getPkgSize() - pkgbuf->getReadLen();
         sendlen = ::send(m_socket, (void*)(pkgbuf->getPkgReadPos()), needsend, 0);
 
         if (0 == sendlen)
@@ -249,7 +249,7 @@ void CSession::processPacket()
         char *bufbegin = pkg->getPkgReadPos();
         assert(bufbegin != NULL);
         handlePackage(this, (PkgHeader *)bufbegin, (MsgHeader *)(bufbegin + sizeof(PkgHeader)), (bufbegin + sizeof(PkgHeader) + sizeof(MsgHeader)), ((PkgHeader *)bufbegin)->length - sizeof(PkgHeader) - sizeof(MsgHeader));
-        m_RecvBufManager.sendNReusePkg(((PkgHeader *)bufbegin)->length);
+        m_RecvBufManager.readNReusePkg(((PkgHeader *)bufbegin)->length);
         pkg = m_RecvBufManager.next();
     }
 }

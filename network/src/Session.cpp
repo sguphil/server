@@ -47,7 +47,7 @@ int32 CSession::send(char *buff, int32 buffsize)
 #endif 
 
 
-int32 CSession::recv()
+int32 CSession::onRecv()
 {
     #if 0
     #ifdef USE_DOUBLE_QUEUE
@@ -67,11 +67,12 @@ int32 CSession::recv()
 
     int32 recvlen = 0;
     int leftLen = 0;
+    bool ispkgbody = false;
     while (true)
     {
         m_RecvBufManager.pushPkgToList(recvlen);
         ICPkgBuf *curpkg = m_RecvBufManager.getCurPkg();
-
+        ispkgbody = false;
         int leftpkgSize = curpkg->getLeftPkgSize();
         if (0 == leftpkgSize) //header not complete
         {
@@ -80,14 +81,19 @@ int32 CSession::recv()
         else
         {
             leftLen = leftpkgSize;
+            ispkgbody = true;
         }
-
-        recvlen = ::recv(m_socket, (void *)(curpkg->getPkgWritePos()), leftLen, 0);
+        recvlen = recv(m_socket, (void *)(curpkg->getPkgWritePos()), leftLen, 0);
         if (0 == recvlen)
         {
             printf("socket!!!!!!!!recv return 0!!!!!!!!\n");
             return -1;
         }
+        else if (ispkgbody && (leftLen == recvlen))// why we return? !!! avoid the infinity loop while the socket buf is always get data from a very busy send client
+        {
+            m_RecvBufManager.pushPkgToList(recvlen); //complete package, push to list
+            return recvlen;
+        } 
         else if (recvlen < 0)
         {
             if (errno == EWOULDBLOCK || errno == EAGAIN)
@@ -110,11 +116,11 @@ int32 CSession::modEpollEvent(int32 epollfd, bool isRecv, bool addEvent)
     
     if (isRecv)
     {
-        chkEvent.events = EPOLLOUT | EPOLLIN | EPOLLONESHOT; //now add all epollin and out
+        chkEvent.events = EPOLLIN | EPOLLONESHOT; //now add all epollin and out
     }
     else
     {
-        chkEvent.events = EPOLLOUT | EPOLLONESHOT;
+        chkEvent.events = EPOLLIN | EPOLLOUT | EPOLLONESHOT;
     }
 
     if (addEvent)
@@ -148,12 +154,14 @@ int32 CSession::sendToSocket()
     //send directly
     ICPkgBuf *pkgbuf = NULL;
     int32 sendlen = 0;
+    int32 ret = 0;
     while (true)
     {
         m_SendBufManager.readNReusePkg(sendlen);
         pkgbuf = m_SendBufManager.getReadPkg();
         if (NULL == pkgbuf)
         {
+            ret = 0;
             break;
         }
 
@@ -163,22 +171,26 @@ int32 CSession::sendToSocket()
         if (0 == sendlen)
         {
             printf("socket!!!!!!!!send return 0!!!!!!!!\n");
-            return -1;
+            ret = -1;
+            break;
         }
         else if (sendlen < 0)
         {
             if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
             {
                 printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
-                return 0;
+                ret = 1;
+                break;
             }
             else
             {
-                return -1;
+                ret = -1;
+                break;
             }
         }
     }
-    return 0;
+
+    return ret;
 }
 
 void CSession::processPacket()

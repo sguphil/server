@@ -73,6 +73,9 @@ class Acceptor : public CBaseThread
         {
             return m_svrType;
         }
+
+        void setSocketNoBlock(int32 socket);
+
 private:
         Int32 m_nMaxAcc;
         char m_listenIp[32];

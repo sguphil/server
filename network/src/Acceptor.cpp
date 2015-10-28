@@ -44,6 +44,14 @@ bool Acceptor::startListen(const char *szIP, Int32 nPort)
     return true;
 }
 
+void Acceptor::setSocketNoBlock(int32 socket)
+{
+    //设置非堵塞
+    Int32 ioFlag;
+    ioFlag = fcntl(socket, F_GETFL);
+    fcntl(socket, F_SETFL, ioFlag|O_NONBLOCK);
+}
+
 bool Acceptor::createSocket()
 {
     m_nServerSock = socket(AF_INET, SOCK_STREAM, 0);
@@ -101,7 +109,7 @@ void* Acceptor::threadRoutine(void *args)
             {
                 CSession *session = m_SessionFactory.allocate();
                 session->setType(m_eAcceptType);
-                //session->setRecvNSendBuffSwapTick(41, 0); //recvqueue 41fps make a swap iobuff
+               //setSocketNoBlock(clientSock);
 
                 if (NULL != session)
                 {

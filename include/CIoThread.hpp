@@ -35,40 +35,17 @@ public:
             {
                 for (int i = 0; i < evCount;i++)
                 {
-                    isRecvEvent = true;
+                    isRecvEvent = false;
                     CSession *session =  (CSession *)epEvent[i].data.ptr;
                     int32 oplen = 0;
                     if (epEvent[i].events & EPOLLIN) // recv msg
                     {
-                        oplen = session->recv();
+                        oplen = session->onRecv();
                         
                         if (oplen >= 0) // normal 
                         {
-                            #if 0
-                            if (oplen > 0 )
-                            {
-                                if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
-                                {
-                                    m_nNextTick = acct_time::getCurTimeMs() + 1000;
-                                    cout << "===========================================================" << m_llpkgCount++ << endl;
-                                    m_llpkgCount = 0;
-                                }
-                            
-                                m_llpkgCount++;
-                                //cout << "CIoThread=======recvlen:" << oplen << endl;
-                            }
-                            #endif 
-                            /*
-                            if (svr->getIoThreadNum() > 1)
-                            {
-                                session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
-                            }
-                            */
+                            isRecvEvent = true;
                         }
-                       // else if (0 == oplen)
-                        //{
-                        //    acct_time::sleepMs(200);
-                        //} 
                         else // socket error wait to free session
                         {
                             isRecvEvent = false;
@@ -76,57 +53,34 @@ public:
                             session->setStatus(waitdel);
                         }
                     }
-#if 0
-                    if (epEvent[i].events & EPOLLOUT) // send msg to client
+                    
+                    #if 1
+
+                    if (epEvent[i].events & EPOLLOUT) // send msg
                     {
                         oplen = session->sendToSocket();
-                        //isRecvEvent = false;
-                        
-                        if (oplen > 0) // normal 
+                        if (0 == oplen)
                         {
-                            #if 0
-                            if (oplen > 0)
-                            { 
-                                if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
-                                {
-                                    m_nNextTick = acct_time::getCurTimeMs() + 1000;
-                                    cout << "=================sendThread============" << m_llpkgCount++ << endl;
-                                    m_llpkgCount = 0;
-                                }
-                                
-                                m_llpkgCount++; 
-                                //cout << "CSendThread=======sendlen:" << oplen << endl;
-                            }
-                            #endif
-                            /*
-                            if (svr->getIoThreadNum() > 1)
-                            {
-                                session->modEpollEvent(svr->getIoEpollfd(), true);
-                            }
-                            */
-                            //session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);//single thread do not need epolloneshoot
+                            isRecvEvent = true;
                         }
-                        else if (oplen == -1)// socket error wait to free session
+                        else if (1 == oplen) //still have data
+                        {
+                            isRecvEvent = false;
+                        }
+                        else if (oplen < 0)
                         {
                             isRecvEvent = false;
                             session->delEpollEvent(svr->getIoEpollfd());
                             session->setStatus(waitdel);
                         }
-                        else // EAGAIN
-                        {
-                            //printf("CSendThread send oplen 0!!! epoll_wait return:%d\n", evCount);
-                            acct_time::sleepMs(100);
-                        }
                     }
+                    #endif
 
-                    if (isRecvEvent)
+                    if (oplen >= 0)
                     {
-                        if (svr->getIoThreadNum() > 1)
-                        {
-                            session->modEpollEvent(svr->getIoEpollfd(), true);
-                        }
+                        session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
                     }
-#endif
+                    
                 }
             }
             else if (0 == evCount) //epoll timeout

@@ -151,7 +151,7 @@ public:
     //int32 send(char *buff, int32 buffsize);  // logic module call to write msg to buffqueue return:-1 error -2 again >=0 success send length
 
     int32 sendToSocket(); //network layer call to send msg with socket
-    int32 recv();  // network layer call to recv msg with socket
+    int32 onRecv();  // network layer call to recv msg with socket
     void processPacket();  // application layer handle msg from buffqueue, into the logic modules
     int32 modEpollEvent(int32 epollfd, bool isRecv, bool addEvent=false);
     int32 delEpollEvent(int32 epollfd);

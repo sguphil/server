@@ -47,20 +47,6 @@ int32 AccsvrSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsi
     char buf[(pmsg->strlen)+1];
     memset(buf, 0x00, sizeof(buf));
     snprintf(buf, (pmsg->strlen), "%s", (char *)msgbuf + sizeof(pmsg->strlen));
-    #if 0
-    printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
-    #endif
-    #if 1
-    if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
-    {
-        m_nNextTick = acct_time::getCurTimeMs() + 1000;
-        //cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
-        m_llpkgCount = 0;
-    }
-
-    m_llpkgCount++;
-    #endif
-
     return processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
 }
 

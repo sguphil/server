@@ -47,18 +47,6 @@ int32 LogicSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsiz
     char buf[(pmsg->strlen)+1];
     memset(buf, 0x00, sizeof(buf));
     snprintf(buf, (pmsg->strlen), "%s", (char *)msgbuf + sizeof(pmsg->strlen));
-    #if 0
-    printf("server recv msg:%s\n", buf); //(char *)pmsg + sizeof(pmsg->strlen));
-    #endif
-
-    if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
-    {
-        m_nNextTick = acct_time::getCurTimeMs() + 1000;
-        //cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
-        m_llpkgCount = 0;
-    }
-
-    m_llpkgCount++;
     return processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
 }
 
@@ -66,7 +54,6 @@ int32 LogicSession::testProtobuf(MsgHeader *msghead, char *msgbuf, int32 bufsize
 {
     test_package::testMsg recvmsg;
     recvmsg.ParseFromArray(msgbuf, bufsize);
-    //printf("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
     return processSend(msghead->sysId, msghead->msgType, msgbuf, bufsize);
 }
 

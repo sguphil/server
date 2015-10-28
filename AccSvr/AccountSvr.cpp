@@ -79,7 +79,8 @@ void AccountSvr::updateSessionList()
         newSession->setStatus(active);
         m_activeSessionList.push_back(newSession);
         //add to epoll event loop
-        addFdToRecvEpoll(newSession); //pollin and pollout
+        int ret = addFdToRecvEpoll(newSession); //pollin and pollout
+        cout << "=====add to epoll:" << newSession->getSocket() << endl;
         //addFdToSendEpoll(newSession);
     }
 

@@ -12,6 +12,7 @@
 #include "../include/acctTimeTool.hpp"
 #include "DBSvrConfig.hpp"
 #include "../database/CDBInstFactory.hpp"
+#include "../common/SIDGenerator.hpp"
 
 extern int32 MAXPKGLEN;
 extern int32 SESSIONBUFLEN;

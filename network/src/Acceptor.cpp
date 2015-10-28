@@ -108,11 +108,12 @@ void* Acceptor::threadRoutine(void *args)
             if (clientSock > 0)
             {
                 CSession *session = m_SessionFactory.allocate();
-                session->setType(m_eAcceptType);
                //setSocketNoBlock(clientSock);
 
                 if (NULL != session)
                 {
+                   
+                    session->setType(m_eAcceptType);
                     session->setSocket(clientSock);
                     session->setSvrType(this->m_svrType);
                     addSession2List(session);

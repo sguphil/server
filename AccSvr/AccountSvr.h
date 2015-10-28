@@ -12,12 +12,12 @@
 #include "../include/acctTimeTool.hpp"
 #include "AccSvrConfig.hpp"
 #include "../include/packHeader.hpp"
-
 #include "../session/ClientSession.h"
 #include "../session/AccsvrSession.h"
 #include "../session/DBSession.h"
 #include "../session/LogicSession.h"
 #include "../session/StrictClient.h"
+#include "../common/SIDGenerator.hpp"
 
 extern int32 MAXPKGLEN;
 extern int32 SESSIONBUFLEN;

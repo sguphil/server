@@ -182,7 +182,7 @@ public:
         return m_nSessionId;
     }
 
-    inline void setm_nSessionId(uint32 sessionId)
+    inline void setSessionId(uint32 sessionId)
     {
         m_nSessionId = sessionId;
     }

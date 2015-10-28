@@ -1,7 +1,7 @@
 #ifndef __SIDGENERATOR_H__
 #define __SIDGENERATOR_H__
 
-
+#include "../include/baseHeader.h"
 /**
  * session generator 
  * sessionid is a unique id which is a number type of unsigned 
@@ -13,7 +13,7 @@
 class SIDGenerator
 {
 public:
-    SIDGenerator* getInstance()
+    static SIDGenerator* getInstance()
     {
         static SIDGenerator instance;
         return &instance;
@@ -33,12 +33,22 @@ public:
 
     uint32 getServeridBySID(uint32 sid)
     {
+        if (!m_IsInit)
+        {
+            return 0;
+        }
+
         uint32 serverid = sid >> 24;
         return serverid;
     }
 
     uint32 generatorSid()
     {
+        if (!m_IsInit)
+        {
+            return 0;
+        }
+
         m_curid += 1;
         uint32 sid = m_serverid << 24 | m_curid;
         return sid;

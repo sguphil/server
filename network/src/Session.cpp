@@ -344,30 +344,16 @@ void CSession::defaultMsgHandle(int16 sysid, int16 msgtype, char *msgbuf, int32 
     int16 sessionType = msg->sessionType;
     NetWorkObject *netobj = NULL;
     struct c_s_registersession ret;
-    MsgHeader msghead;
-    int32 msglen = 0;
-    PkgHeader header;
-    int32 totalsize = 0;
-    //char *buf = NULL;
+
     switch (sessionType)
     {
     case 1: // client
         {
             netobj = new ClientSession;
             bindNetWorkObj(netobj);
-            msghead.sysId = 1;
-            msghead.msgType = 1;
-
+           
             ret.sessionType = 6; // modify the typeof client
-            msglen = sizeof(msghead) + sizeof(ret);
-
-            header.length = msglen;
-            header.reserved = 0;
-
-            //totalsize = msglen + sizeof(header);
-            //char buf[totalsize];
-            //encodepkg(buf, &header, &msghead, (char *)&ret, (int32)sizeof(ret));
-            //send(buf, totalsize);// send back the same struct
+           
             processSend(1, 1, (char *)&ret, (int16)sizeof(ret));
             cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
             break;

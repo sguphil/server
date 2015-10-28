@@ -29,6 +29,8 @@ AccountSvr::AccountSvr()
         assert(false);
     }
 
+    SIDGenerator::getInstance()->init(m_ServerID, 1);
+
 }
 
 AccountSvr::~AccountSvr()
@@ -77,10 +79,10 @@ void AccountSvr::updateSessionList()
     {
         CSession *newSession = *it;
         newSession->setStatus(active);
+        newSession->setSessionId(SIDGenerator::getInstance()->generatorSid());
         m_activeSessionList.push_back(newSession);
         //add to epoll event loop
-        int ret = addFdToRecvEpoll(newSession); //pollin and pollout
-        cout << "=====add to epoll:" << newSession->getSocket() << endl;
+        addFdToRecvEpoll(newSession); //pollin and pollout
         //addFdToSendEpoll(newSession);
     }
 
@@ -133,6 +135,7 @@ void AccountSvr::updateSessionList()
                 break;
             }
             m_activeSessionList.push_back(newSession);
+            newSession->setSessionId(SIDGenerator::getInstance()->generatorSid());
             if (!checkRecord(newSession))
             {
                 m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(newSession->getType(), newSession));

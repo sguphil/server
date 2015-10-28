@@ -70,6 +70,7 @@ void DBSvr::updateSessionList()
     {
         CSession *newSession = *it;
         newSession->setStatus(active);
+        newSession->setSessionId(SIDGenerator::getInstance()->generatorSid());
         m_activeSessionList.push_back(newSession);
         //add to epoll event loop
         addFdToRecvEpoll(newSession);
@@ -95,6 +96,7 @@ void DBSvr::updateSessionList()
             CSession *newSession = *iter;
             newSession->setStatus(active);
             m_activeSessionList.push_back(newSession);
+            newSession->setSessionId(SIDGenerator::getInstance()->generatorSid());
             if (!checkRecord(newSession))
             {
                 m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(newSession->getType(), newSession));

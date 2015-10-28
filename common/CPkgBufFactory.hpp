@@ -113,42 +113,34 @@ public:
     void reuse(ICPkgBuf *pkg)
     {
         int size = pkg->getcapacity();
-        int32 capacity = 0;
         CommonList<ICPkgBuf> *pkgList = NULL;
         if (size <= 128)
         {
             pkgList = &m_bufListSz128;
-            capacity = 128;
         }
         if (size <= 256)
         {
             pkgList = &m_bufListSz256;
-            capacity = 256;
         }
         else if (size <= 512)
         {
             pkgList = &m_bufListSz512;
-            capacity = 512;
         }
         else if (size <= 1024)
         {
             pkgList = &m_bufListSz1024;
-            capacity = 1024;
         }
         else if (size <= 2048)
         {
             pkgList = &m_bufListSz2048;
-            capacity = 2048;
         }
         else if (size <= 4096)
         {
             pkgList = &m_bufListSz4096;
-            capacity = 4096;
         }
         else if (size <= 8192)
         {
             pkgList = &m_bufListSz8192;
-            capacity = 8192;
         }
         
         if (NULL == pkgList)

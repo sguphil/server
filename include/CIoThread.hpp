@@ -76,7 +76,7 @@ public:
                     }
                     #endif
 
-                    if (oplen >= 0)
+                    if (svr->getIoThreadNum() > 1 &&  oplen >= 0)
                     {
                         session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
                     }
@@ -87,17 +87,14 @@ public:
             {
                 acct_time::sleepMs(100);
                 // handle timeout??
-                //printf("CIoThread epoll timeout!!! epoll_wait return:%d\n", evCount);
             }
             else // ret < 0 error or interrupt
             {
                 if (evCount == -1 && errno == EINTR)
                 {
-                    //acct_time::sleepMs(200);
                     printf("CIoThread epoll timeout!!! epoll_wait return:%d\n", evCount);
                     continue;
                 }
-                //acct_time::sleepMs(300);
                 perror("epoll_wait error!!!");
                 printf("CIoThread error!!! epoll_wait return:%d\n", evCount);
             }

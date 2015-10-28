@@ -48,13 +48,6 @@ void DBSvr::start()
     m_acceptor.startListen(m_Config.m_accConfig.ip, m_Config.m_accConfig.port);
     m_acceptor.start();
 
-    //for dbinstance factory
-    
-    //m_dbInstFactory.init(5, 5, "127.0.0.1", 3306, "root", "root", "test");
-
-    //DBSvr* dbsvr = DBSvr::GetInstance();
-    //CDBInstFactory *dbf = dbsvr->getDBInstFactory();
-    //CSqlConn *sqlInst1 = dbf->allocate();
     getDBInstFactory();
     
 
@@ -64,7 +57,7 @@ void DBSvr::start()
         newThread->start();
     }
 
-    CSendThread *sendThread = new CSendThread(this);
+    //CSendThread *sendThread = new CSendThread(this); //not start sendThread now 
     //sendThread->start();
 }
 
@@ -110,27 +103,11 @@ void DBSvr::updateSessionList()
             addFdToRecvEpoll(newSession);
             //addFdToSendEpoll(newSession);
 
-            //send first package to register session
-            //MsgHeader msghead;
-            //int32 sendlen = 0;
-            //PkgHeader header;
             struct c_s_registersession reg;
-            //struct c_s_refecttest testStr;
-                
             if (newSession->getStatus() != registered)
             {
-                //msghead.sysId = 1;
-                //msghead.msgType = 1;
                 reg.sessionType = int16(eDBServer);
-                //sendlen = sizeof(msghead) + sizeof(reg);
-                //header.length = sendlen;
-                //int32 totallen = sendlen +sizeof(header);
-                //char buf[totallen];
-                //encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
-                //newSession->send(buf, totallen);
                 newSession->processSend(1, 1, (char *)&reg, (int16)sizeof(reg));
-                //cout << "ready to send msg:" << totallen << endl;
-                //newSession->setStatus(registered);
             }
         }
     }
@@ -151,7 +128,6 @@ void DBSvr::removeDeadSession()
                 session->delEpollEvent(m_epollSendfd);
                 session->clear();
                 m_activeSessionList.erase(iter++);
-                cout << "remove session===========" << session->getSessionId() << endl;
                 if (session->getType() == eClient)
                 {
                     m_acceptor.sessionReUse(session);
@@ -178,13 +154,6 @@ void DBSvr::handleActiveSession()
         {
             CSession *session = *iter;
             session->processPacket();
-            if ((acct_time::getCurTimeMs() - m_nStatisticTick)>1000) //1s
-            {
-                m_nStatisticTick = acct_time::getCurTimeMs() + 1000;
-                //cout << "========================================session=====" << ++m_nHandleCount << endl;
-                m_nHandleCount = 0;
-            }
-            m_nHandleCount++;
 
             SESSION_TYPE type = session->getType();
             if (type != eUndefineSessionType)
@@ -203,34 +172,16 @@ void DBSvr::handleActiveSession()
 
 void DBSvr::update()
 {
-    int i = 0;
-    int test = 0;
-
-    if( test )
-        while (i++ < 100) //(true)
+    while (true)
+    {
+        while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            //printf("===================i:%d\n", i);
-            //while (acct_time::getCurTimeMs() >= m_nNextTick)
-            {
-                //m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
-                updateSessionList(); // handle new Session
-                handleActiveSession();
-                removeDeadSession();
-            }
-            acct_time::sleepMs(500); // sleep 1ms per loop
+            m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
+            updateSessionList(); // handle new Session
+            handleActiveSession();//process session message
+            removeDeadSession(); //kick invalid session
         }
-    else
-        while (true)
-        {
-            //printf("===================i:%d\n", i);
-            while (acct_time::getCurTimeMs() >= m_nNextTick)
-            {
-                m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
-                updateSessionList(); // handle new Session
-                handleActiveSession();
-                removeDeadSession();
-            }
-            acct_time::sleepMs(1); // sleep 1ms per loop
-        }
+        acct_time::sleepMs(1); // sleep 1ms per loop
+    }
 
 }

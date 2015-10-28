@@ -59,7 +59,6 @@ unsigned char* CFileUtils::getFileData(const char* pszFileName, const char* pszM
     {
         std::string msg = "Get data from file(";
         msg.append(pszFileName).append(") failed!");
-		printf("ERROR=========%s\n", msg.c_str());
     }
     return pBuffer;
 }

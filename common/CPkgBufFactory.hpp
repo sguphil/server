@@ -81,7 +81,31 @@ public:
             else
             {
                 pkgList->unLockList();
-                return new CPkgBuf< 8192,  sizeof(PkgHeader) >();
+                ICPkgBuf *newpkg = NULL;
+                switch (bufcapacity)
+                {
+                case 128:
+                    newpkg = new CPkgBuf<128,  sizeof(PkgHeader)>();
+                    break;
+                case 256:
+                    newpkg = new CPkgBuf<256,  sizeof(PkgHeader)>();
+                    break;
+                case 512:
+                    newpkg = new CPkgBuf<512,  sizeof(PkgHeader)>();
+                    break;
+                case 1024:
+                    newpkg = new CPkgBuf<1024,  sizeof(PkgHeader)>();
+                    break;
+                case 2048:
+                    newpkg = new CPkgBuf<2048,  sizeof(PkgHeader)>();
+                    break;
+                case 4096:
+                    newpkg = new CPkgBuf<4096,  sizeof(PkgHeader)>();
+                    break;
+                default:
+                    break;
+                }
+                return newpkg;
             }
         }
     }
@@ -135,6 +159,7 @@ public:
         else
         {
             pkgList->lockList();
+            pkg->init();
             pkgList->push_back(pkg);
             pkgList->unLockList();
         }

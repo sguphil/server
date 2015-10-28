@@ -309,9 +309,6 @@ public:
                 pkgret.m_msgHeader.sysId = msghead->sysId;
                 pkgret.m_msgHeader.msgType = msghead->msgType;
                 pkgret.m_nMsglen = allMsglen-sizeof(*msghead);
-                #if 0
-                printf("msglen is================%d\n", allMsglen);
-                #endif
                 assert(pkgret.m_nMsglen > 0);
                 pkgret.setMsgBuff(buf+sizeof(*msghead), pkgret.m_nMsglen);
                 return sizeof(pkgret);

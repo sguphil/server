@@ -52,7 +52,7 @@ public:
         ev.events = EPOLLIN | EPOLLONESHOT; // default EPOLLIN event
         if (m_nIoThreadNum == 1)
         {
-            ev.events = EPOLLIN | EPOLLONESHOT;
+            ev.events = EPOLLIN;// | EPOLLONESHOT;
         }
         ev.data.ptr = session;
         return epoll_ctl(m_epollfd, EPOLL_CTL_ADD, session->getSocket(), &ev);

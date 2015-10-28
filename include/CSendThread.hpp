@@ -45,20 +45,6 @@ public:
                         
                         if (oplen > 0) // normal 
                         {
-                            #if 0
-                            if (oplen > 0)
-                            { 
-                                if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
-                                {
-                                    m_nNextTick = acct_time::getCurTimeMs() + 1000;
-                                    cout << "=================sendThread============" << m_llpkgCount++ << endl;
-                                    m_llpkgCount = 0;
-                                }
-                                
-                                m_llpkgCount++; 
-                                //cout << "CSendThread=======sendlen:" << oplen << endl;
-                            }
-                            #endif
                             //session->modEpollEvent(svr->getSendEpollfd(), isRecvEvent);//single thread do not need epolloneshoot
                         }
                         else if (oplen == -1)// socket error wait to free session
@@ -68,7 +54,6 @@ public:
                         }
                         else // EAGAIN
                         {
-                            //printf("CSendThread send oplen 0!!! epoll_wait return:%d\n", evCount);
                             acct_time::sleepMs(100);
                         }
                     }

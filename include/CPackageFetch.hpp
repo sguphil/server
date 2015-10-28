@@ -41,7 +41,6 @@ public:
     {
         if (size > MAXPKGLEN)
         {
-            printf("getpackage error!!!");
             assert(size <= MAXPKGLEN);
             return -1;
         }

@@ -28,12 +28,22 @@ public:
         }
         int32 bufcapacity = 0;
         CommonList<ICPkgBuf> *pkgList = NULL;
-        if (size <= 128)
+        if (size <= 32)
+        {
+            pkgList = &m_bufListSz32;
+            bufcapacity = 32;
+        }
+        else if (size <= 64)
+        {
+            pkgList = &m_bufListSz64;
+            bufcapacity = 64;
+        }
+        else if (size <= 128)
         {
             pkgList = &m_bufListSz128;
             bufcapacity = 128;
         }
-        if (size <= 256)
+        else if (size <= 256)
         {
             pkgList = &m_bufListSz256;
             bufcapacity = 256;
@@ -84,6 +94,12 @@ public:
                 ICPkgBuf *newpkg = NULL;
                 switch (bufcapacity)
                 {
+                case 32:
+                    newpkg = new CPkgBuf<32,  sizeof(PkgHeader)>();
+                    break;
+                case 64:
+                    newpkg = new CPkgBuf<64,  sizeof(PkgHeader)>();
+                    break;
                 case 128:
                     newpkg = new CPkgBuf<128,  sizeof(PkgHeader)>();
                     break;
@@ -114,11 +130,19 @@ public:
     {
         int size = pkg->getcapacity();
         CommonList<ICPkgBuf> *pkgList = NULL;
-        if (size <= 128)
+        if (size <= 32)
+        {
+            pkgList = &m_bufListSz32;
+        }
+        else if (size <= 64)
+        {
+            pkgList = &m_bufListSz64;
+        }
+        else if (size <= 128)
         {
             pkgList = &m_bufListSz128;
         }
-        if (size <= 256)
+        else if (size <= 256)
         {
             pkgList = &m_bufListSz256;
         }
@@ -163,6 +187,8 @@ private:
         //not to be used
     }
 private:
+    CommonList<ICPkgBuf> m_bufListSz32;
+    CommonList<ICPkgBuf> m_bufListSz64;
     CommonList<ICPkgBuf> m_bufListSz128;
     CommonList<ICPkgBuf> m_bufListSz256;
     CommonList<ICPkgBuf> m_bufListSz512;

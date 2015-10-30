@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <SvrConfig>  
     <!--list all config.-->  
+    <!-- database server id rule!!! from 16-30 -->
     <localconfig>  
-	<serverid>1</serverid>
+	<serverid>16</serverid>
         <ip>127.0.0.1</ip>  
 	<port>9999</port>
 	<maxclient>1</maxclient>

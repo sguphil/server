@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <SvrConfig>  
     <!--list all config.-->  
+    <!-- account server id rule!!! from 1-15 -->
     <localconfig>  
 	<serverid>1</serverid>
         <ip>127.0.0.1</ip>  
@@ -21,7 +22,7 @@
     </mysql>
 
     <dbSvr>  
-	<serverid>1</serverid>
+	<serverid>16</serverid>
         <ip>127.0.0.1</ip>  
 	<port>9999</port>
     </dbSvr>

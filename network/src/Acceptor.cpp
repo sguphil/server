@@ -108,7 +108,7 @@ void* Acceptor::threadRoutine(void *args)
             if (clientSock > 0)
             {
                 CSession *session = m_SessionFactory.allocate();
-               //setSocketNoBlock(clientSock);
+               setSocketNoBlock(clientSock);
 
                 if (NULL != session)
                 {

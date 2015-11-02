@@ -17,7 +17,7 @@ public:
 
     ICPkgBuf* alloc()
     {
-        return new CPkgBuf<128, sizeof(PkgHeader)>();
+        return new CPkgBuf<32, sizeof(PkgHeader)>();
     }
 
     ICPkgBuf* alloc(int32 size)
@@ -117,6 +117,9 @@ public:
                     break;
                 case 4096:
                     newpkg = new CPkgBuf<4096,  sizeof(PkgHeader)>();
+                    break;
+                case 8192:
+                    newpkg = new CPkgBuf<8192,  sizeof(PkgHeader)>();
                     break;
                 default:
                     break;

@@ -13,7 +13,7 @@ enum eSERVERTYPE
 class CServerBase
 {
 public:
-    virtual ~CServerBase(){ }
+    virtual ~CServerBase() { }
     virtual int32 getIoEpollfd() = 0;
     virtual int32 getSendEpollfd() = 0;
     virtual int32 getServerID() = 0;

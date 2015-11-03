@@ -6,7 +6,8 @@ int32 CDBSHandlerFunc::testfunc(CSession *session, char *pMsg, int32 msglen)
     
     recvmsg.ParseFromArray(pMsg, msglen);
     //LOGFMTI("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
-    return session->getNetWorkObject()->processSend(1, 4, pMsg, msglen);
+    //return session->getNetWorkObject()->processSend(1, 4, pMsg, msglen);
+    return session->processSend< test_package::testMsg >(1, 4, recvmsg);
 }
 
 int32 CDBSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
@@ -51,5 +52,6 @@ int32 CDBSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
     char pmsg[sendlen];
     sendmsg.SerializeToArray(pmsg, sendlen);
     dbf->reuse(sqlInst);
-    return session->processSend((uint16)eServerMessage_DBServer, (uint16)DBS_ACCS_CHECKLOGINUSER_RET, pmsg, sendlen);
+    //return session->processSend((uint16)eServerMessage_DBServer, (uint16)DBS_ACCS_CHECKLOGINUSER_RET, pmsg, sendlen);
+    return session->processSend<test_package::dbs_2_acc_checkuser>((uint16)eServerMessage_DBServer, (uint16)DBS_ACCS_CHECKLOGINUSER_RET, sendmsg);
 }

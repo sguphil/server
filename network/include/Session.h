@@ -148,6 +148,38 @@ public:
         return  pPkgHead->length;
     }
 
+    /**
+     * for protobuf Serialize to packagebuf
+     * 
+     * @author root (11/1/2015)
+     * 
+     * @param T 
+     * @param sysid 
+     * @param msgid 
+     * @param sendmsg 
+     * 
+     * @return int32 
+     */
+    template<typename T>
+    int32 processSend(uint16 sysid, uint16 msgid, T& sendmsg)
+    {
+        int32 sendlen = sendmsg.ByteSize();
+        ICPkgBuf *sendpkg =  m_SendBufManager.getCurPkg(sendlen);
+        assert(sendpkg != NULL);
+        char *bufbegin = sendpkg->getPkgWritePos();
+        PkgHeader *pPkgHead = (PkgHeader *)bufbegin;
+        MsgHeader *pMsghead = (MsgHeader *)(bufbegin + sizeof(PkgHeader));
+        char *msgbuf = bufbegin + sizeof(PkgHeader) + sizeof(MsgHeader);
+        sendmsg.SerializeToArray(msgbuf, sendlen);
+
+        pPkgHead->length = sizeof(PkgHeader) + sizeof(MsgHeader) + sendlen;
+        pMsghead->sysId = sysid;
+        pMsghead->msgType = msgid;
+        m_SendBufManager.pushPkgToList(pPkgHead->length);
+        sendToSocket(); //send directly
+        return  pPkgHead->length;
+    }
+
     //int32 send(char *buff, int32 buffsize);  // logic module call to write msg to buffqueue return:-1 error -2 again >=0 success send length
 
     int32 sendToSocket(); //network layer call to send msg with socket

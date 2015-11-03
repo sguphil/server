@@ -22,10 +22,16 @@ public:
 
     ICPkgBuf* alloc(int32 size)
     {
-        if (size <= 0 )
+        if (size < 0 )
         {
             return NULL;
         }
+
+        if (0 == size) //default the min size buf
+        {
+            size = 32;
+        }
+
         int32 bufcapacity = 0;
         CommonList<ICPkgBuf> *pkgList = NULL;
         if (size <= 32)

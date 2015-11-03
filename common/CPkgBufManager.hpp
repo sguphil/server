@@ -25,7 +25,7 @@ public:
         m_CurPkg = pkg;
     }
 
-    ICPkgBuf* getCurPkg();
+    ICPkgBuf* getCurPkg(int32 size = 0);
 
     void pushPkgToList(int32 size);
 

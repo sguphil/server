@@ -1,0 +1,175 @@
+redis记录
+
+列表类型：
+lpush key val1 val2 ... 向列表key左边一次加入元素val1，val2
+rpush key val1 val2 ... 向列表key右边一次加入元素val1，val2
+
+llen key 显示列表元素个数
+
+lrange key start stop  	获取从start开始到stop结束间的元素（包含两端），redis的起始索引为0
+			lrange中的索引如果为负数表示从右边开始查找
+			如果start在stop后则返回空
+			如果stop大于实际索引范围则返回从右边开始的实际数量的值
+						
+lrem key count value 	删除表中前count个值为value的元素， 返回实际删除值的个数
+			count > 0 表示从左边开始删除count个值为value的元素
+			count < 0 表示从右边开始删除count个值为value的元素
+			ocunt = 0 表示删除表中所有值为value的元素
+						
+						
+lindex key index 	返回指定列表key中 index位置的值，index为负数表示从起始在右边
+lset key index value 	设置列表key中index位置的值为value, index为负数表示从起始在右边
+
+ltrim key start end 	删除指定范围之外的所有元素, 范围使用和lrange一样
+
+linsert key before|after pivot value 在列表key中查找值为pivot的元素在它的before或者after插入一个值为value的元素
+										命令返回插入后列表元素个数
+
+rpoplpush source destination 	这个命令组合了两个命令的操作，执行rpop从列表source右端弹出一个元素然后将其lpush
+				到列表destination的左端，返回移动元素的值
+								
+集合类型：
+	集合类型是一种无序，元素不重复的存储结构，存储的key最多2^32-1个。
+
+sadd key member [member...] 	向集合key添加一个或多个元素，如果key不存在则会自动创建，如果集合中已存在元素则忽略
+				命令返回真实加入到集合中的元素个数
+srem key member [member...] 	从集合中删除一个或多个元素,不存在的元素将忽略，并返回成功删除的个数。
+
+smembers key 			获得集合key中的所有元素
+
+sismember key member 		判断元素是否正集合key中,存在时返回1,值不存在或者键不存在都返回0。
+
+集合相关运算：
+sdiff key [key...] 		集合key对多个集合进行差集运算,返回集合key与其他集合不相同的元素
+sinter key [key...] 		集合key对多个集合进行交集运算，返回存在于集合key中且存在于其他集合的元素
+
+scard key 			获得集合中的元素个数
+
+sdiffstore destination key [key...] 	用key集合和多个集合进行差集运算，并把结果存在destination集合中
+sinterstore destionation key [key...] 	用key集合和多个集合进行交集运算，并把结果存在destination集合中
+sunionstore destionation key [key...] 	用key集合和多个集合进行并集运算，并把结果存在destination集合中
+
+srandmember key [count] 	随机从集合中获取一个元素或多个元素，count>0:如count小于集合最大元素个数则随机返回
+				count个不同元素，否则返回集合中所有元素；count<0:随机从集合中取出的count个元素有
+				可能相同。
+
+spop key 			从集合中弹出一个值,由于集合类型是无序的所以会随机弹出一个元素。
+
+
+有序集合类型：
+	有序集合中集合的基础上关联了一个分数，因此除了集合的基本熟悉外还可以根据分数做相关操作。
+	有序集合使用散列表和跳跃表实现所以取集合中间的数据速度也非常快O(log(N).有序集合比列表更耗费内存。
+
+zadd key score member [score member...] 	在有序集合中加入一个元素和分数，如果这个集合中存在这个元素则使用新
+						的分数替换原来的分数，否则插入到集合中。命令返回新加入到集合元素个
+						数。 
+						分数不仅支持整数还支持双精度浮点数，其中+inf,-inf分别表示正负无穷。
+
+zscore key member 		获得有序集合key中member值的分数
+
+zrange key start stop [WITHSCORE] 	从小到大顺序返回索引从start到stop之间的所有元素（包含两端），start和stop的
+					使用和lrange相似。如-1表示从后向前查找。如果想获得元素和分数时要加上
+					WITHSCORE参数。该命令时间复杂度为O(logn+m)其中n为有序集合基数，m为返回元素
+					个数。
+
+zrevrange key start stop [WITHSCORE] 	使用方法和zrange一样，区别时按照从大到小顺序返回元素。
+
+zrangebyscore key min max [WITHSCORE] [LIMIT offset count] 	获得指定分数范围的元素，从小到大返回min和max间的
+								元素（包含min和max）。
+例子：
+zrangebyscore key scoreboard 80 100 返回分数 80 <= score <= 100 的所有元素
+zrangebyscore key scoreboard 80 (100 返回分数 80 <= score < 100 的所有元素
+zrangebyscore key scoreboard 80 +inf 返回分数 80 <= score <正无穷 的所有元素
+zrevranagebyscore key scoreboard 100 0 limit 0 3 返回分数小于或等于100的前三个人
+
+
+zincby key incrememt member 	增加一个元素的分数返回值是更改后的分数, incrememt小于0表示减分
+
+zcard key 	返回集合中元素个数
+
+zcount key min max 	返回指定分数范围内的元素
+
+zrem key member [member...] 	删除一个或多个元素，返回成功返回的元素数量
+
+zremrangebyrank key start stop 按照元素分数从小到大顺序删除处在指定排名范围内的所有元素，并返回删除元素的数量
+
+zrank key member  	按照元素从小到大顺序获得指定嗯原书的排名(从0开始，即分数最小的元素排名为0）
+
+zrevrank key member  	和上面命令相似区别是 分数最大的元素排名为0
+
+zinterstore destination numkeys key [key...] [WEIGHTS weights [weight...]] [AGGERGATE  SUM|MIN|MAX] 
+	该命令用于计算多个有序集合的交集并将结果存储中destination键中，返回destination键中的元素个数,des键元素的分数时由AGGREGATE参数决定的。 SUM：des元素的分数时每个参与计算的集合中该元素分数的和。MIN：参与计算集合中元素分数的最小值。MAX：参与运算元素分数的最大值。
+
+	WEIGHTSK参数可设置每个集合的权重，每个集合中计算元素的分数会被乘上该集合的权重
+
+
+				
+进阶话题：
+事务
+	Redis的事务时一组命令的集合。事务同命令一样都是Redis的最小执行单位，一个事务要么都执行要么都不执行。
+示例：
+	multi
+	set key value
+	set key
+	errorcommand key
+	exec
+
+	multi命令向Redis说明一下的是一组名，只要其中一个命令出错exec命令会直接返回错误连正确的语句都不会执行。
+
+watch 	watch命令科研监控一个或者多个键，一旦其中的agiel键被修改或者删除，之后的事务都不会执行。监控一直持续
+	到exec命令（事务中的命令时中exec之后从执行的，所以在multi命令后科研修改瓦特成监控的键值）。exec执行后
+	会取消对所有键的监控，如果不执行事务中的命令也可以使用unwatch来取消监控。
+示例：
+	set key 1
+	watch key
+	set key 2 
+	multi 
+	set key 3
+	exec
+	get key --> 返回2 因为监控键中事务执行前被修改了，set key 2 修改了被监控的键，所以set key 3将不会执行。
+
+expire 	key seconds 指定key中seconds秒后失效，命令中的seconds参数表示键的生存时间，单位时秒，
+示例：
+	set key 123
+	expire key 900 --> expire返回1表示设置成功，0表示键不存在或者设置失败。
+	ttl key --> 返回剩余时间
+
+ttl key 	返回键的剩余时间（多久时间会被删除），键不存在或键没有设置生存时间即永久时返回-1
+persist key 	取消键的生存时间设置。除了这个命令外使用set或者getset命令为键复制也会同时清除键的生存时间。
+
+pexpire key ms 	毫秒级的生存期设置
+pttl key 	返回毫秒级生存期设置剩余时间
+
+expireat key unixtime	设置key中unixtime秒后失效 
+pexpireat key unixtime_ms	设置key中unixtime毫秒时间失效
+
+
+	在实际开发中发现很难为缓存键设置合理的生存时间，为此科研显示Redis能够使用的最大内存，并让Redis按照一定的鬼子淘汰不需要的缓存键，这种方式在只将Redis用作缓存戏台时非常使用。
+	具体设置方法：
+	修改配置文件的maxmemory参数，显示Redis的最大可用内存大小（单位时字节），当超出了这个限制时Redis会依据
+	maxmemory-policy参数指定的策略来删除不需要的键，直到Redis占用的内存小于指定内存。
+	
+
+sort key 	把键为key的列表、有序集合、无序集合进行排序
+		sort还可以通过ALPHA参数实现字典顺序排序非数字元素，如：sort mylist ALPHA
+		DESC 参数实现从大到小排序，如：sort mylist DESC
+		LIMIT参数可以限制返回的范围，如：sort mylist DESC LIMIT 1 2 
+		by 参考键 参数，如:sort mylist by post:*->time DESC sort命令会读取mylist值作为post:*中的*,然后取
+		post:1散列表中的time字段并以此决定mylist列表的元素顺序。 
+
+4.3.4
+
+		
+
+
+
+
+
+
+
+
+
+
+	
+
+

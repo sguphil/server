@@ -38,15 +38,15 @@ ICPkgBuf* CPkgbufManager::next()
     return pkg;
 }
 
-ICPkgBuf* CPkgbufManager::getCurPkg()
+ICPkgBuf* CPkgbufManager::getCurPkg(int32 size)
 {
     if (NULL == m_CurPkg)
     {
-        m_CurPkg = CPkgBufFactory::getInstance()->alloc();
+        m_CurPkg = CPkgBufFactory::getInstance()->alloc(size);
         assert(m_CurPkg != NULL);
     }
 
-    if (m_CurPkg->getbufLen() >= m_CurPkg->getPkgSize())
+    if (m_CurPkg->getbufLen() >= m_CurPkg->getHeadSize())
     {
         int32 pkgsize = m_CurPkg->getPkgSize();
         if (pkgsize > m_CurPkg->getcapacity())

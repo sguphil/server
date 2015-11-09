@@ -4,14 +4,14 @@
 #include "../include/baseHeader.h"
 #include "../Thread/BaseThread.h"
 #include "../Thread/Mutex.h"
-#include "../include/EpollServer.hpp"
+#include "../include/CServerBase.hpp"
 #include "../network/include/Session.h"
 #include "../include/acctTimeTool.hpp"
 
 class CIoThread: public CBaseThread
 {
 public:
-    CIoThread(EpollServer* server): m_ptrServer(server)
+    CIoThread(CServerBase* server): m_ptrServer(server)
     {
         m_llpkgCount = 0;
         m_nNextTick = 0;
@@ -24,7 +24,7 @@ public:
     void *threadRoutine(void *args)
     {
         CIoThread *threadself = (CIoThread *)args;
-        EpollServer *svr = threadself->getServerPtr();
+        CServerBase *svr = threadself->getServerPtr();
         struct epoll_event epEvent[10];
         cout << "CIoThread start threadRoutine" << endl;
         bool isRecvEvent = false;
@@ -103,12 +103,12 @@ public:
         return NULL;
     }
 
-    inline EpollServer* getServerPtr()
+    inline CServerBase* getServerPtr()
     {
         return m_ptrServer;
     }
 private:
-    EpollServer* m_ptrServer;
+    CServerBase* m_ptrServer;
 
     int32 m_nNextTick;
     int32 m_llpkgCount;

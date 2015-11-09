@@ -94,9 +94,10 @@ void protobuf_AssignDesc_testMsg_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(acc_2_client_checkuser));
   acc_2_dbs_checkuser_descriptor_ = file->message_type(3);
-  static const int acc_2_dbs_checkuser_offsets_[2] = {
+  static const int acc_2_dbs_checkuser_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(acc_2_dbs_checkuser, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(acc_2_dbs_checkuser, passwd_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(acc_2_dbs_checkuser, sessionid_),
   };
   acc_2_dbs_checkuser_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -110,8 +111,9 @@ void protobuf_AssignDesc_testMsg_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(acc_2_dbs_checkuser));
   dbs_2_acc_checkuser_descriptor_ = file->message_type(4);
-  static const int dbs_2_acc_checkuser_offsets_[1] = {
+  static const int dbs_2_acc_checkuser_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(dbs_2_acc_checkuser, retcode_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(dbs_2_acc_checkuser, sessionid_),
   };
   dbs_2_acc_checkuser_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -174,9 +176,10 @@ void protobuf_AddDesc_testMsg_2eproto() {
     "\022\020\n\010sendtime\030\001 \002(\005\022\013\n\003msg\030\002 \002(\t\"6\n\026clien"
     "t_2_acc_checkuser\022\014\n\004name\030\001 \001(\t\022\016\n\006passw"
     "d\030\002 \001(\t\"6\n\026acc_2_client_checkuser\022\014\n\004nam"
-    "e\030\001 \001(\t\022\016\n\006passwd\030\002 \001(\t\"3\n\023acc_2_dbs_che"
-    "ckuser\022\014\n\004name\030\001 \001(\t\022\016\n\006passwd\030\002 \001(\t\"&\n\023"
-    "dbs_2_acc_checkuser\022\017\n\007retcode\030\001 \002(\005", 276);
+    "e\030\001 \001(\t\022\016\n\006passwd\030\002 \001(\t\"F\n\023acc_2_dbs_che"
+    "ckuser\022\014\n\004name\030\001 \001(\t\022\016\n\006passwd\030\002 \001(\t\022\021\n\t"
+    "sessionid\030\003 \001(\r\"9\n\023dbs_2_acc_checkuser\022\017"
+    "\n\007retcode\030\001 \002(\005\022\021\n\tsessionid\030\002 \001(\r", 314);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "testMsg.proto", &protobuf_RegisterTypes);
   testMsg::default_instance_ = new testMsg();
@@ -1097,6 +1100,7 @@ void acc_2_client_checkuser::Swap(acc_2_client_checkuser* other) {
 #ifndef _MSC_VER
 const int acc_2_dbs_checkuser::kNameFieldNumber;
 const int acc_2_dbs_checkuser::kPasswdFieldNumber;
+const int acc_2_dbs_checkuser::kSessionidFieldNumber;
 #endif  // !_MSC_VER
 
 acc_2_dbs_checkuser::acc_2_dbs_checkuser()
@@ -1120,6 +1124,7 @@ void acc_2_dbs_checkuser::SharedCtor() {
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   passwd_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sessionid_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1161,7 +1166,7 @@ acc_2_dbs_checkuser* acc_2_dbs_checkuser::New() const {
 }
 
 void acc_2_dbs_checkuser::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
+  if (_has_bits_[0 / 32] & 7) {
     if (has_name()) {
       if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         name_->clear();
@@ -1172,6 +1177,7 @@ void acc_2_dbs_checkuser::Clear() {
         passwd_->clear();
       }
     }
+    sessionid_ = 0u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1213,6 +1219,21 @@ bool acc_2_dbs_checkuser::MergePartialFromCodedStream(
             this->passwd().data(), this->passwd().length(),
             ::google::protobuf::internal::WireFormat::PARSE,
             "passwd");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_sessionid;
+        break;
+      }
+
+      // optional uint32 sessionid = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_sessionid:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &sessionid_)));
+          set_has_sessionid();
         } else {
           goto handle_unusual;
         }
@@ -1265,6 +1286,11 @@ void acc_2_dbs_checkuser::SerializeWithCachedSizes(
       2, this->passwd(), output);
   }
 
+  // optional uint32 sessionid = 3;
+  if (has_sessionid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->sessionid(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1297,6 +1323,11 @@ void acc_2_dbs_checkuser::SerializeWithCachedSizes(
         2, this->passwd(), target);
   }
 
+  // optional uint32 sessionid = 3;
+  if (has_sessionid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->sessionid(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1321,6 +1352,13 @@ int acc_2_dbs_checkuser::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->passwd());
+    }
+
+    // optional uint32 sessionid = 3;
+    if (has_sessionid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->sessionid());
     }
 
   }
@@ -1356,6 +1394,9 @@ void acc_2_dbs_checkuser::MergeFrom(const acc_2_dbs_checkuser& from) {
     if (from.has_passwd()) {
       set_passwd(from.passwd());
     }
+    if (from.has_sessionid()) {
+      set_sessionid(from.sessionid());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1381,6 +1422,7 @@ void acc_2_dbs_checkuser::Swap(acc_2_dbs_checkuser* other) {
   if (other != this) {
     std::swap(name_, other->name_);
     std::swap(passwd_, other->passwd_);
+    std::swap(sessionid_, other->sessionid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -1400,6 +1442,7 @@ void acc_2_dbs_checkuser::Swap(acc_2_dbs_checkuser* other) {
 
 #ifndef _MSC_VER
 const int dbs_2_acc_checkuser::kRetcodeFieldNumber;
+const int dbs_2_acc_checkuser::kSessionidFieldNumber;
 #endif  // !_MSC_VER
 
 dbs_2_acc_checkuser::dbs_2_acc_checkuser()
@@ -1421,6 +1464,7 @@ dbs_2_acc_checkuser::dbs_2_acc_checkuser(const dbs_2_acc_checkuser& from)
 void dbs_2_acc_checkuser::SharedCtor() {
   _cached_size_ = 0;
   retcode_ = 0;
+  sessionid_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1456,7 +1500,21 @@ dbs_2_acc_checkuser* dbs_2_acc_checkuser::New() const {
 }
 
 void dbs_2_acc_checkuser::Clear() {
-  retcode_ = 0;
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<dbs_2_acc_checkuser*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  ZR_(retcode_, sessionid_);
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -1478,6 +1536,21 @@ bool dbs_2_acc_checkuser::MergePartialFromCodedStream(
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &retcode_)));
           set_has_retcode();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_sessionid;
+        break;
+      }
+
+      // optional uint32 sessionid = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_sessionid:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &sessionid_)));
+          set_has_sessionid();
         } else {
           goto handle_unusual;
         }
@@ -1515,6 +1588,11 @@ void dbs_2_acc_checkuser::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->retcode(), output);
   }
 
+  // optional uint32 sessionid = 2;
+  if (has_sessionid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->sessionid(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1528,6 +1606,11 @@ void dbs_2_acc_checkuser::SerializeWithCachedSizes(
   // required int32 retcode = 1;
   if (has_retcode()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->retcode(), target);
+  }
+
+  // optional uint32 sessionid = 2;
+  if (has_sessionid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->sessionid(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1547,6 +1630,13 @@ int dbs_2_acc_checkuser::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->retcode());
+    }
+
+    // optional uint32 sessionid = 2;
+    if (has_sessionid()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->sessionid());
     }
 
   }
@@ -1579,6 +1669,9 @@ void dbs_2_acc_checkuser::MergeFrom(const dbs_2_acc_checkuser& from) {
     if (from.has_retcode()) {
       set_retcode(from.retcode());
     }
+    if (from.has_sessionid()) {
+      set_sessionid(from.sessionid());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1604,6 +1697,7 @@ bool dbs_2_acc_checkuser::IsInitialized() const {
 void dbs_2_acc_checkuser::Swap(dbs_2_acc_checkuser* other) {
   if (other != this) {
     std::swap(retcode_, other->retcode_);
+    std::swap(sessionid_, other->sessionid_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

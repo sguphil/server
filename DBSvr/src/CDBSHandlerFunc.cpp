@@ -47,6 +47,7 @@ int32 CDBSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
 
     test_package::dbs_2_acc_checkuser sendmsg;
     sendmsg.set_retcode(retcode);
+    sendmsg.set_sessionid(recvmsg.sessionid());
     printf("checkuser db retcode is:%d\n", retcode);
     int32 sendlen = sendmsg.ByteSize();
     char pmsg[sendlen];

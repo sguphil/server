@@ -48,6 +48,8 @@ enum SESSION_TYPE
     eUndefineSessionType = 8,
 };
 
+typedef SESSION_TYPE eSERVERTYPE;
+
 using namespace std;
 
 typedef long long Int64;

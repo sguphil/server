@@ -15,6 +15,7 @@ int32 CACCSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
     recvmsg.ParseFromArray(pMsg, msglen);
     sendmsg.set_name(recvmsg.name());
     sendmsg.set_passwd(recvmsg.passwd());
+    sendmsg.set_sessionid(session->getSessionId());
     int32 sendlen = sendmsg.ByteSize();
     char pmsg[sendlen];
     sendmsg.SerializeToArray(pmsg, sendlen);
@@ -34,6 +35,9 @@ int32 CACCSHandlerFunc::dbcheckuserret(CSession *session, char *pMsg, int32 msgl
     test_package::dbs_2_acc_checkuser recvmsg;
     test_package::acc_2_client_checkuser sendmsg;
     recvmsg.ParseFromArray(pMsg, msglen);
+    uint32 clientSessionid = recvmsg.sessionid();
+    //find clientSessionId and send the db-search result 
+    
     //LOGFMTI("CACCSHandlerFunc::dbcheckuserret====recvmsg retcode:%d\n", recvmsg.retcode());
     return 0;
 }

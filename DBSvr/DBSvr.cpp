@@ -17,7 +17,7 @@ DBSvr::DBSvr()
     m_ServerID = m_Config.m_accConfig.serverid;
     m_nIoThreadNum = m_Config.m_accConfig.recvThread;
     LOGI("=====e======m_nIoThreadNum:" <<  m_nIoThreadNum);
-    m_svrType = eDBSvr;
+    m_svrType = eDBServer;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
 
@@ -59,117 +59,6 @@ void DBSvr::start()
 
     //CSendThread *sendThread = new CSendThread(this); //not start sendThread now 
     //sendThread->start();
-}
-
-void DBSvr::updateSessionList()
-{
-    // 1.process accept session
-    CommonList<CSession>* readList = m_acceptor.getReadSessionList();
-    CommonList<CSession>::iterator it = readList->begin();
-    for (; it != readList->end(); it++)
-    {
-        CSession *newSession = *it;
-        newSession->setStatus(active);
-        newSession->setSessionId(SIDGenerator::getInstance()->generatorSid());
-        m_activeSessionList.push_back(newSession);
-        //add to epoll event loop
-        addFdToRecvEpoll(newSession);
-        //addFdToSendEpoll(newSession);
-    }
-
-    readList->clear();
-
-    if (m_acceptor.getWriteSessionList()->size() > 0 )
-    {
-        m_acceptor.swapSessionList();
-    }
-    
-    // 2.process connect session
-    CommonList<CSession> *connSessionList =  m_connector.getConnList(); //all connector's session  connect to other server, we use mutilMap to record them
-    if (connSessionList->size() > 0)
-    {
-        std::vector<CSession *> connectSessions;
-        m_connector.getConnList(connectSessions);
-        std::vector<CSession *>::iterator iter = connectSessions.begin();
-        for (; iter != connectSessions.end(); iter++)
-        {
-            CSession *newSession = *iter;
-            newSession->setStatus(active);
-            m_activeSessionList.push_back(newSession);
-            newSession->setSessionId(SIDGenerator::getInstance()->generatorSid());
-            if (!checkRecord(newSession))
-            {
-                m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(newSession->getType(), newSession));
-            }
-            //add to epoll event loop
-            addFdToRecvEpoll(newSession);
-            //addFdToSendEpoll(newSession);
-
-            struct c_s_registersession reg;
-            if (newSession->getStatus() != registered)
-            {
-                reg.sessionType = int16(eDBServer);
-                newSession->processSend(1, 1, (char *)&reg, (int16)sizeof(reg));
-            }
-        }
-    }
-
-}
-
-void DBSvr::removeDeadSession()
-{
-    if (m_activeSessionList.size() > 0)
-    {
-        CommonList<CSession>::iterator iter;
-        for (iter = m_activeSessionList.begin(); iter != m_activeSessionList.end();)
-        {
-            CSession *session = *iter;
-            if (session->getStatus() == waitdel)
-            {
-                session->delEpollEvent(m_epollfd);
-                session->delEpollEvent(m_epollSendfd);
-                session->clear();
-                m_activeSessionList.erase(iter++);
-                if (session->getType() == eClient)
-                {
-                    m_acceptor.sessionReUse(session);
-                }
-                else
-                {
-                    delClusterSession(session);
-                }
-            }
-            else
-            {
-                iter++;
-            }
-        }
-    }
-}
-
-void DBSvr::handleActiveSession()
-{
-    if (m_activeSessionList.size() > 0)
-    {
-        CommonList<CSession>::iterator iter = m_activeSessionList.begin();
-        for (; iter != m_activeSessionList.end(); iter++)
-        {
-            CSession *session = *iter;
-            session->processPacket();
-
-            SESSION_TYPE type = session->getType();
-            if (type != eUndefineSessionType)
-            {
-                if (eGateWay == type || eOtherSvr == type || eGameServer == type || eAccountSvr == type) //record server cluster
-                {
-                    if (registered == session->getStatus() && !checkRecord(session))
-                    {
-                        m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(session->getType(), session));
-                    }
-                }
-            }
-        }
-    }
 }
 
 void DBSvr::update()

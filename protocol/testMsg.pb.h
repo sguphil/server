@@ -410,12 +410,21 @@ class acc_2_dbs_checkuser : public ::google::protobuf::Message {
   inline ::std::string* release_passwd();
   inline void set_allocated_passwd(::std::string* passwd);
 
+  // optional uint32 sessionid = 3;
+  inline bool has_sessionid() const;
+  inline void clear_sessionid();
+  static const int kSessionidFieldNumber = 3;
+  inline ::google::protobuf::uint32 sessionid() const;
+  inline void set_sessionid(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:test_package.acc_2_dbs_checkuser)
  private:
   inline void set_has_name();
   inline void clear_has_name();
   inline void set_has_passwd();
   inline void clear_has_passwd();
+  inline void set_has_sessionid();
+  inline void clear_has_sessionid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -423,6 +432,7 @@ class acc_2_dbs_checkuser : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::std::string* name_;
   ::std::string* passwd_;
+  ::google::protobuf::uint32 sessionid_;
   friend void  protobuf_AddDesc_testMsg_2eproto();
   friend void protobuf_AssignDesc_testMsg_2eproto();
   friend void protobuf_ShutdownFile_testMsg_2eproto();
@@ -492,16 +502,26 @@ class dbs_2_acc_checkuser : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 retcode() const;
   inline void set_retcode(::google::protobuf::int32 value);
 
+  // optional uint32 sessionid = 2;
+  inline bool has_sessionid() const;
+  inline void clear_sessionid();
+  static const int kSessionidFieldNumber = 2;
+  inline ::google::protobuf::uint32 sessionid() const;
+  inline void set_sessionid(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:test_package.dbs_2_acc_checkuser)
  private:
   inline void set_has_retcode();
   inline void clear_has_retcode();
+  inline void set_has_sessionid();
+  inline void clear_has_sessionid();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::int32 retcode_;
+  ::google::protobuf::uint32 sessionid_;
   friend void  protobuf_AddDesc_testMsg_2eproto();
   friend void protobuf_AssignDesc_testMsg_2eproto();
   friend void protobuf_ShutdownFile_testMsg_2eproto();
@@ -1084,6 +1104,30 @@ inline void acc_2_dbs_checkuser::set_allocated_passwd(::std::string* passwd) {
   // @@protoc_insertion_point(field_set_allocated:test_package.acc_2_dbs_checkuser.passwd)
 }
 
+// optional uint32 sessionid = 3;
+inline bool acc_2_dbs_checkuser::has_sessionid() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void acc_2_dbs_checkuser::set_has_sessionid() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void acc_2_dbs_checkuser::clear_has_sessionid() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void acc_2_dbs_checkuser::clear_sessionid() {
+  sessionid_ = 0u;
+  clear_has_sessionid();
+}
+inline ::google::protobuf::uint32 acc_2_dbs_checkuser::sessionid() const {
+  // @@protoc_insertion_point(field_get:test_package.acc_2_dbs_checkuser.sessionid)
+  return sessionid_;
+}
+inline void acc_2_dbs_checkuser::set_sessionid(::google::protobuf::uint32 value) {
+  set_has_sessionid();
+  sessionid_ = value;
+  // @@protoc_insertion_point(field_set:test_package.acc_2_dbs_checkuser.sessionid)
+}
+
 // -------------------------------------------------------------------
 
 // dbs_2_acc_checkuser
@@ -1110,6 +1154,30 @@ inline void dbs_2_acc_checkuser::set_retcode(::google::protobuf::int32 value) {
   set_has_retcode();
   retcode_ = value;
   // @@protoc_insertion_point(field_set:test_package.dbs_2_acc_checkuser.retcode)
+}
+
+// optional uint32 sessionid = 2;
+inline bool dbs_2_acc_checkuser::has_sessionid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void dbs_2_acc_checkuser::set_has_sessionid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void dbs_2_acc_checkuser::clear_has_sessionid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void dbs_2_acc_checkuser::clear_sessionid() {
+  sessionid_ = 0u;
+  clear_has_sessionid();
+}
+inline ::google::protobuf::uint32 dbs_2_acc_checkuser::sessionid() const {
+  // @@protoc_insertion_point(field_get:test_package.dbs_2_acc_checkuser.sessionid)
+  return sessionid_;
+}
+inline void dbs_2_acc_checkuser::set_sessionid(::google::protobuf::uint32 value) {
+  set_has_sessionid();
+  sessionid_ = value;
+  // @@protoc_insertion_point(field_set:test_package.dbs_2_acc_checkuser.sessionid)
 }
 
 

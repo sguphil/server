@@ -82,7 +82,7 @@ private:
         Int32 m_listenPort;
         Int32 m_nServerSock;
         Int32 m_epollfd;
-        SESSION_TYPE m_eAcceptType;
+        eSERVERTYPE m_eAcceptType;
         bool m_boIsListen;
         Int32 m_nMaxAccept;
         Int32 m_nCurrAccept;

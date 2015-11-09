@@ -1,7 +1,7 @@
 #ifndef __CSERVERBASE_H__
 #define __CSERVERBASE_H__
 #include "baseHeader.h"
-
+/*
 enum eSERVERTYPE
 {
     eACCSvr = 1,
@@ -9,7 +9,7 @@ enum eSERVERTYPE
     eGSvr = 3,
     eDBSvr = 4,
 };
-
+*/
 class CServerBase
 {
 public:

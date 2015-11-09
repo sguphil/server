@@ -22,9 +22,11 @@ optional string passwd = 2;
 message acc_2_dbs_checkuser{
 optional string name = 1;
 optional string passwd = 2;
+optional uint32 sessionid = 3;
 }
 //eServerMessage_DBServer -- DBS_ACCS_CHECKLOGINUSER_RET
 message dbs_2_acc_checkuser{
 required int32 retcode = 1;
+optional uint32 sessionid = 2;
 }
 

@@ -9,7 +9,7 @@ TestClient::TestClient()
     m_nSendTimes = 0;
     m_ServerID = 1;
     m_nIoThreadNum = 1;
-    m_svrType = eACCSvr;
+    m_svrType = eClient;
     m_epollfd = epoll_create(10);
     m_epollSendfd = epoll_create(10);
     m_bAlreadySend = false;
@@ -46,12 +46,13 @@ void TestClient::start()
     
     for (int i = 0; i < 1;i++)
     {
-        CSendThread *sendThread = new CSendThread(this);
+        //CSendThread *sendThread = new CSendThread(this);
         //sendThread->start();
     }
 
 }
 
+#if 0 
 void TestClient::updateSessionList()
 {
     // 1.process accept session
@@ -127,6 +128,7 @@ void TestClient::removeDeadSession()
         }
     }
 }
+#endif
 
 void TestClient::handleActiveSession()
 {

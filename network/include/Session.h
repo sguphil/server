@@ -280,6 +280,16 @@ public:
         m_connSvrID = svrid;
     }
 
+    inline bool getIsFromSelf()
+    {
+        return m_bIsFromSelf;
+    }
+
+    inline void setIsFromSelf(bool isFromSelf)
+    {
+        m_bIsFromSelf = isFromSelf;
+    }
+
 private:
     Int32 m_socket;
     char m_szIp[32];
@@ -311,6 +321,6 @@ private:
     PkgHeader m_header;
     eSERVERTYPE m_svrType;
     uint8 m_connSvrID;
-
+    bool m_bIsFromSelf;// true means this session create by connector
 };
 #endif // __SESSION_H__

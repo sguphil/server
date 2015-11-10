@@ -1,7 +1,7 @@
 #include "../include/Connector.h"
 #include "../../common/SIDGenerator.hpp"
 
-static sem_t m_waitSem;
+//static sem_t m_waitSem;
 
 Connector::Connector()
 {
@@ -48,9 +48,10 @@ void Connector::reConnectAll()
     if (!m_connErrList.empty())
     {
         CommonList<CSession>::iterator iter;
-        for (iter = m_connErrList.begin(); iter != m_connErrList.end(); iter++)
+        for (iter = m_connErrList.begin(); iter != m_connErrList.end(); )
         {
             addToWaitList(*iter);
+            m_connErrList.erase(iter++);
         }
     }
 }
@@ -58,13 +59,15 @@ void Connector::reConnectAll()
 bool Connector::connect(const char *szIp, Int32 Port, uint8 serverid)
 {
     CSession *pSession = m_sessionFactory.allocate();
-    pSession->setType(SIDGenerator::getInstance()->getServerTypeBySvrID(serverid));
-    pSession->setConnectSvrID(serverid);
     if (NULL == pSession)
     {
         printf("connector can not alloc Session\n");
         return false;
     }
+
+    pSession->setType(SIDGenerator::getInstance()->getServerTypeBySvrID(serverid));
+    pSession->setConnectSvrID(serverid);
+    pSession->setIsFromSelf(true);//means this connection is create from server itself
 
     Int32 cliSock = socket(AF_INET, SOCK_STREAM, 0);
     if (cliSock < 0)

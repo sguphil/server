@@ -75,9 +75,9 @@ void AccountSvr::update()
 {
     while (true)
     {
+        EpollServer::update();
         while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            EpollServer::update();
             m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
             updateSessionList(); // handle new Session
             handleActiveSession();

@@ -11,7 +11,7 @@
 #define REUSE_NETWORKOBJ 1
 extern CBaseFactory<ClientSession> g_ClientNetWorkObjectFactory;
 
-CSession::CSession() : m_pBindNetWorkObj(NULL), m_connSvrID(0)
+CSession::CSession() : m_pBindNetWorkObj(NULL), m_connSvrID(0),m_bIsFromSelf(false)
 {
     m_socket = -1;
     m_boActive = false;

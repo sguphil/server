@@ -4,7 +4,7 @@
 
 GatewaySvr::GatewaySvr()
 {
-    m_Config.init("./config/GatewaySvr.xml");
+    m_Config.init("./config/gatewaySvr.xml");
     m_Config.parseXml();
 
     m_nInterval = m_Config.m_accConfigVec[0].updateFps; //loop per Xms default

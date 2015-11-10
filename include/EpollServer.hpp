@@ -123,7 +123,10 @@ public:
             {
                 m_ServerSessionMap.erase(it++);
                 //put in connector errrolist, wait for reconnect... !!!!todo.....verify not connector session
-                m_connector.addToErrorList(session);
+                if (session->getIsFromSelf())
+                {
+                    m_connector.addToErrorList(session);
+                }
                 break;
             }
             else

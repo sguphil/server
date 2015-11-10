@@ -37,6 +37,7 @@ private:
     CMutex m_waitListLock;
     CMutex m_connListLock;
     CMutex m_connErrListLock;
+    sem_t m_waitSem;
     pthread_cond_t m_waitCond;
     pthread_mutex_t m_mutex;
 };

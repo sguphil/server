@@ -1,6 +1,0 @@
-2015-11-09 03:32:31.834 LOG_ALARM -----------------  log4z thread started!   ---------------------------- 
-2015-11-09 03:32:31.878 LOG_ALARM logger id=0 key=Main name=logicsvr path=./log/ level=1 display=1 
-2015-11-09 03:32:31.885 LOG_INFO  =====e======m_nIoThreadNum:1 (LogicSvr.cpp):19 
-2015-11-09 03:32:32.984 LOG_INFO  Hello world! ServerID is:31 (main.cpp):33 
-2015-11-09 03:32:32.984 LOG_INFO  after:123  msg:protobuf hello world!! (main.cpp):46 
-2015-11-09 03:32:32.984 LOG_INFO  flash main thread (main.cpp):51 

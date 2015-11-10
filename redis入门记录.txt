@@ -1,5 +1,7 @@
 redis记录
 
+add contents here
+
 列表类型：
 lpush key val1 val2 ... 向列表key左边一次加入元素val1，val2
 rpush key val1 val2 ... 向列表key右边一次加入元素val1，val2

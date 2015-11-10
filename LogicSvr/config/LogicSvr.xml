@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<SvrConfig>  
+    <!--list all config.-->  
+    <!-- logic server id rule!!! from 31-45 -->
+    <localconfig>  
+	<serverid>31</serverid>
+        <ip>127.0.0.1</ip>  
+	<port>10000</port>
+	<maxclient>1</maxclient>
+	<recvThread>1</recvThread>  
+	<sendThread>1</sendThread>
+	<sessionbuflen>8192</sessionbuflen>
+	<maxpkglen>8192</maxpkglen>
+	<updateFps>5</updateFps>
+    </localconfig>
+
+    <mysql>  
+	<serverid>91</serverid>
+        <ip>127.0.0.1</ip>  
+	<port>3306</port>
+	<instNum>10</instNum>
+        <instaccNum>1</instaccNum>
+        <dbuserName>root</dbuserName>
+        <dbpasswd>root</dbpasswd>
+        <dbname>test</dbname>
+    </mysql>
+
+    <dbSvr>  
+	<serverid>16</serverid>
+        <ip>127.0.0.1</ip>  
+	<port>9999</port>
+    </dbSvr>
+
+    <logicSvr>
+	<serverid>1</serverid>
+	<ip>127.0.0.1</ip>  
+	<port>9998</port>
+    </logicSvr>
+
+    <!--more config.-->  
+</SvrConfig>

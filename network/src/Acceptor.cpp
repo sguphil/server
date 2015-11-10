@@ -1,6 +1,6 @@
 #include "../include/Acceptor.h"
 
-Acceptor::Acceptor(SESSION_TYPE type): m_eAcceptType(type)
+Acceptor::Acceptor(SESSION_TYPE type) : m_eAcceptType(type)
 {
     memset(m_listenIp, 0x00, sizeof(m_listenIp));
     m_boIsListen = false;
@@ -117,6 +117,7 @@ void* Acceptor::threadRoutine(void *args)
                     session->setSocket(clientSock);
                     session->setSvrType(this->m_svrType);
                     addSession2List(session);
+                    session->setServer(getServer());
                     printf("alloc session\n");
                 }
                 else

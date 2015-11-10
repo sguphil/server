@@ -1,5 +1,8 @@
 ﻿#include "../include/EpollServer.hpp"
 
+EpollServer::EpollServer():m_nNextconnectTick(0)
+{
+}
 void EpollServer::start()
 {
    
@@ -45,11 +48,19 @@ void EpollServer::updateSessionList()
             switch (sessionT)
             {
             case 1:
-
+                netobj = new ClientSession;
+                assert(NULL != netobj);
+                newSession->bindNetWorkObj(netobj);
                 break;
             case 2:
+                //netobj = new ClientSession;
+                //assert(NULL != netobj);
+                //newSession->bindNetWorkObj(netobj);
                 break;
             case 3:
+                //netobj = new ClientSession;
+                //assert(NULL != netobj);
+                //newSession->bindNetWorkObj(netobj);
                 break;
             case 4:
                 netobj = new LogicSession;
@@ -62,10 +73,14 @@ void EpollServer::updateSessionList()
                 newSession->bindNetWorkObj(netobj);
                 break;
             case 6:
+                netobj = new StrictClient;
+                assert(NULL != netobj);
+                newSession->bindNetWorkObj(netobj);
                 break;
             case 7:
-                break;
-            case 8:
+                netobj = new AccsvrSession;
+                assert(NULL != netobj);
+                newSession->bindNetWorkObj(netobj);
                 break;
             default:
                 break;
@@ -84,7 +99,7 @@ void EpollServer::updateSessionList()
             {
                 //send first package to register session
                 struct c_s_registersession reg;
-                reg.sessionType = int16(m_svrType);
+                reg.sessionType =uint16(m_ServerID); // send self serverType 
                 newSession->processSend((uint16)eRegister_Message, (uint16)C_S_SISSION_REGISTER, (char*)&reg, sizeof(reg));
             }
         }
@@ -106,6 +121,8 @@ void EpollServer::removeDeadSession()
                 session->clear();
                 m_activeSessionList.erase(iter++);
                 cout << "remove session===========" << session->getSessionId() << endl;
+                rmClientSessionFromMap(session->getSessionId());
+                delClusterSession(session);
                 if (session->getType() == eClient)
                 {
                     m_acceptor.sessionReUse(session);
@@ -158,5 +175,9 @@ void EpollServer::handleActiveSession()
 
 void EpollServer::update()
 {
-    
+    if (acct_time::getCurTimeMs() > m_nNextconnectTick) //reconnect 10 seconds
+    {
+        m_connector.reConnectAll();
+        m_nNextconnectTick = acct_time::getCurTimeMs() + 10000;
+    }
 }

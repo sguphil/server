@@ -13,7 +13,7 @@ int32 acct_time::getCurTimeusec()
 }
 
 
-int32 acct_time::getCurTimeMs()
+uint32 acct_time::getCurTimeMs()
 {
     //struct timeval timev;
     /*int ret = gettimeofday(&timev, NULL);

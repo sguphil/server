@@ -44,12 +44,13 @@ void DBSvr::start()
 {
     //for acceptor
     m_acceptor.setSvrType(m_svrType);
+    m_acceptor.setServer(this);
     m_acceptor.init(m_Config.m_accConfig.maxclient);
     m_acceptor.startListen(m_Config.m_accConfig.ip, m_Config.m_accConfig.port);
     m_acceptor.start();
 
-    getDBInstFactory();
-    
+    //getDBInstFactory();
+    //getBestServerSession(eDBServer);
 
     for (int i = 0; i < m_nIoThreadNum;i++)
     {
@@ -67,6 +68,7 @@ void DBSvr::update()
     {
         while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
+            EpollServer::update();
             m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
             updateSessionList(); // handle new Session
             handleActiveSession();//process session message

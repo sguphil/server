@@ -41,11 +41,12 @@ AccountSvr::~AccountSvr()
 void AccountSvr::start()
 {
     m_acceptor.setSvrType(m_svrType);
+    m_acceptor.setServer(this);
     m_acceptor.init(m_Config.m_accConfigVec[0].maxclient);
     m_acceptor.startListen(m_Config.m_accConfigVec[0].ip, m_Config.m_accConfigVec[0].port);
     m_acceptor.start();
 
-    getBestServerSession(eDBServer);
+    //getBestServerSession(eDBServer);
 
     for (int i = 0; i < m_nIoThreadNum;i++)
     {
@@ -60,12 +61,12 @@ void AccountSvr::start()
     
     for (uint32 i = 0; i < m_Config.m_dbConfigVec.size(); i++)
     {
-        m_connector.connect(m_Config.m_dbConfigVec[i].ip, m_Config.m_dbConfigVec[i].port, eDBServer);
+        m_connector.connect(m_Config.m_dbConfigVec[i].ip, m_Config.m_dbConfigVec[i].port, m_Config.m_dbConfigVec[i].serverid);
     }
     int32 size = m_Config.m_logicConfigVec.size();
     for (int32 i = 0; i < size; i++)
     {
-        m_connector.connect(m_Config.m_logicConfigVec[i].ip, m_Config.m_logicConfigVec[i].port, eGameServer);
+       m_connector.connect(m_Config.m_logicConfigVec[i].ip, m_Config.m_logicConfigVec[i].port, m_Config.m_logicConfigVec[i].serverid);
     }
     
 }
@@ -76,6 +77,7 @@ void AccountSvr::update()
     {
         while (acct_time::getCurTimeMs() >= m_nNextTick)
         {
+            EpollServer::update();
             m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
             updateSessionList(); // handle new Session
             handleActiveSession();

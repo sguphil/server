@@ -2,7 +2,7 @@
 #include "TestClient.h"
 #include "../Test/include/TestAccess.h"
 #include "../Factory/BaseFactory.h"
-#include "../Logic/Player.h"
+//#include "../Logic/Player.h"
 #include "../include/baseHeader.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"

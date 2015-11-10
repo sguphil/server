@@ -7,7 +7,7 @@
 //c->s 1-1
 struct c_s_registersession
 {
-    int16 sessionType; // 1: client 2:gateway 3:other accsvr 4:gameserver 5:dbserver 6:strictClient
+    uint16 sessionType; // 1: client 2:gateway 3:other accsvr 4:gameserver 5:dbserver 6:strictClient 7:accsvr   serverid  -->  8bit for serverid 
 };
 //s-c 1-1 return
 struct s_c_registersession
@@ -33,4 +33,6 @@ struct c_s_refecttest
 
 // c-s 1-3  proto: test_package:testMsg
 // s-c 1-3  proto: test_package:testMsg
+
+#pragma pack()
 #endif

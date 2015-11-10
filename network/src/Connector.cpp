@@ -1,4 +1,5 @@
 #include "../include/Connector.h"
+#include "../../common/SIDGenerator.hpp"
 
 static sem_t m_waitSem;
 
@@ -54,10 +55,11 @@ void Connector::reConnectAll()
     }
 }
 
-bool Connector::connect(const char *szIp, Int32 Port, SESSION_TYPE type)
+bool Connector::connect(const char *szIp, Int32 Port, uint8 serverid)
 {
     CSession *pSession = m_sessionFactory.allocate();
-    pSession->setType(type);
+    pSession->setType(SIDGenerator::getInstance()->getServerTypeBySvrID(serverid));
+    pSession->setConnectSvrID(serverid);
     if (NULL == pSession)
     {
         printf("connector can not alloc Session\n");
@@ -82,7 +84,6 @@ bool Connector::connect(const char *szIp, Int32 Port, SESSION_TYPE type)
     pSession->setSockAddr(addr);
     pSession->setIp(szIp);
     pSession->setPort(Port);
-    pSession->setType(type);
 
     addToWaitList(pSession);
     return true;
@@ -122,14 +123,13 @@ void* Connector::threadRoutine(void *args)
             assert(false);
         }
 
-        cout << "connect thread=======" << endl;
         pthread_mutex_lock(&m_mutex);
         while(!m_waitList.empty())
         {
             CSession *pSession = m_waitList.front();
             m_waitList.pop_front();
             Int32 connResult = ::connect(pSession->getSocket(), (struct sockaddr*)(&(pSession->getSockAddr())), sizeof(struct sockaddr_in));
-
+            cout << "connect thread=======ip:" << pSession->getIp() << " port:" << pSession->getPort() << endl;
             if(connResult<0)
             {
                 printf("connect error\n");

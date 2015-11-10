@@ -16,7 +16,7 @@ public:
     {
     }
     void init(void *confgStruct) {}
-    bool connect(const char *szIp, Int32 Port, SESSION_TYPE type);
+    bool connect(const char *szIp, Int32 Port, uint8 serverid);
     void *threadRoutine(void *args);
     void addToWaitList(CSession *session);
     void addToErrorList(CSession *session);

@@ -24,7 +24,7 @@ extern int32 SESSIONBUFLEN;
 #define USE_DOUBLE_QUEUE 1
 //#define REUSE_NETWORKOBJ 1
 class NetWorkObject;
-//class ClientSession;
+class EpollServer;
 
 
 class CSession
@@ -81,6 +81,11 @@ public:
         m_nPort = nPort;
     }
 
+    inline int32 getPort()
+    {
+        return m_nPort;
+    }
+
     inline void setIp(const char* szIp)
     {
         memset(m_szIp, 0x00, sizeof(m_szIp));
@@ -102,12 +107,12 @@ public:
         return m_eSessionType;
     }
 
-    inline void setServer(CServerBase *svr)
+    inline void setServer(EpollServer *svr)
     {
         m_ptrServer = svr;
     }
 
-    inline CServerBase* getServer()
+    inline EpollServer* getServer()
     {
         return m_ptrServer;
     }
@@ -265,6 +270,16 @@ public:
         return m_svrType;
     }
 
+    inline uint8 getConnectSvrID()
+    {
+        return m_connSvrID;
+    }
+
+    inline void setConnectSvrID(uint8 svrid)
+    {
+        m_connSvrID = svrid;
+    }
+
 private:
     Int32 m_socket;
     char m_szIp[32];
@@ -288,13 +303,14 @@ private:
     clwCore::CTwoQueues m_RecvTwoQueue;
     clwCore::CTwoQueues m_SendTwoQueue;
     */
-    CServerBase *m_ptrServer;
+    EpollServer *m_ptrServer;
     eSESSIONSTATUS m_eStatus;
     uint32 m_nSessionId;
     char *m_LeftPkgBuf;
     CpackageFetch m_pkgGet;
     PkgHeader m_header;
     eSERVERTYPE m_svrType;
+    uint8 m_connSvrID;
 
 };
 #endif // __SESSION_H__

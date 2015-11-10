@@ -36,20 +36,6 @@
 //#include "../database/CQuery.hpp"
 //#include "../database/CResult.hpp"
 
-enum SESSION_TYPE
-{
-    eClient = 1,
-    eGateWay = 2,
-    eOtherSvr = 3,
-    eGameServer = 4,
-    eDBServer = 5,
-    eStrictClient = 6,
-    eAccountSvr = 7,
-    eUndefineSessionType = 8,
-};
-
-typedef SESSION_TYPE eSERVERTYPE;
-
 using namespace std;
 
 typedef long long Int64;
@@ -75,6 +61,20 @@ typedef short int16;
 typedef short Int16;
 
 #define SAFE_DELETE(p) {if(NULL != (p)) { delete (p); (p) == NULL;}}
+
+enum SESSION_TYPE
+{
+    eClient = 1,  //serverid 61-75
+    eGateWay = 2, //serverid 46-60
+    eOtherSvr = 3,//serverid 76-90
+    eGameServer = 4, //serverid 31-45
+    eDBServer = 5, // serverid 16-30
+    eStrictClient = 6,//serverid >90 && <128
+    eAccountSvr = 7,  //serverid 1-15
+    eUndefineSessionType = 8,
+};
+
+typedef SESSION_TYPE eSERVERTYPE;
 
 enum eSESSIONSTATUS
 {

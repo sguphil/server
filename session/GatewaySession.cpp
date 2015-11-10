@@ -1,9 +1,9 @@
-#include "AccsvrSession.h"
-#include "../AccSvr/include/SessionHandler.hpp"
+#include "GatewaySession.h"
+#include "../GatewaySvr/include/SessionHandler.hpp"
 
 extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 
-AccsvrSession::AccsvrSession()
+GatewaySession::GatewaySession()
 {
     m_llpkgCount = 0;
     m_nStatistic = 0;
@@ -11,12 +11,12 @@ AccsvrSession::AccsvrSession()
     //ctor
 }
 
-AccsvrSession::~AccsvrSession()
+GatewaySession::~GatewaySession()
 {
     //dtor
 }
 #if 0
-int32 AccsvrSession::testRefectSvr(char *msgbuf, int32 bufsize)
+int32 GatewaySession::testRefectSvr(char *msgbuf, int32 bufsize)
 {
     MsgHeader *msgHead = (MsgHeader *)msgbuf;
     struct c_s_refecttest *pmsg = (struct c_s_refecttest *)(msgbuf+sizeof(*msgHead));
@@ -40,7 +40,7 @@ int32 AccsvrSession::testRefectSvr(char *msgbuf, int32 bufsize)
 }
 #endif 
 
-int32 AccsvrSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsize)
+int32 GatewaySession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsize)
 {
     struct c_s_refecttest *pmsg = (struct c_s_refecttest *)(msgbuf);
     int32 pkglen = bufsize;
@@ -50,16 +50,15 @@ int32 AccsvrSession::testRefectSvr(MsgHeader *msghead, char *msgbuf, int32 bufsi
     return processSend(msghead->sysId, msghead->msgType, (char *)msgbuf, pkglen);
 }
 
-int32 AccsvrSession::testProtobuf(MsgHeader *msghead, char *msgbuf, int32 bufsize)
+int32 GatewaySession::testProtobuf(MsgHeader *msghead, char *msgbuf, int32 bufsize)
 {
     test_package::testMsg recvmsg;
     recvmsg.ParseFromArray(msgbuf, bufsize);
-    //printf("protocol==sendtime:%d====server recv:%s\n", recvmsg.sendtime(), recvmsg.msg().c_str());
     return processSend(msghead->sysId, msghead->msgType, msgbuf, bufsize);
 }
 
 #if 0
-int32 AccsvrSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
+int32 GatewaySession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
 {
     MsgHeader *msghead = (MsgHeader *)msgbuf;
     int16 sysid = msghead->sysId;
@@ -73,15 +72,15 @@ int32 AccsvrSession::onRecv(PkgHeader *header, char *msgbuf, int32 buffsize)
 }
 #endif
 
-int32 AccsvrSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int32 buffsize)
+int32 GatewaySession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int32 buffsize)
 {
-    uint16 sysid = msghead->sysId;
-    uint16 msgtype = msghead->msgType;
-    if (sysid == (uint16)eServerMessage_Client && msgtype == (uint16)CLI_ACCS_TESTBINPKG)
+    int16 sysid = msghead->sysId;
+    int16 msgtype = msghead->msgType;
+    if (sysid == 1 and msgtype == 2)
     {
         testRefectSvr(msghead, msgbuf, buffsize);
     }
-    else if (sysid == (uint16)eServerMessage_Client && msgtype == (uint16)CLI_ACCS_TESTPROBUFPKG)
+    else if (sysid == 1 and msgtype ==3 )
     {
         testProtobuf(msghead, msgbuf, buffsize);
     }
@@ -89,11 +88,6 @@ int32 AccsvrSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     {
         
         int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
-        if (NULL == g_HandlerMgr)
-        {
-            printf("not found g_HandlerMgr sysid:%d and msgtype:%d\n", sysid, msgtype);
-            return 0;
-        }
         accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);
         if (NULL == funcStruct)
         {
@@ -108,7 +102,7 @@ int32 AccsvrSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     return 0;
 }
 
-int32 AccsvrSession::processSend(uint16 sysid, uint16 msgid, char *msg, int32 msgsize)
+int32 GatewaySession::processSend(uint16 sysid, uint16 msgid, char *msg, int32 msgsize)
 {
     #if 0
     MsgHeader msgHead = {sysid, msgid};

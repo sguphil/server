@@ -7,7 +7,7 @@ TestClient::TestClient()
     m_nCycleTick = acct_time::getCurTimeMs();
     m_nNextTick = m_nCycleTick + m_nInterval;
     m_nSendTimes = 0;
-    m_ServerID = 1;
+    m_ServerID = 61;
     m_nIoThreadNum = 1;
     m_svrType = eClient;
     m_epollfd = epoll_create(10);
@@ -33,7 +33,7 @@ void TestClient::start()
     m_connector.start();
     for (int i = 0; i < m_ConnCount; i++)
     {
-        m_connector.connect("127.0.0.1", 9997, eAccountSvr);
+        m_connector.connect("127.0.0.1", 9997, 1); //account serverid
         acct_time::sleepMs(2);
     }
 
@@ -148,14 +148,15 @@ void TestClient::handleActiveSession()
                 MsgHeader msghead;
                 int32 sendlen = 0;
                 PkgHeader header;
-                struct c_s_registersession reg;
+                //struct c_s_registersession reg;
                 struct c_s_refecttest testStr;
                 
                 if (session->getStatus() != registered)
                 {
+                    /*
                     msghead.sysId = (uint16)eRegister_Message;
                     msghead.msgType = (uint16)C_S_SISSION_REGISTER;
-                    reg.sessionType = 1;
+                    reg.sessionType = m_ServerID;
                     sendlen = sizeof(msghead) + sizeof(reg);
                     //header.length = sendlen;
                     int32 totallen = sendlen +sizeof(header);
@@ -163,7 +164,9 @@ void TestClient::handleActiveSession()
                     //encodepkg(buf, &header, &msghead, (char *)&reg, (int16)sizeof(reg));
                     //session->send(buf, totallen);
                     session->processSend((uint16)eRegister_Message, (uint16)C_S_SISSION_REGISTER, (char *)&reg, (int16)sizeof(reg));
+                    
                     cout << "ready to send msg:" << totallen << endl;
+                    */
                     session->setStatus(registered);
                 }
                 else if (m_nSendTimes++ == 0) //BIN DATA protocol test
@@ -213,7 +216,7 @@ void TestClient::handleActiveSession()
                     tmsg.SerializeToArray(protomsg, bytelen);
 
                     header.length = msglen;
-                    char buf[sendlen];
+                    //char buf[sendlen];
                     //encodepkg(buf, &header, &msghead, (char *)protomsg, (int16)bytelen);
                     //if (session->send(buf, sendlen) < 0)
                     if (session->processSend((uint16)eServerMessage_Client, (uint16)CLI_ACCS_TESTPROBUFPKG, (char *)protomsg, (int16)bytelen) < 0)
@@ -242,7 +245,7 @@ void TestClient::handleActiveSession()
                     tmsg.SerializeToArray(protomsg, bytelen);
 
                     header.length = msglen;
-                    char buf[sendlen];
+                    //char buf[sendlen];
                     //encodepkg(buf, &header, &msghead, (char *)protomsg, (int16)bytelen);
                     //if (session->send(buf, sendlen) < 0)
                     if (session->processSend((uint16)eServerMessage_Client, (uint16)CLI_ACCS_CHECKLOGINUSER, (char *)protomsg, (int16)bytelen) < 0)

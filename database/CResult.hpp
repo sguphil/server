@@ -2,7 +2,6 @@
 #define __CRESULT_H__
 #include "../include/baseHeader.h"
 #include "mysql/mysql.h"
-#pragma pack(1)
 
 class CResult
 {

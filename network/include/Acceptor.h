@@ -8,6 +8,8 @@
 #include "../../Thread/Mutex.h"
 #include "../../include/CServerBase.hpp"
 
+class EpollServer;
+
 class Acceptor : public CBaseThread
 {
     public:
@@ -76,6 +78,16 @@ class Acceptor : public CBaseThread
 
         void setSocketNoBlock(int32 socket);
 
+        inline void setServer(EpollServer *svr)
+        {
+            m_ptrServer = svr;
+        }
+
+        inline EpollServer* getServer()
+        {
+            return m_ptrServer;
+        }
+
 private:
         Int32 m_nMaxAcc;
         char m_listenIp[32];
@@ -93,6 +105,7 @@ private:
         CommonList<CSession> *m_pWriteList; 
         CBaseFactory<CSession> m_SessionFactory;
         eSERVERTYPE m_svrType;
+        EpollServer *m_ptrServer;
 };
 
 #endif // __ACCEPTOR_H

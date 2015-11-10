@@ -15,7 +15,7 @@
     </localconfig>
 
     <mysql>  
-	<serverid>1</serverid>
+	<serverid>91</serverid>
         <ip>127.0.0.1</ip>  
 	<port>3306</port>
 	<instNum>10</instNum>

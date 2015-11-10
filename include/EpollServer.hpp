@@ -18,13 +18,14 @@
 class EpollServer
 {
 public:
+    EpollServer();
     virtual ~EpollServer() { }
     virtual void start();
     virtual void updateSessionList();
     virtual void removeDeadSession();
     virtual void handleActiveSession();
     virtual void update();
-    inline int32 getServerID()
+    inline uint8 getServerID()
     {
         return m_ServerID;
     }
@@ -89,7 +90,7 @@ public:
         m_nSessionSwapTick = tick;
     }
 
-    inline bool checkRecord(CSession *session)
+    bool checkRecord(CSession *session)
     {
         
         typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
@@ -104,15 +105,24 @@ public:
         return false;
     }
 
-    inline void delClusterSession(CSession *session)
+    void recordServerSession(CSession *newSession)
     {
-        typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
-        for (mapiter it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); )
+         if (!checkRecord(newSession))
+         {
+             m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(newSession->getType(), newSession));
+         }
+    }
+
+    void delClusterSession(CSession *session)
+    {
+        //typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
+        std::multimap<SESSION_TYPE, CSession *>::iterator it;
+        for (it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); )
         {
             if (it->second->getSessionId() == session->getSessionId())
             {
                 m_ServerSessionMap.erase(it++);
-                //put in connector errrolist, wait for reconnect...
+                //put in connector errrolist, wait for reconnect... !!!!todo.....verify not connector session
                 m_connector.addToErrorList(session);
                 break;
             }
@@ -125,11 +135,12 @@ public:
 
     CSession* getBestServerSession(SESSION_TYPE type)
     {
-        typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
+        //typedef std::multimap<SESSION_TYPE, CSession *>::iterator mapiter;
+        std::multimap<SESSION_TYPE, CSession *>::iterator it;
         int32 size = m_ServerSessionMap.size();
         if (size > 0)
         {
-            for (mapiter it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); it++)
+            for (it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); it++)
             {
                 if (it->first == type)
                 {
@@ -141,24 +152,59 @@ public:
         return NULL;
     }
 
+    void recordClientSession(CSession *session)
+    {
+        m_ClientSessionMap.insert(std::make_pair<uint32, CSession *>(session->getSessionId(), session));
+    }
+
+    CSession* getClientSession(uint32 sessionid)
+    {
+        CSession *session = NULL;
+        std::map<uint32, CSession *>::iterator it = m_ClientSessionMap.find(sessionid);
+        if (it != m_ClientSessionMap.end())
+        {
+            session = it->second;
+        }
+        return session;
+    }
+
+    void rmClientSessionFromMap(uint32 sessionid)
+    {
+        std::map<uint32, CSession *>::iterator it = m_ClientSessionMap.begin();
+        while (it != m_ClientSessionMap.end())
+        {
+            if (it->first == sessionid)
+            {
+                m_ClientSessionMap.erase(it++);
+                break;
+            }
+            else
+            {
+                it++;
+            }
+        }
+    }
+
 protected:
     Acceptor m_acceptor;
     Connector m_connector;
     CommonList<CSession> m_waitSessionList;
     CommonList<CSession> m_activeSessionList;
-    int m_ServerID;
+    uint8 m_ServerID;
     int32 m_epollfd; //for epoll in
     eSERVERTYPE m_svrType;
-    int32 m_nCycleTick;
-    int32 m_nNextTick;
-    int32 m_nInterval;
+    uint32 m_nCycleTick;
+    uint32 m_nNextTick;
+    uint32 m_nInterval;
     int32 m_epollSendfd;
     int32 m_nIoThreadNum;
     int32 m_nHandleCount;
     int32 m_nStatisticTick;
     int32 m_nSessionSwapTick;
+    uint32 m_nNextconnectTick;
     //CAccSvrConfig m_Config;
     std::multimap<SESSION_TYPE, CSession *> m_ServerSessionMap; //need to update session in loop
+    std::map<uint32, CSession *> m_ClientSessionMap; //sessionid to CSession_ptr
 };
 
 #endif

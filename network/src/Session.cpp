@@ -4,12 +4,14 @@
 #include "../../session/AccsvrSession.h"
 #include "../../session/DBSession.h"
 #include "../../session/LogicSession.h"
+#include "../../session/GatewaySession.h"
 #include "../../session/StrictClient.h"
+#include "../../include/EpollServer.hpp"
 
 #define REUSE_NETWORKOBJ 1
 extern CBaseFactory<ClientSession> g_ClientNetWorkObjectFactory;
 
-CSession::CSession():m_pBindNetWorkObj(NULL)
+CSession::CSession() : m_pBindNetWorkObj(NULL), m_connSvrID(0)
 {
     m_socket = -1;
     m_boActive = false;
@@ -270,70 +272,83 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
     //struct c_s_registersession *msg = (struct c_s_registersession*)(msgbuf);
     struct c_s_registersession msgstruct;
     memcpy(&msgstruct, msgbuf, msgsize);
-    int16 sessionType = msgstruct.sessionType;
-    NetWorkObject *netobj = NULL;
-    //struct c_s_registersession ret;
-    //MsgHeader msghead = *msgHead;
-    //int32 msglen = 0;
-    //PkgHeader header;
-    //int32 totalsize = 0;
-    //char *buf = NULL;
-    switch (sessionType)
+    uint8  fromServerID = msgstruct.sessionType;
+    
+    if (fromServerID < 128 && fromServerID > 0)
     {
-    case 1: // client
+        uint8  sessionType = SIDGenerator::getInstance()->getServerTypeBySvrID(msgstruct.sessionType);
+        NetWorkObject *netobj = NULL;
+        switch (sessionType)
         {
-            netobj = g_ClientNetWorkObjectFactory.allocate();
-            //netobj = new ClientSession;
-            assert(netobj != NULL);
-            bindNetWorkObj(netobj);
-            setType((SESSION_TYPE)1);
-            setStatus(registered);
-            //cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
-            break;
-        }
-    case 2: // gateway
-        setType((SESSION_TYPE)2);
-        break;
-    case 3: // other account svr
-        setType((SESSION_TYPE)3);
-        break;
-    case 4: // gameserver/logicServer
-        netobj = new LogicSession;
-        assert(NULL != netobj);
-        bindNetWorkObj(netobj);
-        setType((SESSION_TYPE)4);
-        setStatus(registered);
-        cout << "got LogicSvr msg" << endl;
-        break;
-    case 5: // dbserver
-        netobj = new DBSession;
-        assert(NULL != netobj);
-        bindNetWorkObj(netobj);
-        setType((SESSION_TYPE)5);
-        setStatus(registered);
-        cout << "strictclient got msg" << endl;
-        break;
-    case 6: // strict client for test
-        {
-            netobj = new StrictClient;
+        case 1: // client
+            {
+                netobj = g_ClientNetWorkObjectFactory.allocate();
+                //netobj = new ClientSession;
+                assert(netobj != NULL);
+                bindNetWorkObj(netobj);
+                setType((SESSION_TYPE)1);
+                setStatus(registered);
+                getServer()->recordClientSession(this);
+                //cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
+                break;
+            }
+        case 2: // gateway
+            netobj = new GatewaySession;
             assert(NULL != netobj);
             bindNetWorkObj(netobj);
-            cout << "got strictclient msg" << endl;
-            setType((SESSION_TYPE)6);
             setStatus(registered);
+            setType((SESSION_TYPE)2);
+            getServer()->recordServerSession(this);
+            cout << "got GatewaySvr msg" << endl;
+            break;
+        case 3: // other account svr
+            setType((SESSION_TYPE)3);
+            getServer()->recordServerSession(this);
+            break;
+        case 4: // gameserver/logicServer
+            netobj = new LogicSession;
+            assert(NULL != netobj);
+            bindNetWorkObj(netobj);
+            setType((SESSION_TYPE)4);
+            setStatus(registered);
+            getServer()->recordServerSession(this);
+            cout << "got LogicSvr msg" << endl;
+            break;
+        case 5: // dbserver
+            netobj = new DBSession;
+            assert(NULL != netobj);
+            bindNetWorkObj(netobj);
+            setType((SESSION_TYPE)5);
+            setStatus(registered);
+            getServer()->recordServerSession(this);
+            cout << "strictclient got msg" << endl;
+            break;
+        case 6: // strict client for test
+            {
+                netobj = new StrictClient;
+                assert(NULL != netobj);
+                bindNetWorkObj(netobj);
+                cout << "got strictclient msg" << endl;
+                setType((SESSION_TYPE)6);
+                setStatus(registered);
+                getServer()->recordClientSession(this);
+                break;
+            }
+
+        case 7: //Account server
+            netobj = new DBSession;
+            assert(NULL != netobj);
+            bindNetWorkObj(netobj);
+            setType((SESSION_TYPE)7);
+            setStatus(registered);
+            getServer()->recordServerSession(this);
+            cout << "got accsvr msg" << endl;
+            break;
+        default:
             break;
         }
 
-    case 7: //Account server
-        netobj = new DBSession;
-        assert(NULL != netobj);
-        bindNetWorkObj(netobj);
-        setType((SESSION_TYPE)7);
-        setStatus(registered);
-        cout << "got accsvr msg" << endl;
-        break;
-    default:
-        break;
+        setConnectSvrID(fromServerID);
     }
 }
 

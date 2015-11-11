@@ -1,4 +1,5 @@
 #include "../include/CLogicSHandlerFunc.hpp"
+#include "../include/MessageDef.hpp"
 
 int32 CLogicSHandlerFunc::testfunc(CSession *session, char *pMsg, int32 msglen)
 {

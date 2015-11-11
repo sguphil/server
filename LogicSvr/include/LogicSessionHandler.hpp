@@ -2,6 +2,7 @@
 #define __LOGICSESSIONHANDLER_H__
 #include "../../include/PackageHandler.hpp"
 #include "CLogicSHandlerFunc.hpp"
+#include "../include/MessageDef.hpp"
 
 class CLogicHandlerMgr : public CPackageMgr<accFuncStruct>
 {

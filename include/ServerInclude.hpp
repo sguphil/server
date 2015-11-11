@@ -2,8 +2,6 @@
 #define __SERVERINCLUDE_H__
 #include "../session/ClientSession.h"
 #include "../Factory/BaseFactory.h"
-#include "../AccSvr/include/SessionHandler.hpp"
-#include "../DBSvr/include/DBSessionHandler.hpp"
 #include "../include/packHeader.hpp"
 
 //Define the global server utilities

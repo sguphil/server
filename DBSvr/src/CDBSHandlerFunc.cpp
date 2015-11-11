@@ -1,4 +1,5 @@
 #include "../include/CDBSHandlerFunc.hpp"
+#include "../include/MessageDef.hpp"
 
 int32 CDBSHandlerFunc::testfunc(CSession *session, char *pMsg, int32 msglen)
 {

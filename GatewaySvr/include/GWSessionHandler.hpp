@@ -1,7 +1,8 @@
-#ifndef __SESSIONHANDLER_H__
-#define __SESSIONHANDLER_H__
+#ifndef __GWSESSIONHANDLER_H__
+#define __GWSESSIONHANDLER_H__
 #include "../../include/PackageHandler.hpp"
 #include "./CGWSHandlerFunc.hpp"
+#include "../include/MessageDef.hpp"
 
 class CGwHandlerMgr : public CPackageMgr<accFuncStruct>
 {

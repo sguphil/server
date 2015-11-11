@@ -282,14 +282,14 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
         {
         case 1: // client
             {
-                netobj = g_ClientNetWorkObjectFactory.allocate();
-                //netobj = new ClientSession;
+                //netobj = g_ClientNetWorkObjectFactory.allocate();
+                netobj = new ClientSession;
                 assert(netobj != NULL);
                 bindNetWorkObj(netobj);
                 setType((SESSION_TYPE)1);
                 setStatus(registered);
                 getServer()->recordClientSession(this);
-                //cout << "sessionType:client send reg sessiontype:" << ret.sessionType << endl;
+                cout << "got Client msg" << endl;
                 break;
             }
         case 2: // gateway
@@ -304,6 +304,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
         case 3: // other account svr
             setType((SESSION_TYPE)3);
             getServer()->recordServerSession(this);
+            cout << "got other server msg" << endl;
             break;
         case 4: // gameserver/logicServer
             netobj = new LogicSession;
@@ -321,7 +322,7 @@ void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize)
             setType((SESSION_TYPE)5);
             setStatus(registered);
             getServer()->recordServerSession(this);
-            cout << "strictclient got msg" << endl;
+            cout << "got dbserver msg" << endl;
             break;
         case 6: // strict client for test
             {

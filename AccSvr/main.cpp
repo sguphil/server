@@ -8,7 +8,7 @@
 #include "../network/include/Connector.h"
 #include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
-#include "./include/SessionHandler.hpp"
+#include "./include/ACCSessionHandler.hpp"
 #include "../include/ServerInclude.hpp"
 #include "../include/log4z.h"
 
@@ -32,9 +32,6 @@ int main()
     LOGI("Hello world! ServerID is:" << accountSvr->getServerID());
     g_ClientNetWorkObjectFactory.init(10000, 50);
     
-    //TestAccess acsObj;
-    //printItem(&acsObj);
-    //cout << acsObj << endl;
     test_package::testMsg tmsg;
     tmsg.set_sendtime(123);
     tmsg.set_msg("protobuf hello world!!");
@@ -54,15 +51,7 @@ int main()
     //playerFactory.init(10, 10);
     //CPlayer *player = playerFactory.allocate();
     //cout << "actor type is:" << player->getActorType() << endl;
-
-    //Acceptor acc(eClient);
-    //acc.init();
-    //acc.startListen("127.0.0.1", 9997);
-    //acc.start();
     accountSvr->start(); //listen start
-    //Connector conn;
-    //conn.start();
-    
     accountSvr->update();
 
     while (false)

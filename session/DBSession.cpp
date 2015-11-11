@@ -1,5 +1,6 @@
 #include "DBSession.h"
-#include "../DBSvr/include/DBSessionHandler.hpp"
+//#include "../DBSvr/include/DBSessionHandler.hpp"
+#include "../include/PackageHandler.hpp"
 
 extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 
@@ -76,6 +77,7 @@ int32 DBSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int
 {
     uint16 sysid = msghead->sysId;
     uint16 msgtype = msghead->msgType;
+    /*
     if (sysid == (uint16)eServerMessage_Client && msgtype == (uint16)CLI_ACCS_TESTBINPKG)
     {
         testRefectSvr(msghead, msgbuf, buffsize);
@@ -86,29 +88,19 @@ int32 DBSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, int
     }
     else
     {
-        int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
-        accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);
-        if (NULL == funcStruct)
-        {
-            printf("find no func by sysid:%d and msgtype:%d\n", sysid, msgtype);
-        }
-        else
-        {
-         #if 1
-
-            if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
-            {
-                m_nNextTick = acct_time::getCurTimeMs() + 1000;
-                //cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
-                m_llpkgCount = 0;
-            }
-            
-            m_llpkgCount++;
-         #endif
-            funcStruct->handler(this->getSession(), msgbuf, buffsize);
-        }
-        
+    */
+    int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
+    accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);
+    if (NULL == funcStruct)
+    {
+        printf("find no func by sysid:%d and msgtype:%d\n", sysid, msgtype);
     }
+    else
+    {
+        funcStruct->handler(this->getSession(), msgbuf, buffsize);
+    }
+        
+    //}
     return 0;
 }
 

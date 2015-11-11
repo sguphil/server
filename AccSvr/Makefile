@@ -19,7 +19,7 @@ LIB_PATH = /usr/lib
 PROBUFPATH = /usr/local/lib
 GEN_LIBPATH = /usr/lib64/mysql
 LDFLAGS = -L$(LIB_PATH) -L$(GEN_LIBPATH) -L$(PROBUFPATH)
-LDLIBS = -ldl -lmysqlclient -lpthread -lprotobuf
+LDLIBS = -ldl -lmysqlclient -lpthread -lprotobuf -lrt
 
 #5.生成动态库选项
 

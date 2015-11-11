@@ -107,7 +107,7 @@ public:
         }
         else if (91 <= serverid && serverid <= 127)
         {
-            type = eOtherSvr;
+            type = eStrictClient;
         }
 
         return type;

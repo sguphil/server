@@ -46,8 +46,6 @@ void AccountSvr::start()
     m_acceptor.startListen(m_Config.m_accConfigVec[0].ip, m_Config.m_accConfigVec[0].port);
     m_acceptor.start();
 
-    //getBestServerSession(eDBServer);
-
     for (int i = 0; i < m_nIoThreadNum;i++)
     {
         CIoThread *newThread = new CIoThread(this);
@@ -76,7 +74,7 @@ void AccountSvr::update()
     while (true)
     {
         EpollServer::update();
-        while (acct_time::getCurTimeMs() >= m_nNextTick)
+        if (acct_time::getCurTimeMs() >= m_nNextTick)
         {
             m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;
             updateSessionList(); // handle new Session

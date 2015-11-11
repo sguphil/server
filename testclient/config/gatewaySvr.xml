@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<SvrConfig>  
+    <!--list all config.-->  
+    <!-- gateway server id rule!!! from 46-60 -->
+    <localconfig>  
+	<serverid>46</serverid>
+        <ip>127.0.0.1</ip>  
+	<port>10001</port>
+	<maxclient>3000</maxclient>
+	<recvThread>4</recvThread>  
+	<sendThread>1</sendThread>
+	<sessionbuflen>102400</sessionbuflen>
+	<maxpkglen>8192</maxpkglen>
+	<updateFps>5</updateFps>
+    </localconfig>
+
+    <mysql>  
+	<serverid>91</serverid>
+        <ip>127.0.0.1</ip>  
+	<port>3306</port>
+	<instNum>10</instNum>
+    </mysql>
+
+    <dbSvr>  
+	<serverid>16</serverid>
+        <ip>127.0.0.1</ip>  
+	<port>9999</port>
+    </dbSvr>
+
+    <logicSvr>
+	<serverid>31</serverid>
+	<ip>127.0.0.1</ip>  
+	<port>10000</port>
+    </logicSvr>
+
+    <!--more config.-->  
+</SvrConfig>

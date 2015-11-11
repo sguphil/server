@@ -1,5 +1,4 @@
 #include "ClientSession.h"
-#include "../AccSvr/include/SessionHandler.hpp"
 
 extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 
@@ -76,6 +75,7 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
 {
     int16 sysid = msghead->sysId;
     int16 msgtype = msghead->msgType;
+    /*
     if (sysid == 1 and msgtype == 2)
     {
         testRefectSvr(msghead, msgbuf, buffsize);
@@ -86,11 +86,13 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     }
     else
     {
+    */
         #if 1
-        if ((acct_time::getCurTimeMs() - m_nNextTick)>1000) //1s
+        int32 delay = acct_time::getCurTimeMs() - m_nNextTick;
+        if (delay > 0) //1s
         {
+            cout << "curms:" << acct_time::getCurTimeMs() << "  nextick:" << m_nNextTick << " delay:" << delay << " socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
             m_nNextTick = acct_time::getCurTimeMs() + 1000;
-            cout << "=================socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
             m_llpkgCount = 0;
         }
         
@@ -108,7 +110,7 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
             funcStruct->handler(this->getSession(), msgbuf, buffsize);
         }
         
-    }
+    //}
     return 0;
 }
 

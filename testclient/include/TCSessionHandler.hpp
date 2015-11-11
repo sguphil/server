@@ -1,23 +1,25 @@
-#ifndef __DBSESSIONHANDLER_H__
-#define __DBSESSIONHANDLER_H__
-#include "MessageDef.hpp"
-#include "CDBSHandlerFunc.hpp"
+#ifndef __TCSESSIONHANDLER_H__
+#define __TCSESSIONHANDLER_H__
+#include "../../include/PackageHandler.hpp"
+#include "./CTCHandlerFunc.hpp"
+#include "../include/MessageDef.hpp"
 
-class CDBHandlerMgr : public CPackageMgr<accFuncStruct>
+class CTcHandlerMgr : public CPackageMgr<accFuncStruct>
 {
 
 public:
-    //register all functions in this interface if needed
     void addAllHandle()
     {
-        registerFunc(eServerMessage_AccSvr, ACCS_DBS_CHECKLOGINUSER, &CDBSHandlerFunc::checkuser);
-        registerFunc(eServerMessage_AccSvr, ACCS_DBS_TEST, &CDBSHandlerFunc::testfunc);
+        registerFunc(eServerMessage_Client, CLI_ACCS_TESTBINPKG, &CTCHandlerFunc::testfunc);
+        registerFunc(eServerMessage_Client, CLI_ACCS_TESTPROBUFPKG, &CTCHandlerFunc::testfunc);
+        registerFunc(eServerMessage_Client, CLI_ACCS_CHECKLOGINUSER, &CTCHandlerFunc::checkuser);
+        registerFunc(eServerMessage_DBServer, DBS_ACCS_CHECKLOGINUSER_RET, &CTCHandlerFunc::dbcheckuserret);
 
     }
-
 public:
-    ~CDBHandlerMgr()
+    ~CTcHandlerMgr()
     {
+        
     }
 
     accFuncStruct* findFuncStruct(int32 key)

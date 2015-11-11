@@ -33,8 +33,8 @@ class ClientSession : public NetWorkObject
     protected:
     private:
         uint64 m_llpkgCount;
-        int32 m_nStatistic;
-        int32 m_nNextTick;
+        uint32 m_nStatistic;
+        uint32 m_nNextTick;
 };
 
 #endif // CLIENTSESSION_H

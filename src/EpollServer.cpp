@@ -12,19 +12,22 @@ void EpollServer::updateSessionList()
 {
     // 1.process accept session
     CommonList<CSession>* readList = m_acceptor.getReadSessionList();
-    CommonList<CSession>::iterator it = readList->begin();
-    for (; it != readList->end(); it++)
+    if (!readList->empty())
     {
-        CSession *newSession = *it;
-        newSession->setStatus(active);
-        newSession->setSessionId(SIDGenerator::getInstance()->generatorSid());
-        m_activeSessionList.push_back(newSession);
-        //add to epoll event loop
-        addFdToRecvEpoll(newSession); //pollin and pollout
-        //addFdToSendEpoll(newSession);
-    }
+        CommonList<CSession>::iterator it = readList->begin();
+        for (; it != readList->end(); it++)
+        {
+            CSession *newSession = *it;
+            newSession->setStatus(active);
+            newSession->setSessionId(SIDGenerator::getInstance()->generatorSid());
+            m_activeSessionList.push_back(newSession);
+            //add to epoll event loop
+            addFdToRecvEpoll(newSession); //pollin and pollout
+            //addFdToSendEpoll(newSession);
+        }
 
-    readList->clear();
+        readList->clear();
+    }
 
     if (m_acceptor.getWriteSessionList()->size() > 0 )
     {
@@ -33,7 +36,7 @@ void EpollServer::updateSessionList()
     
     // 2.process connect session
     CommonList<CSession> *connSessionList =  m_connector.getConnList(); //all connector's session  connect to other server, we use mutilMap to record them
-    if (connSessionList->size() > 0)
+    if (!connSessionList->empty() )
     {
         std::vector<CSession *> connectSessions;
         m_connector.getConnList(connectSessions);
@@ -100,7 +103,7 @@ void EpollServer::updateSessionList()
                 //send first package to register session
                 struct c_s_registersession reg;
                 reg.sessionType =uint16(m_ServerID); // send self serverType 
-                newSession->processSend((uint16)eRegister_Message, (uint16)C_S_SISSION_REGISTER, (char*)&reg, sizeof(reg));
+                newSession->processSend((uint16)SYS_SESSION_REGISTER, (uint16)C_S_SISSION_REGISTER, (char*)&reg, sizeof(reg));
             }
         }
     }
@@ -108,10 +111,10 @@ void EpollServer::updateSessionList()
 
 void EpollServer::removeDeadSession()
 {
-    if (m_activeSessionList.size() > 0)
+    if (!m_rmSessionList.empty())
     {
         CommonList<CSession>::iterator iter;
-        for (iter = m_activeSessionList.begin(); iter != m_activeSessionList.end();)
+        for (iter = m_rmSessionList.begin(); iter != m_rmSessionList.end();)
         {
             CSession *session = *iter;
             if (session->getStatus() == waitdel)
@@ -119,7 +122,7 @@ void EpollServer::removeDeadSession()
                 session->delEpollEvent(m_epollfd);
                 session->delEpollEvent(m_epollSendfd);
                 session->clear();
-                m_activeSessionList.erase(iter++);
+                m_rmSessionList.erase(iter++);
                 cout << "remove session===========" << session->getSessionId() << endl;
                 rmClientSessionFromMap(session->getSessionId());
                 delClusterSession(session);
@@ -145,19 +148,20 @@ void EpollServer::removeDeadSession()
 
 void EpollServer::handleActiveSession()
 {
-    if (m_activeSessionList.size() > 0)
+    if (!m_activeSessionList.empty())
     {
         CommonList<CSession>::iterator iter = m_activeSessionList.begin();
-        for (; iter != m_activeSessionList.end(); iter++)
+        for (; iter != m_activeSessionList.end();)
         {
             CSession *session = *iter;
             session->processPacket();
-            if ((acct_time::getCurTimeMs() - m_nStatisticTick)>1000) //1s
+            if (session->getStatus() == waitdel)
             {
-                m_nStatisticTick = acct_time::getCurTimeMs() + 1000;
-                m_nHandleCount = 0;
+                m_rmSessionList.push_back(session);
+                m_activeSessionList.erase(iter++);
+                continue;
             }
-            m_nHandleCount++;
+
             SESSION_TYPE type = session->getType();
             if (type != eUndefineSessionType)
             {
@@ -169,6 +173,8 @@ void EpollServer::handleActiveSession()
                     }
                 }
             }
+
+            iter++;
         }
     }
 }

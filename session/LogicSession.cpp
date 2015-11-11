@@ -1,5 +1,6 @@
 #include "LogicSession.h"
-#include "../AccSvr/include/SessionHandler.hpp"
+//#include "../AccSvr/include/SessionHandler.hpp"
+#include "../include/PackageHandler.hpp"
 
 extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 

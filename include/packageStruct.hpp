@@ -4,11 +4,13 @@
 
 #pragma pack(1)
 
-//c->s 1-1
+//c->s 1-1  --> SYS_SESSION_REGISTER  C_S_SISSION_REGISTER
 struct c_s_registersession
 {
     uint16 sessionType; // 1: client 2:gateway 3:other accsvr 4:gameserver 5:dbserver 6:strictClient 7:accsvr   serverid  -->  8bit for serverid 
 };
+
+//========test package below==========
 //s-c 1-1 return
 struct s_c_registersession
 {

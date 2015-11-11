@@ -1,6 +1,7 @@
-#ifndef __SESSIONHANDLER_H__
-#define __SESSIONHANDLER_H__
+#ifndef __ACCSESSIONHANDLER_H__
+#define __ACCSESSIONHANDLER_H__
 #include "../../include/PackageHandler.hpp"
+#include "MessageDef.hpp"
 #include "./CACCSHandlerFunc.hpp"
 
 class CAccHandlerMgr : public CPackageMgr<accFuncStruct>

@@ -193,6 +193,7 @@ protected:
     Connector m_connector;
     CommonList<CSession> m_waitSessionList;
     CommonList<CSession> m_activeSessionList;
+    CommonList<CSession> m_rmSessionList; //waitdel sessions store in this list
     uint8 m_ServerID;
     int32 m_epollfd; //for epoll in
     eSERVERTYPE m_svrType;

@@ -1,5 +1,7 @@
 #include "StrictClient.h"
 
+extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
+
 StrictClient::StrictClient():m_llpkgCount(0)
 {
     m_nNextTick = acct_time::getCurTimeMs();
@@ -75,13 +77,15 @@ int32 StrictClient::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf, 
 {
     int16 sysid = msghead->sysId;
     int16 msgtype = msghead->msgType;
-    if (sysid == 1 and msgtype == 2)
+    int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
+    accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);
+    if (NULL == funcStruct)
     {
-        testRefectSvr(msghead, msgbuf, buffsize);
+        printf("find no func by sysid:%d and msgtype:%d\n", sysid, msgtype);
     }
-    else if (sysid == 1 and msgtype == 3)
+    else
     {
-        testProtobuf(msghead, msgbuf, buffsize);
+        funcStruct->handler(this->getSession(), msgbuf, buffsize);
     }
     return 0;
 }

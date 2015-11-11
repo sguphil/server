@@ -1,5 +1,6 @@
 #include "AccsvrSession.h"
-#include "../AccSvr/include/SessionHandler.hpp"
+//#include "../AccSvr/include/SessionHandler.hpp"
+#include "../include/PackageHandler.hpp"
 
 extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 
@@ -77,6 +78,7 @@ int32 AccsvrSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
 {
     uint16 sysid = msghead->sysId;
     uint16 msgtype = msghead->msgType;
+    /*
     if (sysid == (uint16)eServerMessage_Client && msgtype == (uint16)CLI_ACCS_TESTBINPKG)
     {
         testRefectSvr(msghead, msgbuf, buffsize);
@@ -87,24 +89,24 @@ int32 AccsvrSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     }
     else
     {
-        
-        int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
-        if (NULL == g_HandlerMgr)
-        {
-            printf("not found g_HandlerMgr sysid:%d and msgtype:%d\n", sysid, msgtype);
-            return 0;
-        }
-        accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);
-        if (NULL == funcStruct)
-        {
-            printf("find no func by sysid:%d and msgtype:%d\n", sysid, msgtype);
-        }
-        else
-        {
-            funcStruct->handler(this->getSession(), msgbuf, buffsize);
-        }
-        
+    */  
+    int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);
+    if (NULL == g_HandlerMgr)
+    {
+        printf("not found g_HandlerMgr sysid:%d and msgtype:%d\n", sysid, msgtype);
+        return 0;
     }
+    accFuncStruct *funcStruct = g_HandlerMgr->findFuncStruct(key);
+    if (NULL == funcStruct)
+    {
+        printf("find no func by sysid:%d and msgtype:%d\n", sysid, msgtype);
+    }
+    else
+    {
+        funcStruct->handler(this->getSession(), msgbuf, buffsize);
+    }
+        
+    //}
     return 0;
 }
 

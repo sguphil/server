@@ -1,5 +1,6 @@
 #include "TestClient.h"
 #include "../include/acctTimeTool.hpp"
+#include "./include/MessageDef.hpp"
 
 TestClient::TestClient()
 {
@@ -168,7 +169,7 @@ void TestClient::handleActiveSession()
                     cout << "ready to send msg:" << totallen << endl;
                     */
                     session->setStatus(registered);
-                }
+                }/*
                 else if (m_nSendTimes++ == 0) //BIN DATA protocol test
                 {
                     m_bAlreadySend = true;
@@ -229,7 +230,7 @@ void TestClient::handleActiveSession()
                     {
                         cout << "3ready to send msg:" << sendlen << endl;
                     }
-                }
+                }*/
                 else //if (m_nSendTimes == 3)//2 dbServer test
                 {
                     //m_nSendTimes = 1;
@@ -250,7 +251,7 @@ void TestClient::handleActiveSession()
                     //if (session->send(buf, sendlen) < 0)
                     if (session->processSend((uint16)eServerMessage_Client, (uint16)CLI_ACCS_CHECKLOGINUSER, (char *)protomsg, (int16)bytelen) < 0)
                     {
-                        cout << "4send buff is full!!!! stop!!!" << endl;
+                        //cout << "4send buff is full!!!! stop!!!" << endl;
                         //session->setStatus(waitdel);
                         acct_time::sleepMs(10);
                     }
@@ -268,17 +269,14 @@ void TestClient::update()
 {
     while (true)
     {
-        if (acct_time::getCurTimeMs() >= m_nNextTick)
+        if (true || acct_time::getCurTimeMs() >= m_nNextTick)
         {
             m_nNextTick = acct_time::getCurTimeMs() + 1;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();
-            //m_nNextTick = acct_time::getCurTimeMs() + m_nInterval;// 30 ms per logic handle
-            //cout << "into logic loop:" << acct_time::getCurTimeMs() << endl;
         }
-        //cout << "out logic loop:" << acct_time::getCurTimeMs() << endl;
-        acct_time::sleepMs(1); // sleep 1ms per loop
+        //acct_time::sleepMs(1); // sleep 1ms per loop
     }
     
 }

@@ -1,13 +1,12 @@
-#ifndef __CACCSHANDLERFUNC_H__
-#define __CACCSHANDLERFUNC_H__
+#ifndef __CTCHANDLERFUNC_H__
+#define __CTCHANDLERFUNC_H__
 
 #include "../../include/baseHeader.h"
 #include "../../network/include/Session.h"
 #include "../../protocol/testMsg.pb.h" // add all related protocol header here
-#include "../AccountSvr.h"
-#include "MessageDef.hpp"
 
-class CACCSHandlerFunc
+
+class CTCHandlerFunc
 {
 public:
     static int32 testfunc(CSession *session, char *pMsg, int32 msglen);

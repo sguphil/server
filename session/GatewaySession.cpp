@@ -1,5 +1,6 @@
 #include "GatewaySession.h"
-#include "../GatewaySvr/include/SessionHandler.hpp"
+//#include "../GatewaySvr/include/SessionHandler.hpp"
+#include "../include/PackageHandler.hpp"
 
 extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 

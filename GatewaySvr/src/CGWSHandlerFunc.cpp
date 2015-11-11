@@ -1,4 +1,5 @@
 #include "../include/CGWSHandlerFunc.hpp"
+#include "../include/MessageDef.hpp"
 
 int32 CGWSHandlerFunc::testfunc(CSession *session, char *pMsg, int32 msglen)
 {

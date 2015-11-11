@@ -8,7 +8,7 @@
 #include "../network/include/Connector.h"
 #include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
-#include "./include/SessionHandler.hpp"
+#include "./include/GWSessionHandler.hpp"
 #include "../include/ServerInclude.hpp"
 #include "../include/log4z.h"
 

@@ -50,10 +50,27 @@ void Connector::reConnectAll()
         CommonList<CSession>::iterator iter;
         for (iter = m_connErrList.begin(); iter != m_connErrList.end(); )
         {
-            addToWaitList(*iter);
-            m_connErrList.erase(iter++);
+            if (preReConnect(*iter))
+            {
+                addToWaitList(*iter);
+                m_connErrList.erase(iter++);
+            }
         }
     }
+}
+
+bool Connector::preReConnect(CSession *session)
+{
+    close(session->getSocket());//close the old socket
+    Int32 cliSock = socket(AF_INET, SOCK_STREAM, 0); //create a new socket
+    if (cliSock < 0)
+    {
+        printf(" pre reconnect create sock error\n");
+        return false;
+    }
+
+    session->setSocket(cliSock);
+    return true;
 }
 
 bool Connector::connect(const char *szIp, Int32 Port, uint8 serverid)

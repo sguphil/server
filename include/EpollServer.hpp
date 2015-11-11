@@ -15,6 +15,8 @@
 #include "../session/LogicSession.h"
 #include "../session/StrictClient.h"
 
+#define MAX_EPOLL_IN_FD 16 // SET MAX EPOLLIN FD TO 16 
+
 class EpollServer
 {
 public:
@@ -30,9 +32,9 @@ public:
         return m_ServerID;
     }
 
-    inline int32 getIoEpollfd()
+    inline int32 getIoEpollfd(int idx)
     {
-        return m_epollfd;
+        return m_epollfd[idx];
     }
     
     inline int32 getSendEpollfd()
@@ -48,13 +50,14 @@ public:
     int32 addFdToRecvEpoll(CSession* session)
     {
         struct epoll_event ev;
-        ev.events = EPOLLIN | EPOLLONESHOT; // default EPOLLIN event
-        if (m_nIoThreadNum == 1)
-        {
+        //ev.events = EPOLLIN | EPOLLONESHOT; // default EPOLLIN event
+        //if (m_nIoThreadNum == 1)
+        //{
             ev.events = EPOLLIN;// | EPOLLONESHOT;
-        }
+        //}
         ev.data.ptr = session;
-        return epoll_ctl(m_epollfd, EPOLL_CTL_ADD, session->getSocket(), &ev);
+        int32 epfd_idx = session->getSocket() % m_nIoThreadNum;
+        return epoll_ctl(m_epollfd[epfd_idx], EPOLL_CTL_ADD, session->getSocket(), &ev);
     }
 
     int32 addFdToSendEpoll(CSession* session)
@@ -195,7 +198,7 @@ protected:
     CommonList<CSession> m_activeSessionList;
     CommonList<CSession> m_rmSessionList; //waitdel sessions store in this list
     uint8 m_ServerID;
-    int32 m_epollfd; //for epoll in
+    int32 m_epollfd[MAX_EPOLL_IN_FD]; //for epoll in
     eSERVERTYPE m_svrType;
     uint32 m_nCycleTick;
     uint32 m_nNextTick;

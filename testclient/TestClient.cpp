@@ -11,14 +11,6 @@ TestClient::TestClient()
     m_ServerID = 61;
     m_nIoThreadNum = 1;
     m_svrType = eClient;
-    m_epollfd = epoll_create(10);
-    m_epollSendfd = epoll_create(10);
-    m_bAlreadySend = false;
-    if (m_epollfd <= 0 || m_epollSendfd <= 0)
-    {
-        printf("TestClient create epollfd error!!!");
-        assert(false);
-    }
 }
 
 TestClient::~TestClient()
@@ -28,6 +20,7 @@ TestClient::~TestClient()
 
 void TestClient::start()
 {
+    EpollServer::start(); //create all epollfd
     //m_acceptor.init();
     //m_acceptor.startListen("127.0.0.1", 9997);
     //m_acceptor.start();
@@ -39,9 +32,10 @@ void TestClient::start()
     }
 
     
-    for (int i = 0; i < 1/*m_nIoThreadNum*/;i++)
+    for (int i = 0; i < m_nIoThreadNum;i++)
     {
         CIoThread *newThread = new CIoThread(this);
+        newThread->setStartID(i);
         newThread->start();
     }
     

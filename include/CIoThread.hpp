@@ -30,7 +30,7 @@ public:
         bool isRecvEvent = false;
         while (true)
         {
-            int32 evCount = epoll_wait(svr->getIoEpollfd(),epEvent, 10, -1);//100ms wait timeout infinite wait just one event to one sockfd
+            int32 evCount = epoll_wait(svr->getIoEpollfd(m_nStartID),epEvent, 10, -1);//100ms wait timeout infinite wait just one event to one sockfd
             if (evCount > 0)
             {
                 for (int i = 0; i < evCount;i++)
@@ -49,7 +49,7 @@ public:
                         else // socket error wait to free session
                         {
                             isRecvEvent = false;
-                            session->delEpollEvent(svr->getIoEpollfd());
+                            session->delEpollEvent(svr->getIoEpollfd(m_nStartID));
                             session->setStatus(waitdel);
                         }
                     }
@@ -70,17 +70,17 @@ public:
                         else if (oplen < 0)
                         {
                             isRecvEvent = false;
-                            session->delEpollEvent(svr->getIoEpollfd());
+                            session->delEpollEvent(svr->getIoEpollfd(m_nStartID));
                             session->setStatus(waitdel);
                         }
                     }
                     #endif
-
+                    /* //now there is single thread wait for each epollfd
                     if (svr->getIoThreadNum() > 1 &&  oplen >= 0)
                     {
                         session->modEpollEvent(svr->getIoEpollfd(), isRecvEvent);
                     }
-                    
+                    */
                 }
             }
             else if (0 == evCount) //epoll timeout
@@ -107,10 +107,21 @@ public:
     {
         return m_ptrServer;
     }
+
+    inline int32 getStartID()
+    {
+        return m_nStartID;
+    }
+
+    inline void setStartID(int32 id)
+    {
+        m_nStartID = id;
+    }
 private:
     EpollServer* m_ptrServer;
 
     int32 m_nNextTick;
     int32 m_llpkgCount;
+    int32 m_nStartID;
 };
 #endif

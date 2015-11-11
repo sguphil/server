@@ -20,17 +20,6 @@ GatewaySvr::GatewaySvr()
     m_nIoThreadNum = m_Config.m_accConfigVec[0].recvThread;
     LOGI("=====e======m_nIoThreadNum:" <<  m_nIoThreadNum);
     m_svrType = eGateWay;
-    m_epollfd = epoll_create(10);
-    m_epollSendfd = epoll_create(10);
-
-    if (m_epollfd <= 0 || m_epollSendfd <= 0)
-    {
-        printf("GatewaySvr create epollfd error!!!");
-        assert(false);
-    }
-
-    SIDGenerator::getInstance()->init(m_ServerID, 1);
-
 }
 
 GatewaySvr::~GatewaySvr()
@@ -40,6 +29,8 @@ GatewaySvr::~GatewaySvr()
 
 void GatewaySvr::start()
 {
+    EpollServer::start(); //create all epollfd
+
     m_acceptor.setSvrType(m_svrType);
     m_acceptor.setServer(this);
     m_acceptor.init(m_Config.m_accConfigVec[0].maxclient);
@@ -51,6 +42,7 @@ void GatewaySvr::start()
     for (int i = 0; i < m_nIoThreadNum;i++)
     {
         CIoThread *newThread = new CIoThread(this);
+        newThread->setStartID(i);
         newThread->start();
     }
 

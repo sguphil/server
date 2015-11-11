@@ -18,14 +18,6 @@ DBSvr::DBSvr()
     m_nIoThreadNum = m_Config.m_accConfig.recvThread;
     LOGI("=====e======m_nIoThreadNum:" <<  m_nIoThreadNum);
     m_svrType = eDBServer;
-    m_epollfd = epoll_create(10);
-    m_epollSendfd = epoll_create(10);
-
-    if (m_epollfd <= 0 || m_epollSendfd <= 0)
-    {
-        printf("DBSvr create epollfd error!!!");
-        assert(false);
-    }
     m_dbInstFactory.init(m_Config.m_mysqlConfig.instNum, 1, m_Config.m_mysqlConfig.ip, m_Config.m_mysqlConfig.port, m_Config.m_mysqlConfig.dbuserName, m_Config.m_mysqlConfig.dbpasswd, m_Config.m_mysqlConfig.dbname);
 }
 
@@ -42,6 +34,7 @@ DBSvr::~DBSvr()
 
 void DBSvr::start()
 {
+    EpollServer::start(); //create all epollfd
     //for acceptor
     m_acceptor.setSvrType(m_svrType);
     m_acceptor.setServer(this);
@@ -55,6 +48,7 @@ void DBSvr::start()
     for (int i = 0; i < m_nIoThreadNum;i++)
     {
         CIoThread *newThread = new CIoThread(this);
+        newThread->setStartID(i);
         newThread->start();
     }
 

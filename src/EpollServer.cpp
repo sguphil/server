@@ -3,9 +3,32 @@
 EpollServer::EpollServer():m_nNextconnectTick(0)
 {
 }
+
 void EpollServer::start()
 {
-   
+    if (MAX_EPOLL_IN_FD < m_nIoThreadNum)
+    {
+        printf("ERROR ARGS!! MAX RECV THREAD NUM IS 16!!!\n");
+        exit(1);
+    }
+
+     for (int i = 0; i < MAX_EPOLL_IN_FD; i++)
+    {
+        m_epollfd[i] = epoll_create(10);
+        if (m_epollfd[i] <= 0)
+        {
+            printf("server create recv epollfd error!!!");
+            assert(false);
+        }
+    }
+
+    m_epollSendfd = epoll_create(10);
+    if ( m_epollSendfd <= 0)
+    {
+        printf("server create send epollfd error!!!");
+        assert(false);
+    }
+    SIDGenerator::getInstance()->init(m_ServerID, 1);
 }
 
 void EpollServer::updateSessionList()
@@ -119,7 +142,8 @@ void EpollServer::removeDeadSession()
             CSession *session = *iter;
             if (session->getStatus() == waitdel)
             {
-                session->delEpollEvent(m_epollfd);
+                int32 epfd_idx = session->getSocket() % m_nIoThreadNum;
+                session->delEpollEvent(m_epollfd[epfd_idx]);
                 session->delEpollEvent(m_epollSendfd);
                 session->clear();
                 m_rmSessionList.erase(iter++);

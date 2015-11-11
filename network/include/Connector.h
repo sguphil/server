@@ -20,6 +20,7 @@ public:
     void *threadRoutine(void *args);
     void addToWaitList(CSession *session);
     void addToErrorList(CSession *session);
+    bool preReConnect(CSession *session);
     void reConnectAll();
     bool getConnList(std::vector<CSession*> &retVec);
 

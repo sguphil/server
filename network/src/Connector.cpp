@@ -27,13 +27,12 @@ void Connector::addToWaitList(CSession *session)
 {
     pthread_mutex_lock(&m_mutex);
     m_waitList.push_back(session);
+    pthread_mutex_unlock(&m_mutex);
     if (sem_post(&m_waitSem) < 0)
     {
         perror("sem_post error");
         assert(false);
     }
-    //pthread_cond_signal(&m_waitCond);
-    pthread_mutex_unlock(&m_mutex);
 }
 
 void Connector::addToErrorList(CSession *session)
@@ -44,18 +43,26 @@ void Connector::addToErrorList(CSession *session)
 
 void Connector::reConnectAll()
 {
-    AutoLock lock(&m_connErrListLock);
+    m_connErrListLock.lock();
+    std::vector<CSession *> sessionvec;
+    
     if (!m_connErrList.empty())
     {
+        sessionvec.reserve(m_connErrList.size());
         CommonList<CSession>::iterator iter;
         for (iter = m_connErrList.begin(); iter != m_connErrList.end(); )
         {
             if (preReConnect(*iter))
             {
-                addToWaitList(*iter);
+                sessionvec.push_back(*iter);
                 m_connErrList.erase(iter++);
             }
         }
+    }
+    m_connErrListLock.unLock();
+    for (int i = 0; i < sessionvec.size(); i++)
+    {
+        addToWaitList(sessionvec[i]);
     }
 }
 
@@ -130,13 +137,6 @@ void* Connector::threadRoutine(void *args)
 
     while (true)
     {
-        //cout << "first while connect thread=======" << endl;
-        /*pthread_mutex_lock(&m_mutex);
-        while(m_waitList.empty())
-        {
-            cout << "connect thread=======list empty" << endl;
-            pthread_cond_wait(&m_waitCond, &m_mutex);
-        }*/
         if (sem_wait(&m_waitSem) < 0)
         {
             perror("sem_wait error");

@@ -22,8 +22,8 @@ int main(int argc, char **argv)
     cout << "Hello world! ServerID is:" << testClient->getServerID() << endl;
     
     g_ClientNetWorkObjectFactory.init(1, 1);
-    //g_HandlerMgr = new CTcHandlerMgr;
-    //g_HandlerMgr->addAllHandle();
+    g_HandlerMgr = new CTcHandlerMgr;
+    g_HandlerMgr->addAllHandle();
 
     int32 count = 1;
     if (argc == 2)

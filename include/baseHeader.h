@@ -82,6 +82,7 @@ enum eSESSIONSTATUS
     waitactive = 2, // need to active io 
     waitdel = 3, // deactive, need to remove
     registered = 4,//registered
+    sock_SIGPIPE = 5, //recv signal pipe
 };
 
 

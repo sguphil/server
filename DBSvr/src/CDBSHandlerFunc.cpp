@@ -30,7 +30,7 @@ int32 CDBSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
     sql.append(recvmsg.passwd());
     sql.append("'");
     CQuery query(sqlInst, sql, sql.length());
-    printf("query sql is:%s\n", sql.c_str());
+    //printf("query sql is:%s\n", sql.c_str());
     CResult res;
     int32 retcode = 1;
     if (query.exequery(&res))
@@ -39,21 +39,20 @@ int32 CDBSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
         {
             char *name = res.getString(0);
             char *passwd = res.getString(1);
-            printf("db query result name:%s, passwd:%s\n", name, passwd);
+            //printf("db query result name:%s, passwd:%s\n", name, passwd);
             retcode = 0;
             break;
         }
     }
-    //LOGFMTI("check printing log==sendtime:====server recv:%d\n", retcode);
 
     test_package::dbs_2_acc_checkuser sendmsg;
     sendmsg.set_retcode(retcode);
     sendmsg.set_sessionid(recvmsg.sessionid());
-    printf("checkuser db retcode is:%d\n", retcode);
+    //printf("checkuser db retcode is:%d\n", retcode);
     int32 sendlen = sendmsg.ByteSize();
     char pmsg[sendlen];
     sendmsg.SerializeToArray(pmsg, sendlen);
     dbf->reuse(sqlInst);
-    //return session->processSend((uint16)eServerMessage_DBServer, (uint16)DBS_ACCS_CHECKLOGINUSER_RET, pmsg, sendlen);
     return session->processSend<test_package::dbs_2_acc_checkuser>((uint16)eServerMessage_DBServer, (uint16)DBS_ACCS_CHECKLOGINUSER_RET, sendmsg);
+    //return 1;
 }

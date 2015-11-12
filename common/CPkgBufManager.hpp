@@ -33,10 +33,16 @@ public:
     
     ICPkgBuf* getReadPkg();
 
+    void swapRWList();
+
 private:
     ICPkgBuf *m_CurPkg; //for recv
     ICPkgBuf *m_ReadPkg;//for read/send
     CommonList<ICPkgBuf> m_PkgList;
+    CommonList<ICPkgBuf> m_PkgList_sec; //double list to avoid lock competition
+    CommonList<ICPkgBuf> *m_ptrRead;
+    CommonList<ICPkgBuf> *m_ptrWrite;
+    CMutex m_listSwapLock;
 };
 
 #endif

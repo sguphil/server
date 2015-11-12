@@ -1,5 +1,7 @@
 #include "../include/CACCSHandlerFunc.hpp"
 
+#define G_SVR_PTR AccountSvr::GetInstance()
+
 int32 CACCSHandlerFunc::testfunc(CSession *session, char *pMsg, int32 msglen)
 {
     test_package::testMsg recvmsg;
@@ -33,11 +35,12 @@ int32 CACCSHandlerFunc::checkuser(CSession *session, char *pMsg, int32 msglen)
 int32 CACCSHandlerFunc::dbcheckuserret(CSession *session, char *pMsg, int32 msglen)
 {
     test_package::dbs_2_acc_checkuser recvmsg;
-    test_package::acc_2_client_checkuser sendmsg;
     recvmsg.ParseFromArray(pMsg, msglen);
     uint32 clientSessionid = recvmsg.sessionid();
-    //find clientSessionId and send the db-search result 
-    
-    //LOGFMTI("CACCSHandlerFunc::dbcheckuserret====recvmsg retcode:%d\n", recvmsg.retcode());
-    return 0;
+    CSession *clientSession = G_SVR_PTR->getClientSession(clientSessionid);
+    if (NULL == clientSession)
+    {
+        return -1;
+    }
+    return clientSession->processSend(eServerMessage_DBServer, DBS_ACCS_CHECKLOGINUSER_RET, recvmsg);
 }

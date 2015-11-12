@@ -26,7 +26,6 @@ extern int32 SESSIONBUFLEN;
 class NetWorkObject;
 class EpollServer;
 
-
 class CSession
 {
 public:
@@ -149,7 +148,16 @@ public:
         pMsghead->msgType = msgid;
         memcpy(msgbuf, msg, msgsize);
         m_SendBufManager.pushPkgToList(pPkgHead->length);
-        sendToSocket(); //send directly
+        if (getStatus() !=waitdel)
+        {
+            int32 ret = sendToSocket(); //send directly
+            if (ret < 0) // socket error occour
+            {
+                setStatus(waitdel);
+                return -1;
+            }
+        }
+        
         return  pPkgHead->length;
     }
 
@@ -168,6 +176,10 @@ public:
     template<typename T>
     int32 processSend(uint16 sysid, uint16 msgid, T& sendmsg)
     {
+        if (getStatus() == waitdel)
+        {
+            return -1; // this session is not valid
+        }
         int32 sendlen = sendmsg.ByteSize();
         ICPkgBuf *sendpkg =  m_SendBufManager.getCurPkg(sendlen);
         assert(sendpkg != NULL);
@@ -181,7 +193,15 @@ public:
         pMsghead->sysId = sysid;
         pMsghead->msgType = msgid;
         m_SendBufManager.pushPkgToList(pPkgHead->length);
-        sendToSocket(); //send directly
+        if (getStatus() !=waitdel)
+        {
+            int32 ret = sendToSocket(); //send directly
+            if (ret < 0) // socket error occour
+            {
+                setStatus(waitdel);
+                return -1;
+            }
+        }
         return  pPkgHead->length;
     }
 
@@ -307,7 +327,7 @@ private:
     CSendBuf m_sendBuff;
     #endif
     #endif
-    CPkgbufManager m_RecvBufManager;
+    CPkgbufManager m_RecvBufManager;  
     CPkgbufManager m_SendBufManager;
     /*
     clwCore::CTwoQueues m_RecvTwoQueue;

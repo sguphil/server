@@ -154,12 +154,14 @@ void EpollServer::removeDeadSession()
                 {
                     m_acceptor.sessionReUse(session);
                 }
+                else  if (checkRecord(session))
+                {
+                    delClusterSession(session);
+                }
                 else
                 {
-                    if (checkRecord(session))
-                    {
-                        delClusterSession(session);
-                    }
+                    delete session;
+                    session = NULL;
                 }
             }
             else
@@ -178,13 +180,13 @@ void EpollServer::handleActiveSession()
         for (; iter != m_activeSessionList.end();)
         {
             CSession *session = *iter;
-            session->processPacket();
             if (session->getStatus() == waitdel)
             {
                 m_rmSessionList.push_back(session);
                 m_activeSessionList.erase(iter++);
                 continue;
             }
+            session->processPacket();
 
             SESSION_TYPE type = session->getType();
             if (type != eUndefineSessionType)

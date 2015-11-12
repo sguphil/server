@@ -251,7 +251,7 @@ void TestClient::handleActiveSession()
                     }
                     else
                     {
-                        cout << "4ready to send msg:" << sendlen << endl;
+                        //cout << "4ready to send msg:" << sendlen << endl;// no output
                     }
                 }
             }

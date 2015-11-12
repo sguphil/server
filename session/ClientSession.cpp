@@ -2,6 +2,9 @@
 
 extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 
+uint32 g_m_nNextTick = 0;
+int32 g_m_llpkgCount = 0;
+
 ClientSession::ClientSession()
 {
     m_llpkgCount = 0;
@@ -88,15 +91,15 @@ int32 ClientSession::onRecv(PkgHeader *header, MsgHeader *msghead, char *msgbuf,
     {
     */
         #if 1
-        int32 delay = acct_time::getCurTimeMs() - m_nNextTick;
+        int32 delay = acct_time::getCurTimeMs() - g_m_nNextTick;
         if (delay > 0) //1s
         {
-            cout << "curms:" << acct_time::getCurTimeMs() << "  nextick:" << m_nNextTick << " delay:" << delay << " socket:" << getSession()->getSocket() << "============" << m_llpkgCount++ << endl;
-            m_nNextTick = acct_time::getCurTimeMs() + 1000;
-            m_llpkgCount = 0;
+            cout << "curms:" << acct_time::getCurTimeMs() << "  nextick:" << g_m_nNextTick << " delay:" << delay << " socket:" << getSession()->getSocket() << "============" << g_m_llpkgCount++ << endl;
+            g_m_nNextTick = acct_time::getCurTimeMs() + 1000;
+            g_m_llpkgCount = 0;
         }
         
-        m_llpkgCount++;
+        g_m_llpkgCount++;
         #endif
         
         int32 key = PKGFUNCBASE::makeKey(sysid, msgtype);

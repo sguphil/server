@@ -56,7 +56,7 @@ public:
                     
                     #if 1
 
-                    if (epEvent[i].events & EPOLLOUT) // send msg
+                    if (epEvent[i].events & EPOLLOUT && session->getStatus() != waitdel) // send msg
                     {
                         oplen = session->sendToSocket();
                         if (0 == oplen)

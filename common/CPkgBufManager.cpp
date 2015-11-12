@@ -2,7 +2,8 @@
 
 CPkgbufManager::CPkgbufManager():m_CurPkg(NULL), m_ReadPkg(NULL)
 {
-    
+    m_ptrRead = &m_PkgList;
+    m_ptrWrite = &m_PkgList_sec;
 }
 
 CPkgbufManager::~CPkgbufManager()
@@ -20,10 +21,28 @@ CPkgbufManager::~CPkgbufManager()
         delete *it;
     }
     m_PkgList.unLockList();
+
+    m_PkgList_sec.lockList();
+    for (std::list<ICPkgBuf *>::iterator it = m_PkgList_sec.begin();
+          it != m_PkgList_sec.end(); it++)
+    {
+        delete *it;
+    }
+    m_PkgList_sec.unLockList();
+}
+
+void CPkgbufManager::swapRWList()
+{
+    m_listSwapLock.lock();
+    CommonList<ICPkgBuf> *tmpWList = m_ptrWrite;
+    m_ptrWrite = m_ptrRead;
+    m_ptrRead = tmpWList;
+    m_listSwapLock.unLock();
 }
 
 ICPkgBuf* CPkgbufManager::next()
 {
+    #if 0 //single list
     m_PkgList.lockList();
     if (m_PkgList.empty())
     {
@@ -35,6 +54,18 @@ ICPkgBuf* CPkgbufManager::next()
     ICPkgBuf *pkg = m_ReadPkg;
     m_PkgList.pop_front();
     m_PkgList.unLockList();
+    #endif
+
+    //for double list
+    if (m_ptrRead->empty())
+    {
+        return NULL;
+    }
+
+    m_ReadPkg = m_ptrRead->front();
+    ICPkgBuf *pkg = m_ReadPkg;
+    m_ptrRead->pop_front();
+
     return pkg;
 }
 
@@ -69,13 +100,23 @@ void CPkgbufManager::pushPkgToList(int32 size)
     {
         return;
     }
-    
+    #if 0  //single list
     m_CurPkg->incPkgLen(size);
     if (m_CurPkg->getbufLen() == m_CurPkg->getPkgSize())
     {
         m_PkgList.lockList();
         m_PkgList.push_back((m_CurPkg));
         m_PkgList.unLockList();
+        m_CurPkg = NULL;
+    }
+    #endif
+    //double list
+    m_CurPkg->incPkgLen(size);
+    if (m_CurPkg->getbufLen() == m_CurPkg->getPkgSize())
+    {
+        m_listSwapLock.lock();
+        m_ptrWrite->push_back(m_CurPkg);
+        m_listSwapLock.unLock();
         m_CurPkg = NULL;
     }
 }

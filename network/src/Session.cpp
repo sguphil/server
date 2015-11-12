@@ -163,6 +163,12 @@ int32 CSession::sendToSocket()
         pkgbuf = m_SendBufManager.getReadPkg();
         if (NULL == pkgbuf)
         {
+            m_SendBufManager.swapRWList();
+            pkgbuf = m_SendBufManager.getReadPkg();
+        }
+
+        if (NULL == pkgbuf)
+        {
             ret = 0;
             break;
         }
@@ -183,7 +189,13 @@ int32 CSession::sendToSocket()
                 printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
                 ret = 1;
                 break;
-            }
+            }/*
+            else if (errno == EPIPE )
+            {
+                setStatus(sock_SIGPIPE);
+                ret = -1;
+                break;
+            } */
             else
             {
                 ret = -1;
@@ -258,13 +270,22 @@ void CSession::processPacket()
     #endif
 #endif
     ICPkgBuf *pkg = m_RecvBufManager.next();
+    int hdlPkgCount = 0;
     while (pkg)
     {
         char *bufbegin = pkg->getPkgReadPos();
         assert(bufbegin != NULL);
         handlePackage(this, (PkgHeader *)bufbegin, (MsgHeader *)(bufbegin + sizeof(PkgHeader)), (bufbegin + sizeof(PkgHeader) + sizeof(MsgHeader)), ((PkgHeader *)bufbegin)->length - sizeof(PkgHeader) - sizeof(MsgHeader));
         m_RecvBufManager.readNReusePkg(((PkgHeader *)bufbegin)->length);
+        if (hdlPkgCount++ == 1000)// 1000pkg each time
+        {
+            break;
+        }
         pkg = m_RecvBufManager.next();
+    }
+    if (NULL == pkg)
+    {
+        m_RecvBufManager.swapRWList(); //swap read-write list while read list is empty
     }
 }
 void CSession::defaultMsgHandle(MsgHeader *msgHead, char *msgbuf, int32 msgsize) // first package to register

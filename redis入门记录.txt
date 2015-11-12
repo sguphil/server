@@ -1,6 +1,88 @@
 redis记录
 
-add contents here
+启动服务：
+	1.直接启动，使用命令 redis-server  默认端口为6379 要指定端口使用port选项 如：--port 6380 
+	2.脚本启动，redis源码目录下utils文件夹下有一个redis_init_script脚本，使用时先把脚本复制到
+	/etc/init.d目录中，文件名为redis_端口号  其中端口号时要让Redis监听的端口，然后修改脚本的
+	REDISPORT变量的值为同样的端口号; 建立目录 /etc/redis -->用于存放Redis的配置文件
+	/var/redis/端口号 -->用于存放Redis的持久化文件
+	
+	修改配置文件，配置参数：
+	daemonize 	yes 	使Reids以守护进程模式运行
+	pidfile 	/var/run/redis_端口号.pid 	设置Redis的PID文件位置
+	port		端口号 	设置Redis的监听端口
+	dir		/var/redis/端口号	设置持久化文件存储位置
+	
+	使用脚本方式启动可以使用命令： /etc/init.d/redis_端口号 start，然后序言执行下马的命令使Redis
+	随戏台自动启动：
+		update-rc.d redis_端口号 defaults
+
+停止Redis:
+	使用 redis_cli SHUTDOWN 命令，Redis收到命令将断开所有客户端，染红执行陪陪值的持久化策略，最后
+	退出。Redis对于SIGTERM信号也有处理，当用户使用kill命令杀死Redis进程时，Redis会做和SHUTDOWN一
+	一样的操作最后安全退出。
+
+配置：
+	redis启动时可以指定配置文件 如 redis-server /home/redis.conf 
+
+多数据库：
+	Redis时一种字典接哦股的存储服务器，实际上Redis提供了多个用来存储数据的字典，每个数据库对外都
+	是以一个从0开始递增的数字来命名的，Redis默认支持16个数据库，可通过配置参数databases修改这个值
+	客户的连接上Redis后会自动选择0号数据库，可以随时通过 select 命令更换数据库，如选择一号数据库
+	使用命令： select 1
+
+	Redis不支持自定义数据库名字，也不支持对每个数据库设置不同的访问密码，并且多个数据库之间并非是
+	完全隔离的，比如FLUSHALL命令将清空一个Redis实例中所有数据库中的数据。
+
+入门：
+	keys pattern  	获得符合pattern规则的所有key
+	exist key	判断是否存在key 存在返回1 否则返回0
+	del key [key...]	删除一个或多个key 删除成功返回1 删除失败或不存在key返回0 
+	type key	获得key的数据类型
+
+字符串类型：
+	字符串类型可以存储任何形式的字符串。
+	set key value 	设置key的值为value
+	get key		获取key的值,当存储的字符串时整数形式时，这个命令使其值递增,当操作的key不存在
+			时会默认键值为0，所以第一次递增后值为1,当键值不是整数时会提示错误。
+	incrby key incrememt 指定累加值的递增命令
+	decr key 		递减1
+	decr key decrement	减少指定整数
+	incrbyfloat key increment 递增指定浮点数
+	incr key	递增数字
+	append key value	向尾部追加值，如果键不存在则将键值设置为value.
+				>set key hello
+				OK
+				>append key " world!"
+				(integer) 12
+	strlen key 	获取字键值长度，键不存在返回0
+	mget key [key...] 	获取多个键值
+	mset key value [key value ...]	设置多个键值
+	
+	getbit key offset 	获取键指定位置二进制位的值 结果0或1 
+	setbit key offset value	设置指定键指定位的值
+	bitcount key [start] [end] 	计算起止位置含有多少位
+	bitop operation destkey key [key...]	对指定destkey键和一个或多个key进行位运算，operation
+						有 AND OR XOR NOT	
+
+散列类型：
+	散列类型（hash）的简爱那只也时一个字典结构，存储了字段（field）和字段的映射，但字段只能时字符
+	串，不支持其他数据类型，因此散列类型不能嵌套其他的数据类型，一个散列类型键最多2^32-1个字段。
+
+	hset key field value	设置key的field字段为value
+	hget key field 		获取key的field字段的值
+	hmset key field value [field value...]	设置多个键值映射
+	hmget key field [field...] 	获取多个字段值
+	hgetall key 		获取所有字段的值
+	hexist key field 	判断键中是否存在字段 存在返回1 否则返回0 键不存在也返回0
+	hsetnx key field value 	当字段不存在时赋值，如果已经存在字段则不做任何操作
+	hincrby key field increment 	指定字段递增increment，如果键不存在会建立键及字段并设置值为
+					increment
+	hdel key field [field...] 	删除指定一个或多个字段，返回时被删除的字段个数
+	hkeys key 获取字段名列表
+	hvals key 获取所有字段值列表
+	hlen key  获得字段数量	 
+	
 
 列表类型：
 lpush key val1 val2 ... 向列表key左边一次加入元素val1，val2

@@ -68,9 +68,9 @@ void EpollServer::updateSessionList()
         {
             CSession *newSession = *iter;
             newSession->setStatus(active);
-            NetWorkObject *netobj = NULL;
             int32 sessionT = newSession->getType();
-
+            /* 
+            NetWorkObject *netobj = NULL; 
             switch (sessionT)
             {
             case 1:
@@ -111,12 +111,12 @@ void EpollServer::updateSessionList()
             default:
                 break;
             }
+            */
+            SESSION_TYPE stype = (SESSION_TYPE)sessionT;
+            createNetWorkobjAndBind(stype, newSession);
             m_activeSessionList.push_back(newSession);
             newSession->setSessionId(SIDGenerator::getInstance()->generatorSid());
-            if (!checkRecord(newSession))
-            {
-                m_ServerSessionMap.insert(std::make_pair<SESSION_TYPE, CSession *>(newSession->getType(), newSession));
-            }
+          
             //add to epoll event loop
             addFdToRecvEpoll(newSession);
             //addFdToSendEpoll(newSession);
@@ -156,6 +156,7 @@ void EpollServer::removeDeadSession()
                 }
                 else  if (checkRecord(session))
                 {
+                    DestructNetWorkObj(session->getNetWorkObject());
                     delClusterSession(session);
                 }
                 else

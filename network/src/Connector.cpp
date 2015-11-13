@@ -60,7 +60,7 @@ void Connector::reConnectAll()
         }
     }
     m_connErrListLock.unLock();
-    for (int i = 0; i < sessionvec.size(); i++)
+    for (uint32 i = 0; i < sessionvec.size(); i++)
     {
         addToWaitList(sessionvec[i]);
     }

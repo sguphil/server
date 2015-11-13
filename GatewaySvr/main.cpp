@@ -2,11 +2,9 @@
 #include "GatewaySvr.h"
 #include "../Test/include/TestAccess.h"
 #include "../Factory/BaseFactory.h"
-//#include "../Logic/Player.h"
 #include "../include/baseHeader.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
-#include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
 #include "./include/GWSessionHandler.hpp"
 #include "../include/ServerInclude.hpp"
@@ -30,11 +28,7 @@ int main()
 
     GatewaySvr *GatewaySvr = GatewaySvr::GetInstance();
     LOGI("Hello world! ServerID is:" << GatewaySvr->getServerID());
-    g_ClientNetWorkObjectFactory.init(10000, 50);
     
-    //TestAccess acsObj;
-    //printItem(&acsObj);
-    //cout << acsObj << endl;
     test_package::testMsg tmsg;
     tmsg.set_sendtime(123);
     tmsg.set_msg("protobuf hello world!!");

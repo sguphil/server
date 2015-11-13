@@ -1,7 +1,6 @@
 #ifndef __CSQLCONN_H__
 #define __CSQLCONN_H__
 #include "../include/baseHeader.h"
-//#include "CDBInstFactory.hpp"
 #include <mysql/mysql.h>
 class CResult;
 class CQuery;

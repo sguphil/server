@@ -30,11 +30,7 @@
 #include <sstream>
 //#include <cstdint>
 
-
-//
 #include "./log4z.h"
-//#include "../database/CQuery.hpp"
-//#include "../database/CResult.hpp"
 
 using namespace std;
 

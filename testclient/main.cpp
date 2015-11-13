@@ -21,7 +21,6 @@ int main(int argc, char **argv)
     TestClient* testClient = TestClient::GetInstance();
     cout << "Hello world! ServerID is:" << testClient->getServerID() << endl;
     
-    g_ClientNetWorkObjectFactory.init(1, 1);
     g_HandlerMgr = new CTcHandlerMgr;
     g_HandlerMgr->addAllHandle();
 

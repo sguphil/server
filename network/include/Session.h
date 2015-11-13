@@ -1,19 +1,15 @@
 #ifndef __SESSION_H__
 #define __SESSION_H__
 #include "../../include/baseHeader.h"
-//#include "NetWorkObject.h"
+#include "NetWorkObject.h"
 #include "../../include/CServerBase.hpp"
 #include "../../include/CRecvBuf.hpp"
 #include "../../include/CSendBuf.hpp"
 #include "../../include/CIoBuff.hpp"
 #include "../../include/packHeader.hpp"
 #include "../../include/packageStruct.hpp"
-#include "../../session/ClientSession.h"
-#include "../../session/StrictClient.h"
 #include "../../include/PackageHandler.hpp"
 #include "../../include/CPackageFetch.hpp"
-//#include "../../include/queue.hpp"
-
 #include "../../common/CPkgBuf.hpp"
 #include "../../common/CPkgBufFactory.hpp"
 #include "../../common/CPkgBufManager.hpp"
@@ -22,8 +18,6 @@ extern int32 MAXPKGLEN;
 extern int32 SESSIONBUFLEN;
 
 #define USE_DOUBLE_QUEUE 1
-//#define REUSE_NETWORKOBJ 1
-class NetWorkObject;
 class EpollServer;
 
 class CSession
@@ -31,28 +25,7 @@ class CSession
 public:
     CSession();
     ~CSession();
-    inline void clear() // call when reuse
-    {
-#if 0 
-        #ifdef USE_DOUBLE_QUEUE
-        m_recvBuff.clear();
-        m_sendBuff.clear();
-        #else
-        m_recvBuff.getBuffQueuePtr()->clear();
-        m_sendBuff.getBuffQueuePtr()->clear();
-        #endif
-#endif
-        #if REUSE_NETWORKOBJ
-        g_ClientNetWorkObjectFactory.reuse(m_pBindNetWorkObj);
-        #else        
-        close(m_socket); // close socket fd
-        if (NULL != m_pBindNetWorkObj)
-        {
-            delete m_pBindNetWorkObj;
-            m_pBindNetWorkObj = NULL;
-        }
-        #endif
-    }
+    void clear(); // call when reuse
 
     inline void setSocket(Int32 socket)
     {
@@ -217,6 +190,11 @@ public:
     {
         m_pBindNetWorkObj = networkObj;
         m_pBindNetWorkObj->setSesion(this);
+    }
+    
+    inline void setNetWorkObj(NetWorkObject *obj)
+    {
+        m_pBindNetWorkObj = obj;
     }
 
     inline NetWorkObject* getNetWorkObject()

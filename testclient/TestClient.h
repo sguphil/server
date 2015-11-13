@@ -10,6 +10,14 @@
 #include "../include/CSendThread.hpp"
 #include "../protocol/testMsg.pb.h"
 
+#include "./session/ClientSession.h"
+#include "./session/AccsvrSession.h"
+#include "./session/DBSession.h"
+#include "./session/LogicSession.h"
+#include "./session/GatewaySession.h"
+#include "./session/StrictClient.h"
+
+
 class TestClient: public EpollServer, public base::Singleton<TestClient>
 {
 public:
@@ -18,6 +26,9 @@ public:
     void start();
     void handleActiveSession();
     void update();
+
+    void DestructNetWorkObj(NetWorkObject *netobj);
+    NetWorkObject* CreateNetWorkObj(SESSION_TYPE type);
 
     void setConnectCount(int32 count)
     {

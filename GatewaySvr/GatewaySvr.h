@@ -14,6 +14,13 @@
 #include "../common/SIDGenerator.hpp"
 #include "../include/EpollServer.hpp"
 
+#include "./session/ClientSession.h"
+#include "./session/AccsvrSession.h"
+#include "./session/DBSession.h"
+#include "./session/LogicSession.h"
+#include "./session/GatewaySession.h"
+#include "./session/StrictClient.h"
+
 extern int32 MAXPKGLEN;
 extern int32 SESSIONBUFLEN;
 using std::multimap;
@@ -25,6 +32,8 @@ public:
     virtual ~GatewaySvr();
     void start();
     void update(); 
+    void DestructNetWorkObj(NetWorkObject *netobj);
+    NetWorkObject* CreateNetWorkObj(SESSION_TYPE type);
 
 private:
     CGatewaySvrConfig m_Config;

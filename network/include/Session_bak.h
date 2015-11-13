@@ -1,5 +1,6 @@
 #ifndef __SESSION_H__
 #define __SESSION_H__
+#if 0
 #include "../../include/baseHeader.h"
 //#include "NetWorkObject.h"
 #include "../../include/CServerBase.hpp"
@@ -13,7 +14,7 @@
 #include "../../include/CPackageFetch.hpp"
 
 
-#if 0
+
 class NetWorkObject;
 //class ClientSession;
 

@@ -9,6 +9,13 @@
 #include "../include/acctTimeTool.hpp"
 #include "../include/Singleton.h"
 
+#include "./session/ClientSession.h"
+#include "./session/AccsvrSession.h"
+#include "./session/DBSession.h"
+#include "./session/LogicSession.h"
+#include "./session/GatewaySession.h"
+#include "./session/StrictClient.h"
+
 extern int32 MAXPKGLEN;
 extern int32 SESSIONBUFLEN;
 
@@ -19,6 +26,9 @@ public:
     virtual ~LogicSvr();
     void start();
     void update();
+
+    void DestructNetWorkObj(NetWorkObject *netobj);
+    NetWorkObject* CreateNetWorkObj(SESSION_TYPE type);
 
     CDBInstFactory* getDBInstFactory()
     {

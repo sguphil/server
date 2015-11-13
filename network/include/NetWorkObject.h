@@ -1,6 +1,5 @@
 #ifndef __NETWORKOBJECT_H__
 #define __NETWORKOBJECT_H__
-//#include "Session.h"
 #include "../../include/baseHeader.h"
 #include "../../include/packHeader.hpp"
 

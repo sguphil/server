@@ -26,6 +26,56 @@ LogicSvr::~LogicSvr()
 
 }
 
+void LogicSvr::DestructNetWorkObj(NetWorkObject * netobj)
+{
+    delete netobj;
+    netobj = NULL;
+}
+
+NetWorkObject* LogicSvr::CreateNetWorkObj(SESSION_TYPE type)
+{
+    NetWorkObject *netobj = NULL;
+    switch (type)
+    {
+    case 1: // client
+        netobj = new ClientSession;
+        assert(NULL != netobj);
+        cout << "got Client msg" << endl;
+        break;
+    case 2: // gateway
+        netobj = new GatewaySession;
+        assert(NULL != netobj);
+        cout << "got GatewaySvr msg" << endl;
+        break;
+    case 3: // other account svr
+        cout << "got other server msg" << endl;
+        break;
+    case 4: // gameserver/logicServer
+        netobj = new LogicSession;
+        assert(NULL != netobj);
+        cout << "got LogicSvr msg" << endl;
+        break;
+    case 5: // dbserver
+        netobj = new DBSession;
+        assert(NULL != netobj);
+        cout << "got dbserver msg" << endl;
+        break;
+    case 6: // strict client for test
+        netobj = new StrictClient;
+        assert(NULL != netobj);
+        break;
+    case 7: //Account server
+        netobj = new DBSession;
+        assert(NULL != netobj);
+        cout << "got accsvr msg" << endl;
+        break;
+    default:
+        break;
+    }
+
+    return netobj;
+}
+
 void LogicSvr::start()
 {
     EpollServer::start(); //create all epollfd

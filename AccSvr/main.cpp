@@ -2,11 +2,9 @@
 #include "AccountSvr.h"
 #include "../Test/include/TestAccess.h"
 #include "../Factory/BaseFactory.h"
-//#include "../Logic/Player.h"
 #include "../include/baseHeader.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
-#include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
 #include "./include/ACCSessionHandler.hpp"
 #include "../include/ServerInclude.hpp"
@@ -30,7 +28,7 @@ int main()
 
     AccountSvr *accountSvr = AccountSvr::GetInstance();
     LOGI("Hello world! ServerID is:" << accountSvr->getServerID());
-    g_ClientNetWorkObjectFactory.init(10000, 50);
+    //g_ClientNetWorkObjectFactory.init(10000, 50);
     
     test_package::testMsg tmsg;
     tmsg.set_sendtime(123);
@@ -44,13 +42,8 @@ int main()
     test_package::testMsg after;
     after.ParseFromArray(buf, buflen);
 
-    
     LOGI("after:" << after.sendtime() << "  msg:" << after.msg());
     
-    //CBaseFactory<CPlayer> playerFactory;
-    //playerFactory.init(10, 10);
-    //CPlayer *player = playerFactory.allocate();
-    //cout << "actor type is:" << player->getActorType() << endl;
     accountSvr->start(); //listen start
     accountSvr->update();
 

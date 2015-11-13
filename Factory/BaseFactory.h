@@ -1,9 +1,7 @@
 #ifndef __BASEFACTORY_H__
 #define __BASEFACTORY_H__
 #include "../include/baseHeader.h"
-//#include "../Logic/Player.h"
 #include "../network/include/CommonList.h"
-//#include "../DBSvr/CSqlConn.hpp"
 
 template<typename T>
 class CBaseFactory

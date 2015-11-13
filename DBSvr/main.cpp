@@ -2,11 +2,9 @@
 #include "DBSvr.h"
 #include "../Test/include/TestAccess.h"
 #include "../Factory/BaseFactory.h"
-//#include "../Logic/Player.h"
 #include "../include/baseHeader.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
-#include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
 #include "./include/DBSessionHandler.hpp"
 #include "../include/ServerInclude.hpp"
@@ -31,7 +29,7 @@ int main()
     signal(SIGPIPE, SIG_IGN);
     DBSvr* dbsvr = DBSvr::GetInstance();
     LOGI("Hello world! ServerID is:" << dbsvr->getServerID());
-    g_ClientNetWorkObjectFactory.init(10, 10);
+
     g_HandlerMgr = new CDBHandlerMgr;
     g_HandlerMgr->addAllHandle();
 

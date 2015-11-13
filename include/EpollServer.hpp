@@ -9,16 +9,15 @@
 #include "../include/CSendThread.hpp"
 #include "../include/acctTimeTool.hpp"
 #include "../common/SIDGenerator.hpp"
-#include "../session/ClientSession.h"
-#include "../session/AccsvrSession.h"
-#include "../session/DBSession.h"
-#include "../session/LogicSession.h"
-#include "../session/StrictClient.h"
 
 #define MAX_EPOLL_IN_FD 16 // SET MAX EPOLLIN FD TO 16 
 
 class EpollServer
 {
+public:
+    //construct and destruct the networkobject which is bound to session
+    virtual void DestructNetWorkObj(NetWorkObject *netobj) = 0;
+    virtual NetWorkObject* CreateNetWorkObj(SESSION_TYPE type) = 0;
 public:
     EpollServer();
     virtual ~EpollServer() { }
@@ -27,6 +26,27 @@ public:
     virtual void removeDeadSession();
     virtual void handleActiveSession();
     virtual void update();
+
+    bool createNetWorkobjAndBind(SESSION_TYPE stype, CSession *session)
+    {
+        bool ret = false;
+        NetWorkObject *netobj =  CreateNetWorkObj(stype);
+        if (NULL != netobj)
+        {
+            session->bindNetWorkObj(netobj);
+            if (eClient == stype || eStrictClient == stype)
+            {
+                recordClientSession(session); //store in client session map
+            }
+            else
+            {
+                recordServerSession(session); //store in server session map
+            }
+            ret = true;
+        }
+        return ret;
+    }
+
     inline uint8 getServerID()
     {
         return m_ServerID;

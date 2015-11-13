@@ -27,7 +27,7 @@ public:
         EpollServer *svr = threadself->getServerPtr();
         struct epoll_event epEvent[10];
         cout << "CIoThread start threadRoutine" << endl;
-        bool isRecvEvent = false;
+        //bool isRecvEvent = false;
         while (true)
         {
             int32 evCount = epoll_wait(svr->getIoEpollfd(m_nStartID),epEvent, 10, -1);//100ms wait timeout infinite wait just one event to one sockfd
@@ -35,7 +35,7 @@ public:
             {
                 for (int i = 0; i < evCount;i++)
                 {
-                    isRecvEvent = false;
+                    //isRecvEvent = false;
                     CSession *session =  (CSession *)epEvent[i].data.ptr;
                     int32 oplen = 0;
                     if (epEvent[i].events & EPOLLIN) // recv msg
@@ -44,11 +44,11 @@ public:
                         
                         if (oplen >= 0) // normal 
                         {
-                            isRecvEvent = true;
+                            //isRecvEvent = true;
                         }
                         else // socket error wait to free session
                         {
-                            isRecvEvent = false;
+                            //isRecvEvent = false;
                             session->delEpollEvent(svr->getIoEpollfd(m_nStartID));
                             session->setStatus(waitdel);
                         }
@@ -61,15 +61,15 @@ public:
                         oplen = session->sendToSocket();
                         if (0 == oplen)
                         {
-                            isRecvEvent = true;
+                            //isRecvEvent = true;
                         }
                         else if (1 == oplen) //still have data
                         {
-                            isRecvEvent = false;
+                            //isRecvEvent = false;
                         }
                         else if (oplen < 0)
                         {
-                            isRecvEvent = false;
+                            //isRecvEvent = false;
                             session->delEpollEvent(svr->getIoEpollfd(m_nStartID));
                             session->setStatus(waitdel);
                         }

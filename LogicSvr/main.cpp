@@ -6,7 +6,6 @@
 #include "../include/baseHeader.h"
 #include "../network/include/Acceptor.h"
 #include "../network/include/Connector.h"
-#include "../session/ClientSession.h"
 #include "../protocol/testMsg.pb.h"
 #include "./include/LogicSessionHandler.hpp"
 #include "../include/ServerInclude.hpp"
@@ -31,7 +30,6 @@ int main()
     signal(SIGPIPE, SIG_IGN);
     LogicSvr* LogicSvr = LogicSvr::GetInstance();
     LOGI("Hello world! ServerID is:" << LogicSvr->getServerID());
-    g_ClientNetWorkObjectFactory.init(10, 10);
     g_HandlerMgr = new CLogicHandlerMgr;
     g_HandlerMgr->addAllHandle();
 

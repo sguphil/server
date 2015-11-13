@@ -14,6 +14,14 @@
 #include "../database/CDBInstFactory.hpp"
 #include "../common/SIDGenerator.hpp"
 
+#include "./session/ClientSession.h"
+#include "./session/AccsvrSession.h"
+#include "./session/DBSession.h"
+#include "./session/LogicSession.h"
+#include "./session/GatewaySession.h"
+#include "./session/StrictClient.h"
+
+
 extern int32 MAXPKGLEN;
 extern int32 SESSIONBUFLEN;
 
@@ -24,6 +32,9 @@ public:
     virtual ~DBSvr();
     void start();
     void update();
+
+    void DestructNetWorkObj(NetWorkObject *netobj);
+    NetWorkObject* CreateNetWorkObj(SESSION_TYPE type);
 
     CDBInstFactory* getDBInstFactory()
     {

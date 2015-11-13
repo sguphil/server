@@ -4,8 +4,6 @@
 #include "packHeader.hpp"
 #include "../network/include/Session.h"
 #include "../network/include/NetWorkObject.h"
-//#include "../Handler/CHandlerFunc.hpp"
-//#include "ServerInclude.hpp"
 
 enum identifysysid
 {

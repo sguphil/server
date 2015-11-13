@@ -85,8 +85,8 @@ ICPkgBuf* CPkgbufManager::getCurPkg(int32 size)
             ICPkgBuf *pkg = CPkgBufFactory::getInstance()->alloc(pkgsize);
             assert(NULL != pkg);
             pkg->copyfrom(m_CurPkg);
-            CPkgBufFactory::getInstance()->reuse(m_ReadPkg);
-            m_ReadPkg = pkg;
+            CPkgBufFactory::getInstance()->reuse(m_CurPkg);
+            m_CurPkg = pkg;
             printf("=====realloc package===========%d\n", pkgsize);
         }
     }
@@ -141,7 +141,7 @@ ICPkgBuf* CPkgbufManager::getReadPkg()
 {
     if (NULL == m_ReadPkg)
     {
-        return next();
+        m_ReadPkg = next();
     }
     
     return m_ReadPkg;

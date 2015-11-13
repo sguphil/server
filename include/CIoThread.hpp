@@ -38,7 +38,7 @@ public:
                     //isRecvEvent = false;
                     CSession *session =  (CSession *)epEvent[i].data.ptr;
                     int32 oplen = 0;
-                    if (epEvent[i].events & EPOLLIN) // recv msg
+                    if (epEvent[i].events & EPOLLIN && session->getStatus() != waitdel) // recv msg
                     {
                         oplen = session->onRecv();
                         

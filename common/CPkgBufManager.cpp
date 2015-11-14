@@ -40,6 +40,13 @@ void CPkgbufManager::swapRWList()
     m_listSwapLock.unLock();
 }
 
+/**
+ * use to get a package from readlist,private function
+ * 
+ * @author root (11/13/2015)
+ * 
+ * @return ICPkgBuf* 
+ */
 ICPkgBuf* CPkgbufManager::next()
 {
     #if 0 //single list
@@ -68,7 +75,16 @@ ICPkgBuf* CPkgbufManager::next()
 
     return pkg;
 }
-
+/**
+ * this function get a package(curpkg) for write,if null 
+ * allocate a package from pkg factory 
+ * 
+ * @author root (11/13/2015)
+ * 
+ * @param size 
+ * 
+ * @return ICPkgBuf* 
+ */
 ICPkgBuf* CPkgbufManager::getCurPkg(int32 size)
 {
     if (NULL == m_CurPkg)
@@ -84,7 +100,8 @@ ICPkgBuf* CPkgbufManager::getCurPkg(int32 size)
         {
             ICPkgBuf *pkg = CPkgBufFactory::getInstance()->alloc(pkgsize);
             assert(NULL != pkg);
-            pkg->copyfrom(m_CurPkg);
+            ICPkgBuf *ret = pkg->copyfrom(m_CurPkg);
+            assert( ret != NULL);
             CPkgBufFactory::getInstance()->reuse(m_CurPkg);
             m_CurPkg = pkg;
             printf("=====realloc package===========%d\n", pkgsize);
@@ -93,7 +110,13 @@ ICPkgBuf* CPkgbufManager::getCurPkg(int32 size)
 
     return m_CurPkg;
 }
-
+/**
+ * add package to write list
+ * 
+ * @author root (11/13/2015)
+ * 
+ * @param size 
+ */
 void CPkgbufManager::pushPkgToList(int32 size)
 {
     if (NULL == m_CurPkg)

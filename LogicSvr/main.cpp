@@ -27,7 +27,16 @@ int main()
     ILog4zManager::getRef().start();
     ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
     
-    signal(SIGPIPE, SIG_IGN);
+
+    //multi thread ignore SIGPIPE
+    sigset_t bset, oset;
+    sigemptyset(&bset);
+    sigaddset(&bset, SIGPIPE);
+    if (pthread_sigmask(SIG_BLOCK, &bset, &oset) != 0) 
+    {
+         printf("set thread signal mask fail!\n");
+    }
+
     LogicSvr* LogicSvr = LogicSvr::GetInstance();
     LOGI("Hello world! ServerID is:" << LogicSvr->getServerID());
     g_HandlerMgr = new CLogicHandlerMgr;

@@ -18,6 +18,7 @@
 #include <time.h>
 #include <sys/timeb.h>
 #include <assert.h>
+#include <pthread.h>
 #include <signal.h>
 #include <sys/time.h>
 #include <semaphore.h>

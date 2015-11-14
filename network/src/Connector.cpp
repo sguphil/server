@@ -92,6 +92,7 @@ bool Connector::connect(const char *szIp, Int32 Port, uint8 serverid)
     pSession->setType(SIDGenerator::getInstance()->getServerTypeBySvrID(serverid));
     pSession->setConnectSvrID(serverid);
     pSession->setIsFromSelf(true);//means this connection is create from server itself
+    pSession->setServer(m_ptrServer);
 
     Int32 cliSock = socket(AF_INET, SOCK_STREAM, 0);
     if (cliSock < 0)

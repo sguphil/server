@@ -99,7 +99,8 @@ void LogicSvr::start()
 
     //CSendThread *sendThread = new CSendThread(this); //not start sendThread now 
     //sendThread->start();
-     m_connector.start();
+    m_connector.setServer(this);
+    m_connector.start();
 
     m_connector.connect(m_Config.m_dbConfig.ip, m_Config.m_dbConfig.port, m_Config.m_dbConfig.serverid);
    

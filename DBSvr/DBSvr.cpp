@@ -35,7 +35,6 @@ DBSvr::~DBSvr()
 void DBSvr::DestructNetWorkObj(NetWorkObject * netobj)
 {
     delete netobj;
-    netobj = NULL;
 }
 
 NetWorkObject* DBSvr::CreateNetWorkObj(SESSION_TYPE type)
@@ -102,6 +101,7 @@ void DBSvr::start()
         newThread->start();
     }
 
+    m_connector.setServer(this);
     //CSendThread *sendThread = new CSendThread(this); //not start sendThread now 
     //sendThread->start();
 }

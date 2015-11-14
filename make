@@ -1,4 +1,10 @@
 #!/bin/sh
+
+if [ $# -lt 1 ]; then
+    echo "back args!!!"
+    exit 1
+fi
+
 arg=$1
 pwd=`pwd`
 if [ $arg = "all" ]; then 
@@ -14,6 +20,15 @@ if [ $arg = "all" ]; then
 	cd ../DBSvr
 	make clean
 	make
+        echo "============start make dbserver=============="
+	cd ../GatewaySvr
+	make clean
+	make
+        echo "============start make dbserver=============="
+	cd ../LogicSvr
+	make clean
+	make
+
 elif [ $arg = "clean" ]; then
 	cd $pwd
 	cd AccSvr

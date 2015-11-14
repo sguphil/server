@@ -320,9 +320,9 @@ void TestClient::update()
 {
     while (true)
     {
-        if (true || acct_time::getCurTimeMs() >= m_nNextTick)
+        if (acct_time::getCurTimeMs() >= m_nNextTick)
         {
-            m_nNextTick = acct_time::getCurTimeMs() + 1;
+            m_nNextTick = acct_time::getCurTimeMs() + 100;
             updateSessionList(); // handle new Session
             handleActiveSession();
             removeDeadSession();

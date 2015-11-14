@@ -17,7 +17,15 @@ extern void printItem(TestAccess *accessObj);
 
 int main(int argc, char **argv)
 {
-    signal(SIGPIPE, SIG_IGN);
+    //multi thread ignore SIGPIPE
+    sigset_t bset, oset;
+    sigemptyset(&bset);
+    sigaddset(&bset, SIGPIPE);
+    if (pthread_sigmask(SIG_BLOCK, &bset, &oset) != 0) 
+    {
+         printf("set thread signal mask fail!\n");
+    }
+
     TestClient* testClient = TestClient::GetInstance();
     cout << "Hello world! ServerID is:" << testClient->getServerID() << endl;
     

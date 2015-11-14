@@ -44,7 +44,6 @@ class Acceptor : public CBaseThread
 
         inline void sessionReUse(CSession *pSession)
         {
-            pSession->clear();
             m_SessionFactory.reuse(pSession);
         }
 

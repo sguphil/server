@@ -25,14 +25,13 @@ CSession::CSession() : m_pBindNetWorkObj(NULL), m_connSvrID(0), m_bIsFromSelf(fa
 CSession::~CSession()
 {
     delete[] m_LeftPkgBuf;
-    getServer()->DestructNetWorkObj(m_pBindNetWorkObj);
-    /*
+    
     if (NULL != m_pBindNetWorkObj)
     {
         delete m_pBindNetWorkObj;
         m_pBindNetWorkObj =  NULL;
     }
-    */
+    
 }
 
 void CSession::clear() // call when reuse
@@ -48,7 +47,6 @@ void CSession::clear() // call when reuse
 #endif
 
     getServer()->DestructNetWorkObj(m_pBindNetWorkObj);
-    m_pBindNetWorkObj = NULL;
 }
 
 #if 0
@@ -269,7 +267,7 @@ void CSession::processPacket()
     }
 #endif
 #endif
-    ICPkgBuf *pkg = m_RecvBufManager.next();
+    ICPkgBuf *pkg = m_RecvBufManager.getReadPkg();
     int hdlPkgCount = 0;
     while (pkg)
     {
@@ -281,7 +279,7 @@ void CSession::processPacket()
         {
             break;
         }
-        pkg = m_RecvBufManager.next();
+        pkg = m_RecvBufManager.getReadPkg();
     }
     if (NULL == pkg)
     {

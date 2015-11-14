@@ -18,7 +18,6 @@ public:
     }
     */
     ~CPkgbufManager();
-    ICPkgBuf* next();
 
     inline void setCurPkg(ICPkgBuf *pkg)
     {
@@ -34,6 +33,11 @@ public:
     ICPkgBuf* getReadPkg();
 
     void swapRWList();
+private:
+    CPkgbufManager(CPkgbufManager &buf)// non copyable
+    {
+    }
+    ICPkgBuf* next();
 
 private:
     ICPkgBuf *m_CurPkg; //for recv

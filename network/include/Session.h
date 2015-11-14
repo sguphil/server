@@ -289,6 +289,11 @@ public:
     }
 
 private:
+    CSession(CSession & session)
+    {
+    }
+
+private:
     Int32 m_socket;
     char m_szIp[32];
     Int32 m_nPort;

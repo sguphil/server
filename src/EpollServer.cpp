@@ -145,18 +145,16 @@ void EpollServer::removeDeadSession()
                 int32 epfd_idx = session->getSocket() % m_nIoThreadNum;
                 session->delEpollEvent(m_epollfd[epfd_idx]);
                 session->delEpollEvent(m_epollSendfd);
-                session->clear();
                 m_rmSessionList.erase(iter++);
                 cout << "remove session===========" << session->getSessionId() << endl;
                 rmClientSessionFromMap(session->getSessionId());
-                delClusterSession(session);
+                session->clear(); //reuse networkobject if possible
                 if (session->getType() == eClient)
                 {
                     m_acceptor.sessionReUse(session);
                 }
                 else  if (checkRecord(session))
                 {
-                    DestructNetWorkObj(session->getNetWorkObject());
                     delClusterSession(session);
                 }
                 else

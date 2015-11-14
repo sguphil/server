@@ -150,6 +150,10 @@ public:
                 {
                     m_connector.addToErrorList(session);
                 }
+                else
+                {
+                    delete session;
+                }
                 break;
             }
             else

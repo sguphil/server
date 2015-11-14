@@ -32,10 +32,15 @@ void AccountSvr::DestructNetWorkObj(NetWorkObject *netobj)
     {
         return;
     }
+
     CSession *session = netobj->getSession();
+    if (NULL == session)
+    {
+        return;
+    }
 
     close(session->getSocket()); //close socket
-    session->setNetWorkObj(NULL);
+    
 
     SESSION_TYPE type = session->getType();
     if ( eClient == type)
@@ -45,7 +50,7 @@ void AccountSvr::DestructNetWorkObj(NetWorkObject *netobj)
     else
     {
         delete netobj;
-        netobj = NULL;
+        session->setNetWorkObj(NULL);
     }
 }
 
@@ -114,7 +119,7 @@ void AccountSvr::start()
 
     //CSendThread *sendThread = new CSendThread(this);
     //sendThread->start();
-
+    m_connector.setServer(this);
     m_connector.start();
 
     for (uint32 i = 0; i < m_Config.m_dbConfigVec.size(); i++)

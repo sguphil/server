@@ -7,6 +7,8 @@
 #include "../../Factory/BaseFactory.h"
 #include "../../Thread/Mutex.h"
 
+class EpollServer;
+
 class Connector: public CBaseThread
 {
 public:
@@ -28,6 +30,17 @@ public:
     {
         return &m_connList;
     }
+
+    inline void setServer(EpollServer *svr)
+    {
+        m_ptrServer = svr;
+    }
+
+    inline EpollServer* getServer()
+    {
+        return m_ptrServer;
+    }
+
 private:
     
     CommonList<CSession> m_waitList; //等待链接的队列
@@ -41,5 +54,6 @@ private:
     sem_t m_waitSem;
     pthread_cond_t m_waitCond;
     pthread_mutex_t m_mutex;
+    EpollServer *m_ptrServer;
 };
 #endif // __CONNECTOR_H__

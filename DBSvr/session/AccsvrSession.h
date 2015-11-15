@@ -13,7 +13,7 @@ class AccsvrSession : public NetWorkObject
 {
     public:
         AccsvrSession();
-        virtual ~AccsvrSession();
+        ~AccsvrSession();
         #if 0
         int32 onRecv(PkgHeader *header, char *msgbuf, int32 buffsize);
         #endif

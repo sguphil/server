@@ -14,12 +14,19 @@ CPkgbufManager::~CPkgbufManager()
         m_CurPkg = NULL;
     }
 
+    if (NULL != m_ReadPkg)
+    {
+        delete m_ReadPkg;
+        m_ReadPkg = NULL;
+    }
+
     m_PkgList.lockList();
     for (std::list<ICPkgBuf *>::iterator it = m_PkgList.begin();
           it != m_PkgList.end(); it++)
     {
         delete *it;
     }
+    m_PkgList.clear();
     m_PkgList.unLockList();
 
     m_PkgList_sec.lockList();
@@ -28,6 +35,40 @@ CPkgbufManager::~CPkgbufManager()
     {
         delete *it;
     }
+    m_PkgList_sec.clear();
+    m_PkgList_sec.unLockList();
+}
+
+void CPkgbufManager::clear()
+{
+    if (NULL != m_CurPkg)
+    {
+        delete m_CurPkg;
+        m_CurPkg = NULL;
+    }
+
+    if (NULL != m_ReadPkg)
+    {
+        delete m_ReadPkg;
+        m_ReadPkg = NULL;
+    }
+
+    m_PkgList.lockList();
+    for (std::list<ICPkgBuf *>::iterator it = m_PkgList.begin();
+          it != m_PkgList.end(); it++)
+    {
+        delete *it;
+    }
+    m_PkgList.clear();
+    m_PkgList.unLockList();
+
+    m_PkgList_sec.lockList();
+    for (std::list<ICPkgBuf *>::iterator it = m_PkgList_sec.begin();
+          it != m_PkgList_sec.end(); it++)
+    {
+        delete *it;
+    }
+    m_PkgList_sec.clear();
     m_PkgList_sec.unLockList();
 }
 

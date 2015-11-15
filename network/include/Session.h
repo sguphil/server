@@ -166,6 +166,7 @@ public:
         pMsghead->sysId = sysid;
         pMsghead->msgType = msgid;
         m_SendBufManager.pushPkgToList(pPkgHead->length);
+        
         if (getStatus() !=waitdel)
         {
             int32 ret = sendToSocket(); //send directly
@@ -175,6 +176,7 @@ public:
                 return -1;
             }
         }
+        
         return  pPkgHead->length;
     }
 
@@ -204,12 +206,17 @@ public:
 
     inline void setStatus(eSESSIONSTATUS status)
     {
+        m_SessionStaLock.lock();
         m_eStatus = status;
+        m_SessionStaLock.unLock();
     }
 
     inline eSESSIONSTATUS getStatus()
     {
-        return m_eStatus;
+        m_SessionStaLock.lock();
+        eSESSIONSTATUS status = m_eStatus;
+        m_SessionStaLock.unLock();
+        return status;
     }
 
     inline uint32 getSessionId()
@@ -325,5 +332,6 @@ private:
     eSERVERTYPE m_svrType;
     uint8 m_connSvrID;
     bool m_bIsFromSelf;// true means this session create by connector
+    CMutex m_SessionStaLock;
 };
 #endif // __SESSION_H__

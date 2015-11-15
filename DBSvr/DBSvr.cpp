@@ -70,7 +70,7 @@ NetWorkObject* DBSvr::CreateNetWorkObj(SESSION_TYPE type)
         assert(NULL != netobj);
         break;
     case 7: //Account server
-        netobj = new DBSession;
+        netobj = new AccsvrSession;
         assert(NULL != netobj);
         cout << "got accsvr msg" << endl;
         break;

@@ -149,18 +149,19 @@ void EpollServer::removeDeadSession()
                 cout << "remove session===========" << session->getSessionId() << endl;
                 rmClientSessionFromMap(session->getSessionId());
                 session->clear(); //reuse networkobject if possible
-                if (session->getType() == eClient)
+               /* if (session->getType() == eClient)
                 {
                     m_acceptor.sessionReUse(session);
                 }
-                else  if (checkRecord(session))
+                else */ if (checkRecord(session))
                 {
                     delClusterSession(session);
                 }
                 else
                 {
-                    delete session;
-                    session = NULL;
+                    m_acceptor.sessionReUse(session);
+                    //delete session;
+                    //session = NULL;
                 }
             }
             else
@@ -176,7 +177,7 @@ void EpollServer::handleActiveSession()
     if (!m_activeSessionList.empty())
     {
         CommonList<CSession>::iterator iter = m_activeSessionList.begin();
-        for (; iter != m_activeSessionList.end();)
+        for (iter; iter != m_activeSessionList.end();)
         {
             CSession *session = *iter;
             if (session->getStatus() == waitdel)
@@ -199,7 +200,7 @@ void EpollServer::handleActiveSession()
                 }
             }
 
-            iter++;
+            ++iter;
         }
     }
 }

@@ -54,7 +54,7 @@ public:
                         }
                     }
                     
-                    #if 1
+                    #if 1 //double check sendbuf
 
                     if (epEvent[i].events & EPOLLOUT && session->getStatus() != waitdel) // send msg
                     {

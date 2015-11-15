@@ -161,6 +161,10 @@ void* Connector::threadRoutine(void *args)
             else
             {
                 printf("connect success:%s\n", pSession->getIp());
+                Int32 ioFlag;
+                ioFlag = fcntl(pSession->getSocket(), F_GETFL);
+                fcntl(pSession->getSocket(), F_SETFL, ioFlag|O_NONBLOCK); //set nonblock socket
+
                 m_connListLock.lock();
                 m_connList.push_back(pSession);
                 m_connListLock.unLock();

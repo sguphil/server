@@ -33,6 +33,8 @@ public:
     ICPkgBuf* getReadPkg();
 
     void swapRWList();
+    void clear();
+
 private:
     CPkgbufManager(CPkgbufManager &buf)// non copyable
     {

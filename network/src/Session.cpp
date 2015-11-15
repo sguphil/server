@@ -31,7 +31,8 @@ CSession::~CSession()
         delete m_pBindNetWorkObj;
         m_pBindNetWorkObj =  NULL;
     }
-    
+
+    close(m_socket);
 }
 
 void CSession::clear() // call when reuse
@@ -47,6 +48,10 @@ void CSession::clear() // call when reuse
 #endif
 
     getServer()->DestructNetWorkObj(m_pBindNetWorkObj);
+    m_RecvBufManager.clear();
+    m_SendBufManager.clear();
+    close(m_socket);
+    m_pBindNetWorkObj =  NULL;
 }
 
 #if 0
@@ -95,7 +100,8 @@ int32 CSession::onRecv()
         recvlen = recv(m_socket, (void *)(curpkg->getPkgWritePos()), leftLen, 0);
         if (0 == recvlen)
         {
-            printf("socket!!!!!!!!recv return 0!!!!!!!!\n");
+            printf("====================socket!!!!!!!!recv return 0!!!!!!!!errno:%d\n", errno);
+            perror("recv error");
             return -1;
         } else if (ispkgbody && (leftLen == recvlen)) // why we return? !!! avoid the infinity loop while the socket buf is always get data from a very busy send client
         {
@@ -103,7 +109,7 @@ int32 CSession::onRecv()
             return recvlen;
         } else if (recvlen < 0)
         {
-            if (errno == EWOULDBLOCK || errno == EAGAIN)
+            if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
             {
                 printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
                 return 0;
@@ -177,26 +183,21 @@ int32 CSession::sendToSocket()
 
         int needsend = pkgbuf->getPkgSize() - pkgbuf->getReadLen();
         sendlen = ::send(m_socket, (void *)(pkgbuf->getPkgReadPos()), needsend, 0);
-
-        if (0 == sendlen)
+        
+        if (sendlen <= 0)
         {
-            printf("socket!!!!!!!!send return 0!!!!!!!!\n");
-            ret = -1;
-            break;
-        } else if (sendlen < 0)
-        {
-            if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)
+            if (errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN )// add epipe just ignore
             {
                 printf("socket!!!!!!!!EAGAIN!!!!!!!!\n");
                 ret = 1;
                 break;
-            } /*
-             else if (errno == EPIPE )
-             {
-                 setStatus(sock_SIGPIPE);
-                 ret = -1;
-                 break;
-             } */
+            }
+            else if (errno == EPIPE)
+            {
+                printf("##############=====send EPIPE======#############\n");
+                ret = -1;
+                break;
+            }
             else
             {
                 ret = -1;

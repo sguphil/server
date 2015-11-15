@@ -73,7 +73,7 @@ public:
         //ev.events = EPOLLIN | EPOLLONESHOT; // default EPOLLIN event
         //if (m_nIoThreadNum == 1)
         //{
-            ev.events = EPOLLIN;// | EPOLLONESHOT;
+        ev.events = EPOLLIN;// | EPOLLOUT; // | EPOLLONESHOT;
         //}
         ev.data.ptr = session;
         int32 epfd_idx = session->getSocket() % m_nIoThreadNum;
@@ -152,7 +152,8 @@ public:
                 }
                 else
                 {
-                    delete session;
+                    m_acceptor.sessionReUse(session);
+                    //delete session;
                 }
                 break;
             }
@@ -172,7 +173,7 @@ public:
         {
             for (it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); it++)
             {
-                if (it->first == type)
+                if (it->first == type && (it->second)->getStatus() == active)
                 {
                     return it->second;
                 }

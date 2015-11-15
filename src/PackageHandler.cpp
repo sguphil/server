@@ -35,6 +35,7 @@ void handlePackage(CSession *pSession, PkgHeader *header, MsgHeader *msgHead, ch
 
         printf("session does not bind a networkObject!!!!!disconnect\n");
         pSession->setStatus(waitdel);
+        assert(false);
         return;
     }
     assert(NULL != networkObj->getSession());

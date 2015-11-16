@@ -6,8 +6,8 @@ The server supports linux platform only. <br>
 This project include 5 parts, testclient, AccSvr, DBSvr, GateWaySvr, LogicSvr;the testclient is used to run some test unit, AccSvr is mostly used to manage the account
 info, GatewayServer is a connector of account server and LogicServer; DBSvr accept all connections which need database query, and the whole server looks like:
 
-		 DBSvr                            DBSvr
-		  / 				      /	
+		 DBSvr                                  DBSvr
+		  /                                     /	
 		AccSvr <----->  GatewaySvr <----->  LogicSvr
 		    \            / 
 		     \          /

@@ -1,8 +1,6 @@
 #include "../include/Connector.h"
 #include "../../common/SIDGenerator.hpp"
 
-//static sem_t m_waitSem;
-
 Connector::Connector()
 {
     m_sessionFactory.init(2,2);
@@ -44,31 +42,24 @@ void Connector::addToErrorList(CSession *session)
 void Connector::reConnectAll()
 {
     m_connErrListLock.lock();
-    std::vector<CSession *> sessionvec;
     
     if (!m_connErrList.empty())
     {
-        sessionvec.reserve(m_connErrList.size());
         CommonList<CSession>::iterator iter;
         for (iter = m_connErrList.begin(); iter != m_connErrList.end(); )
         {
             if (preReConnect(*iter))
             {
-                sessionvec.push_back(*iter);
+                addToWaitList(*iter);
                 m_connErrList.erase(iter++);
             }
         }
     }
     m_connErrListLock.unLock();
-    for (uint32 i = 0; i < sessionvec.size(); i++)
-    {
-        addToWaitList(sessionvec[i]);
-    }
 }
 
 bool Connector::preReConnect(CSession *session)
 {
-    close(session->getSocket());//close the old socket
     Int32 cliSock = socket(AF_INET, SOCK_STREAM, 0); //create a new socket
     if (cliSock < 0)
     {
@@ -175,3 +166,4 @@ void* Connector::threadRoutine(void *args)
     }
     return NULL;
 }
+

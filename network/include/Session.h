@@ -89,6 +89,13 @@ public:
         return m_ptrServer;
     }
 
+    inline void closeSocket()
+    {
+        if (m_socket != -1)
+        {
+            close(m_socket);
+        }
+    }
     int32 processSend(uint16 sysid, uint16 msgid, char *msg, int32 msgsize)
     {
         #if 0

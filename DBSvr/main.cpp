@@ -28,6 +28,7 @@ int main()
     
 
     //multi thread ignore SIGPIPE
+    /*
     sigset_t bset, oset;
     sigemptyset(&bset);
     sigaddset(&bset, SIGPIPE);
@@ -35,6 +36,7 @@ int main()
     {
          printf("set thread signal mask fail!\n");
     }
+    */
 
     DBSvr* dbsvr = DBSvr::GetInstance();
     LOGI("Hello world! ServerID is:" << dbsvr->getServerID());

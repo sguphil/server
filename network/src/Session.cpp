@@ -2,16 +2,14 @@
 #include "../../Factory/BaseFactory.h"
 #include "../../include/EpollServer.hpp"
 
-CSession::CSession() : m_pBindNetWorkObj(NULL), m_connSvrID(0), m_bIsFromSelf(false)
+CSession::CSession() : m_socket(-1),m_pBindNetWorkObj(NULL), m_connSvrID(0), m_bIsFromSelf(false)
 {
-    m_socket = -1;
     m_boActive = false;
 #if 0
     m_recvBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
     m_sendBuff.init(SESSIONBUFLEN, SESSIONBUFLEN);
 #endif
 
-    m_pBindNetWorkObj = NULL;
     m_nSessionId = 0;
     m_LeftPkgBuf = new char[MAXPKGLEN];
     assert(m_LeftPkgBuf != NULL);
@@ -32,7 +30,7 @@ CSession::~CSession()
         m_pBindNetWorkObj =  NULL;
     }
 
-    close(m_socket);
+    closeSocket();
 }
 
 void CSession::clear() // call when reuse
@@ -50,8 +48,9 @@ void CSession::clear() // call when reuse
     getServer()->DestructNetWorkObj(m_pBindNetWorkObj);
     m_RecvBufManager.clear();
     m_SendBufManager.clear();
-    close(m_socket);
+    closeSocket();
     m_pBindNetWorkObj =  NULL;
+    m_eStatus = sock_unused;
 }
 
 #if 0
@@ -100,7 +99,7 @@ int32 CSession::onRecv()
         recvlen = recv(m_socket, (void *)(curpkg->getPkgWritePos()), leftLen, 0);
         if (0 == recvlen)
         {
-            printf("====================socket!!!!!!!!recv return 0!!!!!!!!errno:%d\n", errno);
+            printf("====================socket!!!!!!!!recv return 0!!!!!!!!errno:%d EAGAIN:%d\n", errno, EAGAIN);
             perror("recv error");
             return -1;
         } else if (ispkgbody && (leftLen == recvlen)) // why we return? !!! avoid the infinity loop while the socket buf is always get data from a very busy send client

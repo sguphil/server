@@ -38,7 +38,7 @@ public:
                     //isRecvEvent = false;
                     CSession *session =  (CSession *)epEvent[i].data.ptr;
                     int32 oplen = 0;
-                    if (epEvent[i].events & EPOLLIN && session->getStatus() != waitdel) // recv msg
+                    if (epEvent[i].events & EPOLLIN) // recv msg
                     {
                         oplen = session->onRecv();
                         
@@ -56,7 +56,7 @@ public:
                     
                     #if 1 //double check sendbuf
 
-                    if (epEvent[i].events & EPOLLOUT && session->getStatus() != waitdel) // send msg
+                    if (epEvent[i].events & EPOLLOUT) // send msg
                     {
                         oplen = session->sendToSocket();
                         if (0 == oplen)

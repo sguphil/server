@@ -142,7 +142,7 @@ public:
         std::multimap<SESSION_TYPE, CSession *>::iterator it;
         for (it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); )
         {
-            if (it->second->getSessionId() == session->getSessionId())
+            if (it->second == session)
             {
                 m_ServerSessionMap.erase(it++);
                 //put in connector errrolist, wait for reconnect... !!!!todo.....verify not connector session
@@ -173,7 +173,7 @@ public:
         {
             for (it = m_ServerSessionMap.begin(); it != m_ServerSessionMap.end(); it++)
             {
-                if (it->first == type && (it->second)->getStatus() == active)
+                if (it->first == type)
                 {
                     return it->second;
                 }

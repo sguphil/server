@@ -1,7 +1,8 @@
 #!/bin/sh
 
 if [ $# -lt 1 ]; then
-    echo "back args!!!"
+    echo "bad args!!!"
+    echo "usage: ./make [all|serverName]"
     exit 1
 fi
 

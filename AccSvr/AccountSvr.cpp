@@ -39,9 +39,6 @@ void AccountSvr::DestructNetWorkObj(NetWorkObject *netobj)
         return;
     }
 
-    close(session->getSocket()); //close socket
-    
-
     SESSION_TYPE type = session->getType();
     if ( eClient == type)
     {

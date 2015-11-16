@@ -80,6 +80,7 @@ enum eSESSIONSTATUS
     waitdel = 3, // deactive, need to remove
     registered = 4,//registered
     sock_SIGPIPE = 5, //recv signal pipe
+    sock_unused = 6, //still in poll not working
 };
 
 

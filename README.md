@@ -7,7 +7,7 @@ This project include 5 parts, testclient, AccSvr, DBSvr, GateWaySvr, LogicSvr;th
 info, GatewayServer is a connector of account server and LogicServer; DBSvr accept all connections which need database query, and the whole server looks like:
 
 		 DBSvr                               DBSvr
-		  / 				      /	
+		  /                                   /	
 		AccSvr <----->  GatewaySvr <----->  LogicSvr
 		    \            / 
 		     \          /

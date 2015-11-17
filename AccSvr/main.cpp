@@ -10,8 +10,6 @@
 #include "../include/ServerInclude.hpp"
 #include "../include/log4z.h"
 
-#define ULIMITSVR 1
-
 class CSession;
 
 using namespace std;
@@ -22,7 +20,7 @@ int main()
     using namespace zsummer::log4z;
     ILog4zManager::getRef().start();
     ILog4zManager::getRef().setLoggerLevel(LOG4Z_MAIN_LOGGER_ID,LOG_LEVEL_TRACE);
-    //signal(SIGPIPE, SIG_IGN);
+
     //multi thread ignore SIGPIPE
     sigset_t bset, oset;
     sigemptyset(&bset);
@@ -36,32 +34,11 @@ int main()
     g_HandlerMgr->addAllHandle();
 
     AccountSvr *accountSvr = AccountSvr::GetInstance();
-    LOGI("Hello world! ServerID is:" << accountSvr->getServerID());
-    //g_ClientNetWorkObjectFactory.init(10000, 50);
-    
-    test_package::testMsg tmsg;
-    tmsg.set_sendtime(123);
-    tmsg.set_msg("protobuf hello world!!");
-    
-    int32 buflen = tmsg.ByteSize();
-    
-    char buf[buflen];
-    tmsg.SerializeToArray(buf, buflen);
-
-    test_package::testMsg after;
-    after.ParseFromArray(buf, buflen);
-
-    LOGI("after:" << after.sendtime() << "  msg:" << after.msg());
+    LOGI("Server construct! ServerID is:" << accountSvr->getServerID());
     
     accountSvr->start(); //listen start
     accountSvr->update();
 
-    while (false)
-    {
-        LOGI("flash main thread");
-        //conn.connect("127.0.0.1", 9997, eClient);
-        sleep(1);
-    }
     delete g_HandlerMgr;
     return 0;
 }

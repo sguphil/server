@@ -327,7 +327,7 @@ void TestClient::update()
             handleActiveSession();
             removeDeadSession();
         }
-        acct_time::sleepMs(100); // sleep 1ms per loop
+        acct_time::sleepMs(1); // sleep 1ms per loop
     }
     
 }

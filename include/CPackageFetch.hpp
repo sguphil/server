@@ -26,15 +26,11 @@ public:
     inline void setPkgHeader(PkgHeader& header)
     {
         m_pkgHeader = header;
-        //m_pkgHeader.length = header.length;
-        //m_pkgHeader.reserved = header.reserved;
     }
 
     inline void setMsgHeader(MsgHeader& msghead)
     {
         m_msgHeader = msghead;
-        //m_msgHeader.sysId = msghead.sysId;
-        //m_msgHeader.msgType = msghead.msgType;
     }
 
     inline int32 setMsgBuff(char* buff, int32 size)

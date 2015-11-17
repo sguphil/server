@@ -8,12 +8,8 @@
 #include "../include/ServerInclude.hpp"
 #include "./include/TCSessionHandler.hpp"
 
-#define ULIMITSVR 1
-
 using namespace std;
 extern void printItem(TestAccess *accessObj);
-
-//extern CPackageMgr<accFuncStruct> *g_HandlerMgr;
 
 int main(int argc, char **argv)
 {
@@ -27,7 +23,7 @@ int main(int argc, char **argv)
     }
 
     TestClient* testClient = TestClient::GetInstance();
-    cout << "Hello world! ServerID is:" << testClient->getServerID() << endl;
+    cout << "Server construct! ServerID is:" << testClient->getServerID() << endl;
     
     g_HandlerMgr = new CTcHandlerMgr;
     g_HandlerMgr->addAllHandle();
@@ -39,9 +35,6 @@ int main(int argc, char **argv)
     }
     testClient->setConnectCount(count);
     testClient->start();
-    //Connector conn;
-    //conn.start();
-
     testClient->update();
 
     return 0;

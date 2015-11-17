@@ -15,8 +15,6 @@
 #include "../include/rapidjson/stringbuffer.h"
 #include "../include/CFileUtils.hpp"
 
-#define ULIMITSVR 1
-
 using namespace std;
 extern void printItem(TestAccess *accessObj);
 
@@ -28,7 +26,6 @@ int main()
     
 
     //multi thread ignore SIGPIPE
-    /*
     sigset_t bset, oset;
     sigemptyset(&bset);
     sigaddset(&bset, SIGPIPE);
@@ -36,24 +33,13 @@ int main()
     {
          printf("set thread signal mask fail!\n");
     }
-    */
 
     DBSvr* dbsvr = DBSvr::GetInstance();
-    LOGI("Hello world! ServerID is:" << dbsvr->getServerID());
+    LOGI("Server construct! ServerID is:" << dbsvr->getServerID());
 
     g_HandlerMgr = new CDBHandlerMgr;
     g_HandlerMgr->addAllHandle();
 
-    test_package::testMsg tmsg;
-    tmsg.set_sendtime(123);
-    tmsg.set_msg("protobuf hello world!!");
-    int32 buflen = tmsg.ByteSize();
-    char buf[buflen];
-    tmsg.SerializeToArray(buf, buflen);
-    test_package::testMsg after;
-    after.ParseFromArray(buf, buflen);
-    LOGI("after:" << after.sendtime() << "  msg:" << after.msg());
-    
     //==========test
     while (true)
     {

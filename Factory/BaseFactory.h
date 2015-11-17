@@ -66,7 +66,6 @@ protected:
     }
 protected:
     std::list<T*> m_ItemList;
-    //CommonList<T> m_ItemList;
     Int32 m_nTotalItem;
     Int32 m_nItemLess;
     Int32 m_nAccNum;

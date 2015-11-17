@@ -16,8 +16,6 @@
 #include "../include/rapidjson/stringbuffer.h"
 #include "../include/CFileUtils.hpp"
 
-#define ULIMITSVR 1
-
 using namespace std;
 extern void printItem(TestAccess *accessObj);
 
@@ -38,19 +36,12 @@ int main()
     }
 
     LogicSvr* LogicSvr = LogicSvr::GetInstance();
-    LOGI("Hello world! ServerID is:" << LogicSvr->getServerID());
+    LOGI("Server construct! ServerID is:" << LogicSvr->getServerID());
+
     g_HandlerMgr = new CLogicHandlerMgr;
     g_HandlerMgr->addAllHandle();
 
-    test_package::testMsg tmsg;
-    tmsg.set_sendtime(123);
-    tmsg.set_msg("protobuf hello world!!");
-    int32 buflen = tmsg.ByteSize();
-    char buf[buflen];
-    tmsg.SerializeToArray(buf, buflen);
-    test_package::testMsg after;
-    after.ParseFromArray(buf, buflen);
-    LOGI("after:" << after.sendtime() << "  msg:" << after.msg());
+   
     
     //==========test
     while (true)
@@ -64,13 +55,14 @@ int main()
         //d.Parse(json);
         //Value s = d["stars"];
         std::string filecontent = CFileUtils::getInstance()->getFileString("./config/LogicSvr.xml");
-        cout << "myf=======test" << filecontent;
+        cout << "myf=======test" << filecontent << endl;
         break;
     }
     //==========test
 
     LogicSvr->start(); //listen start
     LogicSvr->update();
+
     delete g_HandlerMgr;
     return 0;
 }

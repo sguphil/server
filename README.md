@@ -4,10 +4,10 @@ The server supports linux platform only. <br>
 
 #about the project
 This project include 5 parts, testclient, AccSvr, DBSvr, GateWaySvr, LogicSvr;the testclient is used to run some test unit, AccSvr is mostly used to manage the account
-info, GatewayServer is a connector of account server and LogicServer; DBSvr accept all connections which need database query, and the whole server looks like:
+info, GatewayServer is a connector of account server and LogicServer; DBSvr accept all connections which need database query,the LogicSvr is mostly used to handle all Logic modules,the GatewaySvr keeps the logicSvr safe from the outside connections, and the whole server looks like:
 
-		 DBSvr                               DBSvr
-		  /                                   /	
+		 DBSvr                                  DBSvr
+		  /                                     /	
 		AccSvr <----->  GatewaySvr <----->  LogicSvr
 		    \            / 
 		     \          /
@@ -15,6 +15,7 @@ info, GatewayServer is a connector of account server and LogicServer; DBSvr acce
 		      all clients
 
 #How To run the Test?
+You can build the project by runing the script command:"./make all", after build successfully, start all the servers,and they will connect to each other according their config file.<br>
 Now, the server provided a client-server test. <br>
 The test include three parts: the account-server, test-client, db-server, about the db-server, we only support mysql now. <br>
 
@@ -43,14 +44,13 @@ Runing the test server and client you can follow the steps,as usual you don't ne
 In the client-server test, the terminal will print the info of running procedure,the test-client constantly
 send a test package to account-server, when account-server recieve the package, it send a package to db-server,and then the db-server deserialization the msg and search for the user in database by username and password. <br>
 
-In the following days, i will bring protobuf and redis to the server as the package 
-serialization/deserialization method,and the cache. <br>
+In the following days, i will bring redis to the server. <br>
 
 #简要说明：
 		本服务器提供了一个轻量级网络服务器框架，里面提供了服务器中常用的工具及一些接口的封装，使用这个服务目的
 	在于更容易的搭建起一个可用的高性能的网络服务器，目前这个服务器还需要很多地方需要完善，在服务器性能方面仍然有很
 	大的提升空间，由于服务器网络层使用的epoll，线程使用的是linux下的pthread库，并未做多平台的支持，所以只提供linux环境的支持。 
-		本服务器目前提供了一个简单的测试例子，这个例子是以当前手游服务器常用框架为背景，这个测试提供了一个测试
+		本服务器目前提供了一个简单的测试例子，这个例子是以当前端游服务器常用框架为背景，这个测试提供了一个测试
 	客户端，账号服务器，数据库服务器；例子演示了客户端不断的发账号和密码到账号服务器，账号服务器转包到数据库服务器
 	进行账号密码验证并把结果返回。 
 		这个服务器中易用之处在于，你可以把账号服务器改造成你想要实现的服务器，在其中加入业务逻辑。由于这个服务
@@ -63,9 +63,9 @@ serialization/deserialization method,and the cache. <br>
 		3.每一个服务器都会在其服务器下有include和src目录，里面分别有"*HandlerFunc.hpp"、"*HandlerFunc.cpp"和"*
 	SessionHandler.hpp"、"*SessionHandler.cpp"."*SessionHandler.hpp"文件中addAllHandle函数使用协议号注册你需要的处
 	理函数，在"*HandlerFunc.%pp"文件进行处理函数的声明和实现。 
-		使用这服务器，你可以简单的在上面的处理函数管理器中注册和实现函数就可以使用服务器了。单如果你需要实现集
+		使用这服务器，你可以简单的在上面的处理函数管理器中注册和实现函数就可以使用服务器了。但如果你需要实现集
 	群的话，这里就需要一套集群的策略来实现负载均衡以及不同进程间的数据共享问题，本服务器后期将会使用redis来实现不
-	同进程间的数据共享，最终实现一个可扩展的、高可用的分布式服务器 
+	同进程间的数据共享，最终实现一个可扩展的、高可用的分布式服务器。
     
     
 

@@ -12,6 +12,8 @@
  */
 class SIDGenerator
 {
+    #define LEFT_SHIFT 24
+
 public:
     static SIDGenerator* getInstance()
     {
@@ -38,7 +40,7 @@ public:
             return 0;
         }
 
-        uint32 serverid = sid >> 24;
+        uint32 serverid = sid >> LEFT_SHIFT;
         return serverid;
     }
 
@@ -91,7 +93,7 @@ public:
         }
 
         m_curid += 1;
-        uint32 sid = m_serverid << 24 | m_curid;
+        uint32 sid = m_serverid << LEFT_SHIFT | m_curid;
         return sid;
     }
 

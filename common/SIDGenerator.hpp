@@ -42,42 +42,6 @@ public:
         return serverid;
     }
 
-    eSERVERTYPE getServerTypeBySID(uint32 sid)
-    {
-        uint32 serverid = getServeridBySID(sid);
-        eSERVERTYPE type = eUndefineSessionType;
-        if (1 <= serverid && serverid <= 15)
-        {
-            type = eAccountSvr;
-        }
-        else if (16 <= serverid && serverid <= 30)
-        {
-            type = eDBServer;
-        }
-        else if (31 <= serverid && serverid <= 45)
-        {
-            type = eGameServer;
-        }
-        else if (46 <= serverid && serverid <= 60)
-        {
-            type = eGateWay;
-        }
-        else if (61 <= serverid && serverid <= 75)
-        {
-            type = eClient;
-        }
-        else if (76 <= serverid && serverid <= 90)
-        {
-            type = eOtherSvr;
-        }
-        else if (91 <= serverid && serverid <= 127)
-        {
-            type = eOtherSvr;
-        }
-
-        return type;
-    }
-
     eSERVERTYPE getServerTypeBySvrID(uint32 serverid)
     {
         eSERVERTYPE type = eUndefineSessionType;
@@ -111,6 +75,12 @@ public:
         }
 
         return type;
+    }
+
+    eSERVERTYPE getServerTypeBySID(uint32 sid)
+    {
+        uint32 serverid = getServeridBySID(sid);
+        return getServerTypeBySvrID(serverid);
     }
 
     uint32 generatorSid()

@@ -1,8 +1,8 @@
-# server
+# Server
 This server is used to build a mmorpg game server or other high performance server,it provides many tools to make you build a light weight network server easily. <br>
 The server supports linux platform only. <br>
 
-# about the project
+# About the project
 This project include 5 parts, testclient, AccSvr, DBSvr, GateWaySvr, LogicSvr;the testclient is used to run some test unit, AccSvr is mostly used to manage the account
 info, GatewayServer is a connector of account server and LogicServer; DBSvr accept all connections which need database query,the LogicSvr is mostly used to handle all Logic modules,the GatewaySvr keeps the logicSvr safe from the outside connections, and the whole server looks like:
 
